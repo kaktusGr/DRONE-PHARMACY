@@ -1,11 +1,16 @@
 header {
-    position: sticky;
+    position: fixed !important;
     top: 0;
-    left: 0;
-    max-width: 1440px;
+    width: 100vw;
+    float: left;
     color: var(--dark-text);
     background-color: var(--bg-color);
     padding: 24px 0;
+
+    & .header-container {
+        max-width: 1440px;
+        padding: 0 clamp(24px, 6vw, 84px);
+    }
 
     & .header-main,
     .header-icons,
@@ -17,7 +22,6 @@ header {
         justify-content: flex-end;
         gap: 28px;
         font-size: 12px;
-        font-weight: 500;
         margin-bottom: 9px;
     }
 
@@ -26,7 +30,7 @@ header {
         align-items: center;
 
         & ul {
-            font-weight: 600;
+            font-weight: 500;
             gap: clamp(25px, 4vw, 45px);
         }
 
