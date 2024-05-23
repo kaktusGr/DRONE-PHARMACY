@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function Footer() {
     return (
         <footer>
-            <Link to="/"><h3>air Pharm</h3></Link>
+            <h3><Link to="/">air Pharm</Link></h3>
             <div className="footer-column">
                 <h4>Company</h4>
                 <ul>
