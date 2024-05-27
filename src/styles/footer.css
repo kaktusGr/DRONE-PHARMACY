@@ -1,7 +1,6 @@
 footer {
     display: flex;
     justify-content: space-between;
-    margin-top: 100px;
     margin-bottom: 65px;
     padding: 56px;
     background-color: var(--container-bg-color);

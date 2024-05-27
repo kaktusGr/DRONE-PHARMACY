@@ -1,6 +1,7 @@
 header {
     position: fixed !important;
     top: 0;
+    z-index: 999;
     width: 100vw;
     float: left;
     color: var(--dark-text);
