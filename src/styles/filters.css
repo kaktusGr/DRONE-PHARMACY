@@ -12,13 +12,19 @@
     @media (width < 646px) {
         width: 100%;
     }
+
+    .catalog-products {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+    }
 }
 
 .filter-aside {
     display: flex;
     flex-direction: column;
     gap: 24px;
-    height: 822px;
+    height: 100%;
     width: clamp(240px, 30vw, 300px);
     background-color: var(--container-bg-color);
     border-radius: 32px;
@@ -175,7 +181,7 @@
             & img {
                 cursor: pointer;
                 position: absolute;
-                top: 7.5px;
+                top: 8px;
                 right: 18px;
                 transform: rotate(45deg);
             }

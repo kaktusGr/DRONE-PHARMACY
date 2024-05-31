@@ -6,6 +6,18 @@
     padding: 16px;
     position: relative;
 
+    &.unavailable {
+        background-color: var(--light-text);
+    }
+
+    &>img {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        height: 50px;
+        transform: rotate(45deg) translate(-70%);
+    }
+
     @media (width < 1100px) {
         width: clamp(230px, 30vw, 300px);
     }
@@ -88,7 +100,7 @@ p:is(.name, .price) {
         }
     }
 
-    & button {
+    & button.dark-btn {
         display: block;
         width: 100%;
         padding: 16px 28px;
@@ -100,5 +112,15 @@ p:is(.name, .price) {
         line-height: 20px;
         margin-top: 32px;
         cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover:not(.unavailable) {
+            transform: scale(0.95);
+        }
+
+        &.unavailable {
+            background-color: var(--img-bg-color);
+            cursor: default;
+        }
     }
 }

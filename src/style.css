@@ -33,6 +33,11 @@ body {
 a {
     color: inherit;
     text-decoration: none;
+}
+
+button,
+input,
+a {
     outline: none;
 }
 
