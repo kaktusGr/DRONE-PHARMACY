@@ -1,5 +1,7 @@
 import React from 'react';
 import DiscountScroll from '../components/DiscountScroll';
+import CatalogMain from '../components/CatalogMain';
+import Recommendation from '../components/Recommendation';
 
 export default function Catalog() {
     return (
@@ -27,6 +29,8 @@ export default function Catalog() {
                         pills: ['best deals', 'Free Shipping', 'Cashback']
                     }
                 ]} />
+            <CatalogMain />
+            <Recommendation />
         </>
     )
 }

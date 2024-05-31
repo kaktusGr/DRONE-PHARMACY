@@ -1,6 +1,6 @@
-import React from "react";
+import { React } from "react";
 
-export default function FilterAside() {
+export default function FilterAside({ availability, updateAvailable }) {
     return (
         <div className="filter-aside">
             <div>
@@ -65,7 +65,9 @@ export default function FilterAside() {
             <div className="filter-ul">
                 <h4>availability</h4>
                 <div className="toggle-container">
-                    <input type="checkbox" id="availability" name="availability" />
+                    <input type="checkbox" id="availability" name="availability"
+                        checked={availability}
+                        onChange={() => updateAvailable(!availability)}/>
                     <label htmlFor="availability">
                         <div className="toggle-ball"></div>
                     </label>
