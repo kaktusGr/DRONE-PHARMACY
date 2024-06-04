@@ -1,7 +1,10 @@
-import React from "react";
+import { React, useContext } from "react";
 import { Link } from "react-router-dom";
+import { ProductContext } from '../pages/Layout';
 
 export default function Navbar() {
+    const { countProducts } = useContext(ProductContext);
+
     return (
         <header>
             <div className="header-container">
@@ -31,7 +34,10 @@ export default function Navbar() {
                     <div className="header-icons">
                         <Link to='account-orders'><img src="./images/icons-svg/user.svg" alt="account" /></Link>
                         <Link to='favourites'><img src="./images/icons-svg/heart.svg" alt="favourites" /></Link>
-                        <Link to='shopping-cart'><img src="./images/icons-svg/cart.svg" alt="cart" /></Link>
+                        <Link to='shopping-cart'>
+                            <img src="./images/icons-svg/cart.svg" alt="cart" />
+                            <span className="count-products">{countProducts}</span>
+                        </Link>
                     </div>
                 </div>
             </div>

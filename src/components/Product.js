@@ -1,6 +1,9 @@
-import React from "react";
+import { React, useContext } from "react";
+import { ProductContext } from '../pages/Layout';
 
 export default function Product({ name, gram, status }) {
+    const { countProducts, setCountProducts } = useContext(ProductContext);
+
     return (
         <div className={status !== "AVAILABLE" ? "product-card unavailable" : "product-card"}>
             {status !== "AVAILABLE" && <img src="./images/icons-svg/plus.svg" alt="close" />}
@@ -19,7 +22,12 @@ export default function Product({ name, gram, status }) {
                             <small>Compare</small>
                         </div>
                     </div>
-                    <button className={status !== "AVAILABLE" ? "dark-btn unavailable" : "dark-btn"}>
+                    <button className={status !== "AVAILABLE" ? "dark-btn unavailable" : "dark-btn"}
+                        onClick={() => {
+                            if (status === "AVAILABLE") {
+                                setCountProducts(countProducts + 1)
+                            }
+                        }}>
                         Add to Cart
                     </button>
                 </div>
