@@ -57,10 +57,37 @@ header {
 
     & img {
         padding: 4px;
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+    }
+
+    & a {
+        height: 32px;
+        width: 32px;
 
         &:hover {
             background-color: var(--container-bg-color);
             border-radius: 50%;
+        }
+
+        &:last-child {
+            position: relative;
+
+            & .count-products {
+                position: absolute;
+                top: -2px;
+                right: -4px;
+                display: inline-block;
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                background-color: var(--light-text);
+                color: var(--container-bg-color);
+                font-size: 10px;
+                padding: 3px 2px;
+                text-align: center;
+            }
         }
     }
 }

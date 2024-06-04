@@ -82,6 +82,10 @@
             & label {
                 margin-left: 8px;
             }
+
+            &.showmore {
+                display: none;
+            }
         }
     }
 

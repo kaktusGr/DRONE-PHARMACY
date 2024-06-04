@@ -20,9 +20,8 @@ export default function Navbar() {
                     <nav>
                         <ul>
                             <li><Link to='catalog'>Catalog</Link></li>
-                            <li><Link to='blog'>Blog</Link></li>
-                            <li><Link to='about'>About</Link></li>
-                            <li><Link to='contacts'>Contacts</Link></li>
+                            <li><Link to='account-orders'>History Orders</Link></li>
+                            <li><Link to='shopping-cart'>Shopping Cart</Link></li>
                         </ul>
                     </nav>
                     <div className="header-search">

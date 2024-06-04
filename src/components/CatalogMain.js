@@ -9,7 +9,6 @@ export default function CatalogMain() {
     const urlMedication = "http://localhost:8090/medication";
     const urlSort = {
         available: "status=AVAILABLE",
-        // relevance: "sort=relevance",
         nameAZ: "sort=name,asc",
         nameZA: "sort=name,desc",
         weightUp: "sort=weight,asc",
@@ -36,7 +35,7 @@ export default function CatalogMain() {
         }
     }, [urlFilterMedication]);
 
-    const allMedications = ((medication === null) ? console.log("loading") : medication.map(m => {
+    const allMedications = (medication !== null && medication.map(m => {
         return <Product key={m.id} name={m.name} gram={m.weight} status={m.status} />
     }));
 

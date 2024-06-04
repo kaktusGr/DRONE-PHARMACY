@@ -79,10 +79,6 @@ p:is(.name, .price) {
     }
 
     & .product-small-info {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
         & small {
             font-size: 14px;
             font-weight: 500;
@@ -114,7 +110,7 @@ p:is(.name, .price) {
         cursor: pointer;
         transition: all 0.3s ease;
 
-        &:hover:not(.unavailable) {
+        &:active:not(.unavailable) {
             transform: scale(0.95);
         }
 

@@ -1,0 +1,38 @@
+.home-page {
+    min-height: 460px;
+
+    & h1 {
+        text-align: center;
+        margin-top: 100px;
+    }
+
+    & div {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+
+        & a {
+            display: block;
+            width: 220px;
+            height: 100px;
+            text-align: center;
+            padding: 35px 0;
+            border: none;
+            border-radius: 30px;
+            background-color: var(--dark-text);
+            color: var(--container-bg-color);
+            font-size: 20px;
+            margin-top: 32px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+                background-color: var(--light-text);
+            }
+
+            &:active {
+                transform: scale(0.95);
+            }
+        }
+    }
+}

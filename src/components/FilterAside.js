@@ -1,79 +1,70 @@
-import { React } from "react";
+import { React, useState } from "react";
 
 export default function FilterAside({ availability, updateAvailable }) {
+    const [showMore, setShowMore] = useState({ display: 'none' });
+    const [hideBtn, setHideBtn] = useState(false);
+
     return (
         <div className="filter-aside">
             <div>
-                <h3>Cosmetics</h3>
+                <h3>Medicines</h3>
                 <button className="btn-underline">Clear All</button>
             </div>
             <p>1234 results</p>
+
             <div className="filter-ul">
-                <h4>category</h4>
+                <h4>weight</h4>
                 <ul>
                     <li>
                         <input type="checkbox" />
-                        <label>Face Care (321)</label>
+                        <label>Under 50G</label>
                     </li>
                     <li>
                         <input type="checkbox" />
-                        <label>Body Care (278)</label>
+                        <label>50G – 100G</label>
                     </li>
                     <li>
                         <input type="checkbox" />
-                        <label>Hair Care (169)</label>
+                        <label>100G – 150G</label>
                     </li>
                     <li>
                         <input type="checkbox" />
-                        <label>Hand Care (117)</label>
+                        <label>150G – 200G</label>
                     </li>
                     <li>
                         <input type="checkbox" />
-                        <label>Makeup (368)</label>
+                        <label>200G – 250G</label>
+                    </li>
+                    <li style={showMore}>
+                        <input type="checkbox" />
+                        <label>250G – 300G</label>
+                    </li>
+                    <li style={showMore}>
+                        <input type="checkbox" />
+                        <label>Above 300G</label>
                     </li>
                 </ul>
-                <button className="btn-underline">Show More</button>
+                <button className="btn-underline"
+                    onClick={() => {
+                        setShowMore(!hideBtn ? { display: 'block' } : { display: 'none' });
+                        setHideBtn(!hideBtn);
+                    }}>Show {hideBtn ? "Less" : "More"} Options</button>
             </div>
             <hr />
-            <div className="filter-ul">
-                <h4>price</h4>
-                <ul>
-                    <li>
-                        <input type="radio" name="radio" />
-                        <label>Under $25</label>
-                    </li>
-                    <li>
-                        <input type="radio" name="radio" defaultChecked />
-                        <label>$25 – $50</label>
-                    </li>
-                    <li>
-                        <input type="radio" name="radio" />
-                        <label>$50 – $100</label>
-                    </li>
-                    <li>
-                        <input type="radio" name="radio" />
-                        <label>$100 – $200</label>
-                    </li>
-                    <li>
-                        <input type="radio" name="radio" />
-                        <label>$200 – $500</label>
-                    </li>
-                </ul>
-                <button className="btn-underline">Show More Options</button>
-            </div>
-            <hr />
+
             <div className="filter-ul">
                 <h4>availability</h4>
                 <div className="toggle-container">
                     <input type="checkbox" id="availability" name="availability"
                         checked={availability}
-                        onChange={() => updateAvailable(!availability)}/>
+                        onChange={() => updateAvailable(!availability)} />
                     <label htmlFor="availability">
                         <div className="toggle-ball"></div>
                     </label>
                 </div>
             </div>
             <hr />
+
             <div className="filter-ul">
                 <h4>brand</h4>
                 <div className="custom-select">

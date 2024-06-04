@@ -17,10 +17,6 @@ export default function Product({ name, gram, status }) {
                     <img src="./images/icons-svg/star.svg" alt="star" /><b>4.3</b>
                     <div className="product-small-info">
                         <small>{status}</small>
-                        <div>
-                            <img src="./images/icons-svg/arrow-left-right.svg" alt="star" />
-                            <small>Compare</small>
-                        </div>
                     </div>
                     <button className={status !== "AVAILABLE" ? "dark-btn unavailable" : "dark-btn"}
                         onClick={() => {

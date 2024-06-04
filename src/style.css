@@ -1,10 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 @import url(/src/styles/footer.css);
 @import url(/src/styles/header.css);
-@import url(/src/styles/discount.css);
-@import url(/src/styles/recommendation.css);
 @import url(/src/styles/product-card.css);
 @import url(/src/styles/filters.css);
+@import url(/src/styles/home-page.css);
 
 :root {
     --bg-color: #F3F3F3;

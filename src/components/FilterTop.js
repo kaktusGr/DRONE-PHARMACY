@@ -4,7 +4,6 @@ export default function FilterTop({ availability, updateAvailable, updateSort })
     return (
         <div className="filter-top">
             <div className="filter-pills">
-                <button>$25 – $50 <img src="./images/icons-svg/plus.svg" alt="close" /></button>
                 {availability && <button onClick={() => {
                     updateAvailable(!availability);
                 }}>Available <img src="./images/icons-svg/plus.svg" alt="close" /></button>}
@@ -16,7 +15,6 @@ export default function FilterTop({ availability, updateAvailable, updateSort })
                     <select id="filterTop" onChange={(event) => {
                         updateSort(event.target.value);
                     }}>
-                        {/* <option value="relevance">Sort by: Relevance</option> */}
                         <option value="nameAZ">Sort by: A-Z</option>
                         <option value="nameZA">Sort by: Z-A</option>
                         <option value="weightUp">Sort by: Weight (up)</option>
