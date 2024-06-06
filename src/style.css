@@ -3,12 +3,13 @@
 @import url(/src/styles/header.css);
 @import url(/src/styles/product-card.css);
 @import url(/src/styles/filters.css);
+@import url(/src/styles/catalog.css);
 @import url(/src/styles/home-page.css);
 
 :root {
     --bg-color: #F3F3F3;
     --container-bg-color: #FFFFFF;
-    --img-bg-color: #C4C4C4;
+    --img-bg-color: #CCCCCC;
     --dark-text: #383838;
     --light-text: #838383;
 }
@@ -66,7 +67,7 @@ h4 {
 
 h1 {
     font-size: 44px;
-    margin-bottom: 56px;
+    margin-bottom: 24px;
 }
 
 h2 {
@@ -97,4 +98,8 @@ h4 {
     & h1 {
         font-size: 200px;
     }
+}
+
+hr {
+    border: 1px solid #D5D5D5;
 }

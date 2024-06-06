@@ -10,7 +10,12 @@
         background-color: var(--light-text);
     }
 
-    &>img {
+    &>img#med {
+        width: 100%;
+        border-radius: 20px;
+    }
+
+    &>img#close {
         position: absolute;
         top: 40%;
         left: 50%;
@@ -76,24 +81,6 @@ p:is(.name, .price) {
         position: relative;
         bottom: 3px;
         left: 4px;
-    }
-
-    & .product-small-info {
-        & small {
-            font-size: 14px;
-            font-weight: 500;
-
-            &:first-child {
-                color: var(--light-text);
-                font-weight: 400;
-            }
-        }
-
-        & div {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
     }
 
     & button.dark-btn {
