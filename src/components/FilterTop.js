@@ -12,8 +12,8 @@ export default function FilterTop({ availability, updateAvailable, updateSort })
                 <img src="./images/icons-svg/grid.svg" alt="close" />
                 <img src="./images/icons-svg/menu.svg" alt="close" />
                 <div className="custom-select">
-                    <select id="filterTop" onChange={(event) => {
-                        updateSort(event.target.value);
+                    <select id="filterTop" onChange={(e) => {
+                        updateSort(e.target.value);
                     }}>
                         <option value="nameAZ">Sort by: A-Z</option>
                         <option value="nameZA">Sort by: Z-A</option>

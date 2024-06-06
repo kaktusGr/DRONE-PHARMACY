@@ -1,9 +1,9 @@
 import { React, useContext } from "react";
 import { Link } from "react-router-dom";
-import { ProductContext } from '../pages/Layout';
+import { ArchiveContext } from '../pages/Layout';
 
 export default function Navbar() {
-    const { countProducts } = useContext(ProductContext);
+    const { archive } = useContext(ArchiveContext);
 
     return (
         <header>
@@ -35,7 +35,7 @@ export default function Navbar() {
                         <Link to='favourites'><img src="./images/icons-svg/heart.svg" alt="favourites" /></Link>
                         <Link to='shopping-cart'>
                             <img src="./images/icons-svg/cart.svg" alt="cart" />
-                            <span className="count-products">{countProducts}</span>
+                            <span className="count-products">{archive.length}</span>
                         </Link>
                     </div>
                 </div>

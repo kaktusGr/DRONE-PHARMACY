@@ -1,6 +1,6 @@
 import { React, useState } from "react";
 
-export default function FilterAside({ availability, updateAvailable }) {
+export default function FilterAside({ availability, updateAvailable, totalMed }) {
     const [showMore, setShowMore] = useState({ display: 'none' });
     const [hideBtn, setHideBtn] = useState(false);
 
@@ -10,7 +10,7 @@ export default function FilterAside({ availability, updateAvailable }) {
                 <h3>Medicines</h3>
                 <button className="btn-underline">Clear All</button>
             </div>
-            <p>1234 results</p>
+            <p>{totalMed.current} results</p>
 
             <div className="filter-ul">
                 <h4>weight</h4>
@@ -57,7 +57,7 @@ export default function FilterAside({ availability, updateAvailable }) {
                 <div className="toggle-container">
                     <input type="checkbox" id="availability" name="availability"
                         checked={availability}
-                        onChange={() => updateAvailable(!availability)} />
+                        onChange={(e) => updateAvailable(e.target.checked)} />
                     <label htmlFor="availability">
                         <div className="toggle-ball"></div>
                     </label>

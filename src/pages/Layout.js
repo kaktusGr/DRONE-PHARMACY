@@ -4,18 +4,24 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 export const ProductContext = createContext(0);
+export const ArchiveContext = createContext(null);
+export const Medication = createContext(null);
+export const urlOrigin = "http://localhost:8090";
 
 const Layout = () => {
-    const [countProducts, setCountProducts] = useState(0);
+    const [archive, setArchive] = useState([]);
+    const [medication, setMedication] = useState(null);
 
     return (
-        <ProductContext.Provider value={{ countProducts, setCountProducts }}>
+        <ArchiveContext.Provider value={{ archive, setArchive }}>
             <Navbar />
             <div className='container'>
-                <Outlet />
+                <Medication.Provider value={{ medication, setMedication }}>
+                    <Outlet />
+                </Medication.Provider>
                 <Footer />
             </div>
-        </ProductContext.Provider>
+        </ArchiveContext.Provider>
     );
 };
 
