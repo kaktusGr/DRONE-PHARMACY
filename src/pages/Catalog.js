@@ -1,9 +1,8 @@
 import React from 'react';
+import CatalogMain from '../components/CatalogMain';
 
 export default function Catalog() {
     return (
-        <div className='catalog'>
-            <h1>Catalog</h1>
-        </div>
+        <CatalogMain />
     )
 }

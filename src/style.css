@@ -2,6 +2,9 @@
 @import url(/src/styles/header.css);
 @import url(/src/styles/footer.css);
 @import url(/src/styles/home-page.css);
+@import url(/src/styles/catalog.css);
+@import url(/src/styles/product-card.css);
+@import url(/src/styles/filters.css);
 
 :root {
     --white: #FFFFFF;
@@ -25,6 +28,10 @@ body {
     max-width: 1440px;
     margin: 0 auto;
     overflow-x: hidden;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 a {
