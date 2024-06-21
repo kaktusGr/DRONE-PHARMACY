@@ -34,7 +34,6 @@ const ContextProvider = (props) => {
 
     const selectSort = (value) => {
         refPage.current = 0;
-
         for (let key in urlFilters.sort) {
             if (value === key) {
                 setUrlMedication(availability
