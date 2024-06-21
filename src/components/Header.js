@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Context } from "../Context";
 
 export default function Header() {
-    const cart = useContext(Context);
+    const context = useContext(Context);
 
     return (
         <header>
@@ -35,7 +35,7 @@ export default function Header() {
                         <Link to='favourites'><img src="./images/icons/heart.svg" alt="favourites" /></Link>
                         <Link to='shopping-cart'>
                             <img src="./images/icons/cart.svg" alt="cart" />
-                            <span className="count-products">{cart.items.length}</span>
+                            <span className="count-products">{context.cartItems.length}</span>
                         </Link>
                     </div>
                 </div>

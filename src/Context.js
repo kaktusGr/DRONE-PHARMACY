@@ -3,7 +3,7 @@ import { createContext, useState, useRef } from 'react';
 const Context = createContext();
 
 const ContextProvider = (props) => {
-    const [arrItems, setArrItems] = useState([]); // все товары, которые сейчас в корзине
+    const [cartItems, setCartItems] = useState([]);
     const [availability, setAvailability] = useState(true);
 
     const refPage = useRef(0);
@@ -62,24 +62,23 @@ const ContextProvider = (props) => {
     }
 
     const append = (item, quantity = 1) => {
-        // нужно проверить, нет ли уже такого товара в корзине
-        const itemIndex = arrItems.findIndex(value => value.id === item.id);
-        if (itemIndex < 0) { // такого товара еще нет
+        const itemIndex = cartItems.findIndex(value => value.id === item.id);
+        if (itemIndex < 0) {
             const newItem = {
                 ...item,
                 quantity: quantity
             };
-            setArrItems([...arrItems, newItem]);
+            setCartItems([...cartItems, newItem]);
         }
     }
 
     const remove = (id) => {
-        const newCart = arrItems.filter(item => item.id !== id);
-        setArrItems(newCart);
+        const newCart = cartItems.filter(item => item.id !== id);
+        setCartItems(newCart);
     }
 
     const value = {
-        items: arrItems,
+        cartItems: cartItems,
         urlMedication: urlMedication,
         availability: availability,
         toggleAvailable: toggleAvailable,
