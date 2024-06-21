@@ -1,9 +1,21 @@
-import React from "react";
+import { React, useContext } from "react";
 import FilterAside from "./FilterAside";
 import FilterTop from "./FilterTop";
-import Product from "./Product";
+import Products from "./Products";
+import { Context } from "../Context";
 
 export default function CatalogMain() {
+    const context = useContext(Context);
+
+    const addPages = () => {
+        const arrPage = [];
+        for (let i = 0; i < context.allPages; i++) {
+            arrPage.push(<li key={i} className={i === context.refPage ? "current" : undefined}
+                onClick={() => { context.currentPage(i) }}>{i + 1}</li>);
+        }
+        return arrPage;
+    }
+
     return (
         <div className="catalog">
             <h1>Catalog</h1>
@@ -11,26 +23,17 @@ export default function CatalogMain() {
                 <FilterAside />
                 <div className="catalog-filtered">
                     <FilterTop />
-                    <div className="catalog-products">
-                        <Product />
-                        <Product />
-                        <Product />
-                        <Product />
-                        <Product />
-                        <Product />
-                    </div>
+                    <Products />
                     <hr />
                     <div className="catalog-pages">
                         <div className="choose-page">
-                            <button id="left">
+                            <button id="left" onClick={() => { context.currentPage("left") }}>
                                 <img src="./images/icons/chevron-left.svg" alt="arrow-left" />
                             </button>
                             <ul className="pages">
-                                <li className="current">1</li>
-                                <li>2</li>
-                                <li>3</li>
+                                {addPages()}
                             </ul>
-                            <button id="right">
+                            <button id="right" onClick={() => { context.currentPage("right") }}>
                                 <img src="./images/icons/chevron-right.svg" alt="arrow-right" />
                             </button>
                         </div>

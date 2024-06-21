@@ -6,6 +6,15 @@
     padding: 16px;
     position: relative;
 
+    &.unavailable {
+        background-color: var(--grey);
+    }
+
+    &>img#med {
+        width: 100%;
+        border-radius: 20px;
+    }
+
     &>img#close {
         position: absolute;
         top: 40%;
@@ -95,5 +104,14 @@ p:is(.name, .price) {
         margin-top: 32px;
         cursor: pointer;
         transition: all 0.3s ease;
+
+        &:active:not(.unavailable) {
+            transform: scale(0.95);
+        }
+
+        &.unavailable {
+            background-color: var(--light-grey);
+            cursor: default;
+        }
     }
 }
