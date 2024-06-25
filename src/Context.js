@@ -1,8 +1,9 @@
-import { createContext, useState, useRef } from 'react';
+import { createContext, useState, useRef, useEffect } from 'react';
 
 const Context = createContext();
 
 const ContextProvider = (props) => {
+    const [allMedicines, setAllMedicines] = useState([]);
     const [cartItems, setCartItems] = useState([]);
     const [availability, setAvailability] = useState(true);
 
@@ -23,6 +24,25 @@ const ContextProvider = (props) => {
     const href = "http://localhost:8090/medication?size=6&page=";
 
     const [urlMedication, setUrlMedication] = useState(href + refPage.current + "&" + urlFilters.available + "&" + urlSelect);
+
+    useEffect(() => {
+        let ignore = false;
+        fetch(urlMedication, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(result => result.json())
+            .then(data => {
+                if (!ignore) {
+                    setAllPages(data.totalPages);
+                    setTotalMed(data.totalElements);
+                    setAllMedicines(data.content);
+                }
+            });
+        return () => {
+            ignore = true;
+        }
+    }, [urlMedication]);
 
     const toggleAvailable = (value) => {
         refPage.current = 0;
@@ -60,14 +80,27 @@ const ContextProvider = (props) => {
             : href + refPage.current + "&" + urlSelect);
     }
 
+    const updateCatalog = (item) => {
+        const indexMed = allMedicines.findIndex(value => value.id === item.id);
+        const newItem = {
+            ...item,
+            status: "UNAVAILABLE"
+        };
+        const newAllMed = allMedicines.slice();
+        newAllMed.splice(indexMed, 1, newItem);
+        setAllMedicines(newAllMed);
+    }
+
     const append = (item, quantity = 1) => {
-        const itemIndex = cartItems.findIndex(value => value.id === item.id);
-        if (itemIndex < 0) {
+        const indexCart = cartItems.findIndex(value => value.id === item.id);
+        if (indexCart < 0) {
             const newItem = {
                 ...item,
-                quantity: quantity
+                quantity: quantity,
+                status: "UNAVAILABLE"
             };
             setCartItems([...cartItems, newItem]);
+            updateCatalog(item);
         }
     }
 
@@ -77,6 +110,8 @@ const ContextProvider = (props) => {
     }
 
     const value = {
+        allMedicines: allMedicines,
+        setAllMedicines: setAllMedicines,
         cartItems: cartItems,
         urlMedication: urlMedication,
         availability: availability,
