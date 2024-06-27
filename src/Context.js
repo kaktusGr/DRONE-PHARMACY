@@ -57,7 +57,7 @@ const ContextProvider = (props) => {
 
     const updateWithCartInfo = (medications) => {
         const updateMedications = medications.map(med => {
-            const isInCart = cartItems.some(cartItem => cartItem.id === med.id);
+            const isInCart = cartItems.some(item => item === med.id);
             if (isInCart) {
                 return { ...med, status: "UNAVAILABLE" };
             } else {
@@ -107,7 +107,7 @@ const ContextProvider = (props) => {
         if (cartItems.length === 0) {
             setCartItems([item]);
         } else {
-            const indexCart = cartItems.findIndex(value => value.id === item.id);
+            const indexCart = cartItems.findIndex(value => value.id === item);
             if (indexCart < 0) {
                 setCartItems(prevItems => [...prevItems, item]);
             }

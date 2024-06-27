@@ -3,7 +3,6 @@ import { Context } from "../Context";
 
 export default function Product(props) {
     const { id, status, name, weight, imgUrl } = props;
-    const med = { id: id, name: name, status: status, weight: weight, imgUrl: imgUrl };
     const context = useContext(Context);
 
     const [disabled, setDisabled] = useState(status === "AVAILABLE" ? true : false);
@@ -23,7 +22,7 @@ export default function Product(props) {
                     <button disabled={!disabled}
                         className={disabled ? "dark-btn" : "dark-btn unavailable"}
                         onClick={() => {
-                            context.append(med);
+                            context.append(id);
                             setDisabled(false);
                         }}>
                         {disabled ? "Add to Cart" : "Unavailable"}
