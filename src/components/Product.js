@@ -1,15 +1,16 @@
-import { React, useContext } from "react";
+import { React, useState, useContext } from "react";
 import { Context } from "../Context";
 
 export default function Product(props) {
     const { id, status, name, weight, imgUrl } = props;
-    const med = { id: id, name: name, status: status, weight: weight };
-    const statusMed = status === "AVAILABLE";
+    const med = { id: id, name: name, status: status, weight: weight, imgUrl: imgUrl };
     const context = useContext(Context);
 
+    const [disabled, setDisabled] = useState(status === "AVAILABLE" ? true : false);
+
     return (
-        <div id={"product-" + id} className={statusMed ? "product-card" : "product-card unavailable"}>
-            {statusMed ? <img id="med" src={"http://localhost:8090" + imgUrl} alt="medication" />
+        <div id={"product-" + id} className={disabled ? "product-card" : "product-card unavailable"}>
+            {disabled ? <img id="med" src={"http://localhost:8090" + imgUrl} alt="medication" />
                 : <img id="close" src="./images/icons/plus.svg" alt="close" />}
             <div className="product-info">
                 <p className="brand">Brand name</p>
@@ -19,12 +20,13 @@ export default function Product(props) {
                 </div>
                 <div className="product-hover-block">
                     <img src="./images/icons/star.svg" alt="star" /><b>4.3</b>
-                    <button disabled={!statusMed}
-                        className={statusMed ? "dark-btn" : "dark-btn unavailable"}
+                    <button disabled={!disabled}
+                        className={disabled ? "dark-btn" : "dark-btn unavailable"}
                         onClick={() => {
                             context.append(med);
+                            setDisabled(false);
                         }}>
-                        {statusMed ? "Add to Cart" : "Unavailable"}
+                        {disabled ? "Add to Cart" : "Unavailable"}
                     </button>
                 </div>
             </div>
