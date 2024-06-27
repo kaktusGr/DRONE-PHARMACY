@@ -36,7 +36,44 @@ const ContextProvider = (props) => {
                 if (!ignore) {
                     setAllPages(data.totalPages);
                     setTotalMed(data.totalElements);
-                    setAllMedicines(data.content);
+                    // setAllMedicines(data.content);
+
+                    if (cartItems.length) {
+                        for (let med of cartItems) {
+                            const indexMed = allMedicines.findIndex(value => value.id === med.id);
+                            const newItem = {
+                                ...med,
+                                status: "UNAVAILABLE"
+                            };
+                            const newAllMed = data.content.slice();
+                            newAllMed.splice(indexMed, 1, newItem);
+                            setAllMedicines(newAllMed);
+                            console.log("step");
+                        }
+                    } else {
+                        setAllMedicines(data.content);
+                    }
+                    // for (let med of data.content) {
+                    //     const indexMed = data.content.findIndex(value => value.id === med.id);
+                    //     if (cartItems.length) {
+                    //         for (let item of cartItems) {
+                    //             if (item.id === med.id) {
+                    //                 const newItem = {
+                    //                     ...med,
+                    //                     status: "UNAVAILABLE"
+                    //                 };
+                    //                 const newAllMed = data.content.slice();
+                    //                 newAllMed.splice(indexMed, 1, newItem);
+                    //                 setAllMedicines(newAllMed);
+                    //             }
+                    //         }
+                    //     } else {
+                    //         setAllMedicines(data.content);
+                    //     }
+                    // }
+
+                    // updateCatalog();
+                    console.log("fetch");
                 }
             });
         return () => {
@@ -50,6 +87,7 @@ const ContextProvider = (props) => {
         setUrlMedication(value
             ? href + refPage.current + "&" + urlFilters.available + "&" + urlSelect
             : href + refPage.current + "&" + urlSelect);
+        updateCatalog();
     }
 
     const selectSort = (value) => {
@@ -78,17 +116,29 @@ const ContextProvider = (props) => {
         setUrlMedication(availability
             ? href + refPage.current + "&" + urlFilters.available + "&" + urlSelect
             : href + refPage.current + "&" + urlSelect);
+        updateCatalog();
     }
 
-    const updateCatalog = (item) => {
-        const indexMed = allMedicines.findIndex(value => value.id === item.id);
-        const newItem = {
-            ...item,
-            status: "UNAVAILABLE"
-        };
-        const newAllMed = allMedicines.slice();
-        newAllMed.splice(indexMed, 1, newItem);
-        setAllMedicines(newAllMed);
+    const updateCatalog = () => {
+        console.log("update");
+        // for (let med of allMedicines) {
+        //     const indexMed = allMedicines.findIndex(value => value.id === med.id);
+        //     if (cartItems.length) {
+        //         for (let item of cartItems) {
+        //             if (item.id === med.id) {
+        //                 const newItem = {
+        //                     ...med,
+        //                     status: "UNAVAILABLE"
+        //                 };
+        //                 const newAllMed = allMedicines.slice();
+        //                 newAllMed.splice(indexMed, 1, newItem);
+        //                 setAllMedicines(newAllMed);
+        //             }
+        //         }
+        //     } else {
+        //         setAllMedicines(allMedicines);
+        //     }
+        // }
     }
 
     const append = (item, quantity = 1) => {
@@ -96,12 +146,11 @@ const ContextProvider = (props) => {
         if (indexCart < 0) {
             const newItem = {
                 ...item,
-                quantity: quantity,
-                status: "UNAVAILABLE"
+                quantity: quantity
             };
             setCartItems([...cartItems, newItem]);
-            updateCatalog(item);
         }
+        updateCatalog();
     }
 
     const remove = (id) => {
@@ -109,9 +158,21 @@ const ContextProvider = (props) => {
         setCartItems(newCart);
     }
 
+    // const medLS = JSON.parse(localStorage.getItem('medicine'));
+    // if (medLS) {
+    //     medLS.forEach(med => setAllMedicines(med));
+    // }
+    // const updateLS = () => {
+    //     const medLS = [];
+    //     allMedicines.forEach(med => medLS.push(med));
+    //     localStorage.setItem('medicine', JSON.stringify(medLS));
+    // }
+    // updateLS();
+
     const value = {
         allMedicines: allMedicines,
         setAllMedicines: setAllMedicines,
+        // refAllMedicines: refAllMedicines,
         cartItems: cartItems,
         urlMedication: urlMedication,
         availability: availability,
@@ -123,6 +184,7 @@ const ContextProvider = (props) => {
         setAllPages: setAllPages,
         totalMed: totalMed,
         setTotalMed: setTotalMed,
+        updateCatalog: updateCatalog,
         append: append,
         remove: remove,
     }
