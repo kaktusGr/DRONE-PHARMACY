@@ -36,44 +36,7 @@ const ContextProvider = (props) => {
                 if (!ignore) {
                     setAllPages(data.totalPages);
                     setTotalMed(data.totalElements);
-                    // setAllMedicines(data.content);
-
-                    if (cartItems.length) {
-                        for (let med of cartItems) {
-                            const indexMed = allMedicines.findIndex(value => value.id === med.id);
-                            const newItem = {
-                                ...med,
-                                status: "UNAVAILABLE"
-                            };
-                            const newAllMed = data.content.slice();
-                            newAllMed.splice(indexMed, 1, newItem);
-                            setAllMedicines(newAllMed);
-                            console.log("step");
-                        }
-                    } else {
-                        setAllMedicines(data.content);
-                    }
-                    // for (let med of data.content) {
-                    //     const indexMed = data.content.findIndex(value => value.id === med.id);
-                    //     if (cartItems.length) {
-                    //         for (let item of cartItems) {
-                    //             if (item.id === med.id) {
-                    //                 const newItem = {
-                    //                     ...med,
-                    //                     status: "UNAVAILABLE"
-                    //                 };
-                    //                 const newAllMed = data.content.slice();
-                    //                 newAllMed.splice(indexMed, 1, newItem);
-                    //                 setAllMedicines(newAllMed);
-                    //             }
-                    //         }
-                    //     } else {
-                    //         setAllMedicines(data.content);
-                    //     }
-                    // }
-
-                    // updateCatalog();
-                    console.log("fetch");
+                    updateWithCartInfo(data.content);
                 }
             });
         return () => {
@@ -81,13 +44,24 @@ const ContextProvider = (props) => {
         }
     }, [urlMedication]);
 
+    const updateWithCartInfo = (medications) => {
+        const updateMedications = medications.map(med => {
+            const isInCart = cartItems.some(cartItem => cartItem.id === med.id);
+            if (isInCart) {
+                return { ...med, status: "UNAVAILABLE" };
+            } else {
+                return { ...med };
+            }
+        });
+        setAllMedicines(updateMedications);
+    }
+
     const toggleAvailable = (value) => {
         refPage.current = 0;
         setAvailability(value);
         setUrlMedication(value
             ? href + refPage.current + "&" + urlFilters.available + "&" + urlSelect
             : href + refPage.current + "&" + urlSelect);
-        updateCatalog();
     }
 
     const selectSort = (value) => {
@@ -116,46 +90,17 @@ const ContextProvider = (props) => {
         setUrlMedication(availability
             ? href + refPage.current + "&" + urlFilters.available + "&" + urlSelect
             : href + refPage.current + "&" + urlSelect);
-        updateCatalog();
     }
 
-    const updateCatalog = () => {
-        console.log("update");
-        // for (let med of allMedicines) {
-        //     const indexMed = allMedicines.findIndex(value => value.id === med.id);
-        //     if (cartItems.length) {
-        //         for (let item of cartItems) {
-        //             if (item.id === med.id) {
-        //                 const newItem = {
-        //                     ...med,
-        //                     status: "UNAVAILABLE"
-        //                 };
-        //                 const newAllMed = allMedicines.slice();
-        //                 newAllMed.splice(indexMed, 1, newItem);
-        //                 setAllMedicines(newAllMed);
-        //             }
-        //         }
-        //     } else {
-        //         setAllMedicines(allMedicines);
-        //     }
-        // }
-    }
-
-    const append = (item, quantity = 1) => {
-        const indexCart = cartItems.findIndex(value => value.id === item.id);
-        if (indexCart < 0) {
-            const newItem = {
-                ...item,
-                quantity: quantity
-            };
-            setCartItems([...cartItems, newItem]);
+    const append = (item) => {
+        if (cartItems.length === 0) {
+            setCartItems([item]);
+        } else {
+            const indexCart = cartItems.findIndex(value => value.id === item.id);
+            if (indexCart < 0) {
+                setCartItems(prevItems => [...prevItems, item]);
+            }
         }
-        updateCatalog();
-    }
-
-    const remove = (id) => {
-        const newCart = cartItems.filter(item => item.id !== id);
-        setCartItems(newCart);
     }
 
     // const medLS = JSON.parse(localStorage.getItem('medicine'));
@@ -172,7 +117,6 @@ const ContextProvider = (props) => {
     const value = {
         allMedicines: allMedicines,
         setAllMedicines: setAllMedicines,
-        // refAllMedicines: refAllMedicines,
         cartItems: cartItems,
         urlMedication: urlMedication,
         availability: availability,
@@ -184,9 +128,7 @@ const ContextProvider = (props) => {
         setAllPages: setAllPages,
         totalMed: totalMed,
         setTotalMed: setTotalMed,
-        updateCatalog: updateCatalog,
         append: append,
-        remove: remove,
     }
 
     return (
