@@ -1,17 +1,16 @@
-import { React, useState, useContext } from "react";
+import { React, useContext } from "react";
 import { Context } from "../Context";
 
 export default function Product(props) {
     const { id, status, name, weight, imgUrl } = props;
     const med = { id: id, name: name, status: status, weight: weight };
+    const statusMed = status === "AVAILABLE";
     const context = useContext(Context);
 
-    // const [disabled, setDisabled] = useState(status === "AVAILABLE" ? false : true);
-
     return (
-        <div id={"product-" + id} className={status !== "AVAILABLE" ? "product-card unavailable" : "product-card"}>
-            {status !== "AVAILABLE" ? <img id="close" src="./images/icons/plus.svg" alt="close" />
-                : <img id="med" src={"http://localhost:8090" + imgUrl} alt="medication" />}
+        <div id={"product-" + id} className={statusMed ? "product-card" : "product-card unavailable"}>
+            {statusMed ? <img id="med" src={"http://localhost:8090" + imgUrl} alt="medication" />
+                : <img id="close" src="./images/icons/plus.svg" alt="close" />}
             <div className="product-info">
                 <p className="brand">Brand name</p>
                 <div className="product-name">
@@ -20,41 +19,15 @@ export default function Product(props) {
                 </div>
                 <div className="product-hover-block">
                     <img src="./images/icons/star.svg" alt="star" /><b>4.3</b>
-                    <button disabled={status !== "AVAILABLE"}
-                        className={status !== "AVAILABLE" ? "dark-btn unavailable" : "dark-btn"}
+                    <button disabled={!statusMed}
+                        className={statusMed ? "dark-btn" : "dark-btn unavailable"}
                         onClick={() => {
-                            context.append(med, 1);
-                            // setDisabled(true);
+                            context.append(med);
                         }}>
-                        {status !== "AVAILABLE" ? "Unavailable" : "Add to Cart"}
+                        {statusMed ? "Add to Cart" : "Unavailable"}
                     </button>
                 </div>
             </div>
         </div >
     )
-
-    // return (
-    //     <div id={"product-" + id} className={disabled ? "product-card unavailable" : "product-card"}>
-    //         {disabled ? <img id="close" src="./images/icons/plus.svg" alt="close" />
-    //             : <img id="med" src={"http://localhost:8090" + imgUrl} alt="medication" />}
-    //         <div className="product-info">
-    //             <p className="brand">Brand name</p>
-    //             <div className="product-name">
-    //                 <p className="name">{name}, {weight}G</p>
-    //                 <p className="price">$29.99</p>
-    //             </div>
-    //             <div className="product-hover-block">
-    //                 <img src="./images/icons/star.svg" alt="star" /><b>4.3</b>
-    //                 <button disabled={disabled}
-    //                     className={disabled ? "dark-btn unavailable" : "dark-btn"}
-    //                     onClick={() => {
-    //                         context.append(med, 1);
-    //                         setDisabled(true);
-    //                     }}>
-    //                     {disabled ? "Unavailable" : "Add to Cart"}
-    //                 </button>
-    //             </div>
-    //         </div>
-    //     </div >
-    // )
 }
