@@ -1,4 +1,5 @@
 import { createContext, useState, useRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const Context = createContext();
 
@@ -43,6 +44,16 @@ const ContextProvider = (props) => {
             ignore = true;
         }
     }, [urlMedication]);
+
+    const location = useLocation();
+    useEffect(() => {
+        const handlePageChange = () => {
+            if (cartItems.length && location.pathname !== "/catalog") {
+                updateWithCartInfo(allMedicines);
+            }
+        };
+        handlePageChange();
+    }, [location]);
 
     const updateWithCartInfo = (medications) => {
         const updateMedications = medications.map(med => {
