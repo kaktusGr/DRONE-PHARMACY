@@ -27,11 +27,11 @@ export default function CartItem(props) {
                         </div>
                         <div className='save-delete'>
                             <button>
-                                <img src="./images/icons/heart.svg" alt='med' />
+                                <img src="./images/icons/heart.svg" alt='heart' />
                                 Save
                             </button>
                             <button>
-                                <img src="./images/icons/trash.svg" alt='med' />
+                                <img src="./images/icons/trash.svg" alt='trash' />
                                 Delete
                             </button>
                         </div>

@@ -7,8 +7,8 @@ export default function Products() {
 
     return (
         <div className="catalog-products">
-            {context.allMedicines.length ? (
-                context.allMedicines.map(item => <Product key={item.id} {...item} />)
+            {context.allMedications.length ? (
+                context.allMedications.map(item => <Product key={item.id} {...item} />)
             ) : (
                 <p>Failed to load product list</p>
             )}

@@ -7,7 +7,7 @@ export default function ShoppingCart() {
     const context = useContext(Context);
 
     const showMedicationsInCart = () => {
-        const medications = context.allMedicines.map(med => {
+        const medications = context.allMedications.map(med => {
             const isInCart = context.cartItems.some(item => item === med.id);
             if (isInCart) {
                 return <CartItem key={med.id} {...med} />
@@ -25,10 +25,10 @@ export default function ShoppingCart() {
                         <div className='selected-btn'>
                             <div className='checkbox'>
                                 <input type='checkbox' name='checkbox' />
-                                <label>Select all items</label>
+                                <label htmlFor="checkbox">Select all items</label>
                             </div>
                             <button className='delete'>
-                                <img src="./images/icons/trash.svg" alt="cart" />
+                                <img src="./images/icons/trash.svg" alt="trash" />
                                 Delete selected items
                             </button>
                         </div>

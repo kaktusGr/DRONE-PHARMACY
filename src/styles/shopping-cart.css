@@ -22,7 +22,7 @@
         margin-bottom: 20px;
 
         & .checkbox,
-        .delete {
+        & .delete {
             display: flex;
             align-items: center;
         }
@@ -121,7 +121,7 @@
     }
 
     &>p,
-    td {
+    & td {
         color: var(--grey);
     }
 }

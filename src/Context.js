@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 const Context = createContext();
 
 const ContextProvider = (props) => {
-    const [allMedicines, setAllMedicines] = useState([]);
+    const [allMedications, setAllMedications] = useState([]);
     const [cartItems, setCartItems] = useState([]);
     const [availability, setAvailability] = useState(true);
 
@@ -49,7 +49,7 @@ const ContextProvider = (props) => {
     useEffect(() => {
         const handlePageChange = () => {
             if (cartItems.length && location.pathname !== "/catalog") {
-                updateWithCartInfo(allMedicines);
+                updateWithCartInfo(allMedications);
             }
         };
         handlePageChange();
@@ -64,7 +64,7 @@ const ContextProvider = (props) => {
                 return { ...med };
             }
         });
-        setAllMedicines(updateMedications);
+        setAllMedications(updateMedications);
     }
 
     const toggleAvailable = (value) => {
@@ -114,32 +114,23 @@ const ContextProvider = (props) => {
         }
     }
 
-    // const medLS = JSON.parse(localStorage.getItem('medicine'));
-    // if (medLS) {
-    //     medLS.forEach(med => setAllMedicines(med));
-    // }
-    // const updateLS = () => {
-    //     const medLS = [];
-    //     allMedicines.forEach(med => medLS.push(med));
-    //     localStorage.setItem('medicine', JSON.stringify(medLS));
-    // }
-    // updateLS();
+    const remove = (id) => {
+        const newCart = cartItems.filter(item => item.id !== id);
+        setCartItems(newCart);
+    }
 
     const value = {
-        allMedicines: allMedicines,
-        setAllMedicines: setAllMedicines,
+        allMedications: allMedications,
         cartItems: cartItems,
-        urlMedication: urlMedication,
         availability: availability,
         toggleAvailable: toggleAvailable,
         selectSort: selectSort,
         currentPage: currentPage,
         refPage: refPage.current,
         allPages: allPages,
-        setAllPages: setAllPages,
         totalMed: totalMed,
-        setTotalMed: setTotalMed,
         append: append,
+        remove: remove,
     }
 
     return (
