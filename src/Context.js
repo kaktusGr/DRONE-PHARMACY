@@ -1,8 +1,10 @@
-import { createContext, useState, useRef } from 'react';
+import { createContext, useState, useRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const Context = createContext();
 
 const ContextProvider = (props) => {
+    const [allMedications, setAllMedications] = useState([]);
     const [cartItems, setCartItems] = useState([]);
     const [availability, setAvailability] = useState(true);
 
@@ -23,6 +25,47 @@ const ContextProvider = (props) => {
     const href = "http://localhost:8090/medication?size=6&page=";
 
     const [urlMedication, setUrlMedication] = useState(href + refPage.current + "&" + urlFilters.available + "&" + urlSelect);
+
+    useEffect(() => {
+        let ignore = false;
+        fetch(urlMedication, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(result => result.json())
+            .then(data => {
+                if (!ignore) {
+                    setAllPages(data.totalPages);
+                    setTotalMed(data.totalElements);
+                    updateWithCartInfo(data.content);
+                }
+            });
+        return () => {
+            ignore = true;
+        }
+    }, [urlMedication]);
+
+    const location = useLocation();
+    useEffect(() => {
+        const handlePageChange = () => {
+            if (cartItems.length && location.pathname !== "/catalog") {
+                updateWithCartInfo(allMedications);
+            }
+        };
+        handlePageChange();
+    }, [location]);
+
+    const updateWithCartInfo = (medications) => {
+        const updateMedications = medications.map(med => {
+            const isInCart = cartItems.some(item => item === med.id);
+            if (isInCart) {
+                return { ...med, status: "UNAVAILABLE" };
+            } else {
+                return { ...med };
+            }
+        });
+        setAllMedications(updateMedications);
+    }
 
     const toggleAvailable = (value) => {
         refPage.current = 0;
@@ -60,14 +103,14 @@ const ContextProvider = (props) => {
             : href + refPage.current + "&" + urlSelect);
     }
 
-    const append = (item, quantity = 1) => {
-        const itemIndex = cartItems.findIndex(value => value.id === item.id);
-        if (itemIndex < 0) {
-            const newItem = {
-                ...item,
-                quantity: quantity
-            };
-            setCartItems([...cartItems, newItem]);
+    const append = (item) => {
+        if (cartItems.length === 0) {
+            setCartItems([item]);
+        } else {
+            const indexCart = cartItems.findIndex(value => value.id === item);
+            if (indexCart < 0) {
+                setCartItems(prevItems => [...prevItems, item]);
+            }
         }
     }
 
@@ -77,17 +120,15 @@ const ContextProvider = (props) => {
     }
 
     const value = {
+        allMedications: allMedications,
         cartItems: cartItems,
-        urlMedication: urlMedication,
         availability: availability,
         toggleAvailable: toggleAvailable,
         selectSort: selectSort,
         currentPage: currentPage,
         refPage: refPage.current,
         allPages: allPages,
-        setAllPages: setAllPages,
         totalMed: totalMed,
-        setTotalMed: setTotalMed,
         append: append,
         remove: remove,
     }
