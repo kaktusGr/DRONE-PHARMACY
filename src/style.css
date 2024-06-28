@@ -5,6 +5,7 @@
 @import url(/src/styles/catalog.css);
 @import url(/src/styles/product-card.css);
 @import url(/src/styles/filters.css);
+@import url(/src/styles/shopping-cart.css);
 
 :root {
     --white: #FFFFFF;
@@ -80,4 +81,8 @@ h3 {
 
 h4 {
     font-size: 14px;
+}
+
+hr {
+    border: 1px solid #D5D5D5;
 }
