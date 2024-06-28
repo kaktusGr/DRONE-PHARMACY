@@ -1,6 +1,7 @@
 import { React, useContext } from 'react';
 import { Context } from "../Context";
 import CartItem from '../components/CartItem';
+import CartSummary from '../components/CartSummary';
 
 export default function ShoppingCart() {
     const context = useContext(Context);
@@ -9,12 +10,7 @@ export default function ShoppingCart() {
         const medications = context.allMedicines.map(med => {
             const isInCart = context.cartItems.some(item => item === med.id);
             if (isInCart) {
-                return (
-                    <>
-                        <CartItem key={med.id} {...med} />
-                        <hr />
-                    </>
-                )
+                return <CartItem key={med.id} {...med} />
             }
         });
         return medications;
@@ -31,10 +27,10 @@ export default function ShoppingCart() {
                                 <input type='checkbox' name='checkbox' />
                                 <label>Select all items</label>
                             </div>
-                            <div className='delete'>
+                            <button className='delete'>
                                 <img src="./images/icons/trash.svg" alt="cart" />
-                                <span>Delete selected items</span>
-                            </div>
+                                Delete selected items
+                            </button>
                         </div>
                         <div className='cart-items'>
                             <h3>Available for delivery</h3>
@@ -43,10 +39,7 @@ export default function ShoppingCart() {
                             </ul>
                         </div>
                     </div>
-                    <div className='cart-summary'>
-                        <h3>Summary</h3>
-
-                    </div>
+                    <CartSummary />
                 </div>
             ) : (
                 <div className='empty-cart'>Your cart is empty.</div>
