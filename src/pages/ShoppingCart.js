@@ -35,6 +35,18 @@ export default function ShoppingCart() {
         return medications;
     }
 
+    const setTotalWeight = () => {
+        const allWeight = cartMedications.map(med => {
+            const isInCart = context.cartItems.some(item => item === med.id);
+            if (isInCart) {
+                return med.weight;
+            } else {
+                return 0;
+            }
+        });
+        return allWeight.reduce((accum, current) => accum + current, 0);
+    }
+
     return (
         <div className='shopping-cart'>
             <h1>Shopping cart {context.cartItems.length > 0 && `(${context.cartItems.length})`}</h1>
@@ -58,7 +70,7 @@ export default function ShoppingCart() {
                             </ul>
                         </div>
                     </div>
-                    <CartSummary />
+                    <CartSummary totalWeight={setTotalWeight()} />
                 </div>
             ) : (
                 <div className='empty-cart'>Your cart is empty.</div>
