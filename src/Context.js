@@ -4,6 +4,7 @@ const Context = createContext();
 
 const ContextProvider = (props) => {
     const [allMedications, setAllMedications] = useState([]);
+    const [cartMedications, setCartMedications] = useState([]);
     const [cartItems, setCartItems] = useState([]);
     const [availability, setAvailability] = useState(true);
 
@@ -106,10 +107,14 @@ const ContextProvider = (props) => {
     const remove = (id) => {
         const newCart = cartItems.filter(item => item !== id);
         setCartItems(newCart);
+        const filteredData = cartMedications.filter(med => newCart.includes(med.id));
+        setCartMedications(filteredData);
     }
 
     const value = {
         allMedications: allMedications,
+        cartMedications: cartMedications, 
+        setCartMedications: setCartMedications,
         cartItems: cartItems,
         availability: availability,
         toggleAvailable: toggleAvailable,

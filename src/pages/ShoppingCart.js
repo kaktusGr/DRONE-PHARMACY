@@ -1,51 +1,42 @@
-import { React, useState, useContext, useEffect } from 'react';
+import { React, useContext, useEffect } from 'react';
 import { Context } from "../Context";
 import CartItem from '../components/CartItem';
 import CartSummary from '../components/CartSummary';
 
 export default function ShoppingCart() {
     const context = useContext(Context);
-
-    const [cartMedications, setCartMedications] = useState([]);
+    const cartIDs = context.cartItems.join();
 
     useEffect(() => {
         let ignore = false;
-        fetch(`http://localhost:8090/medication?size=20&${context.cartItems.join()}`, {
+        fetch(`http://localhost:8090/medication?size=20&${cartIDs}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
             .then(result => result.json())
             .then(data => {
                 if (!ignore) {
-                    setCartMedications(data.content);
+                    const filteredData = data.content
+                        .filter(med => context.cartItems.includes(med.id))
+                        .map(med => ({ ...med, price: 29.99 }));
+                    context.setCartMedications(filteredData);
                 }
             });
         return () => {
             ignore = true;
         }
-    }, [context.cartItems]);
+    }, []);
 
-    const showMedicationsInCart = () => {
-        const medications = cartMedications.map(med => {
-            const isInCart = context.cartItems.some(item => item === med.id);
-            if (isInCart) {
-                return <CartItem key={med.id} {...med} />
-            }
-        });
-        return medications;
-    }
+    const medicationsInCart = context.cartMedications
+        .map(med => <CartItem key={med.id} {...med} />);
 
-    const setTotalWeight = () => {
-        const allWeight = cartMedications.map(med => {
-            const isInCart = context.cartItems.some(item => item === med.id);
-            if (isInCart) {
-                return med.weight;
-            } else {
-                return 0;
-            }
-        });
-        return allWeight.reduce((accum, current) => accum + current, 0);
-    }
+    const totalWeight = context.cartMedications
+        .map(med => med.weight)
+        .reduce((accum, current) => accum + current, 0);
+
+    const totalPrice = context.cartMedications
+        .map(med => med.price)
+        .reduce((accum, current) => accum + current, 0);
 
     return (
         <div className='shopping-cart'>
@@ -66,11 +57,11 @@ export default function ShoppingCart() {
                         <div className='cart-items'>
                             <h3>Available for delivery</h3>
                             <ul>
-                                {showMedicationsInCart()}
+                                {medicationsInCart}
                             </ul>
                         </div>
                     </div>
-                    <CartSummary totalWeight={setTotalWeight()} />
+                    <CartSummary totalWeight={totalWeight} totalPrice={totalPrice} />
                 </div>
             ) : (
                 <div className='empty-cart'>Your cart is empty.</div>
