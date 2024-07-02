@@ -1,4 +1,4 @@
-import { React, useContext } from 'react';
+import { React, useState, useContext, useEffect } from 'react';
 import { Context } from "../Context";
 import CartItem from '../components/CartItem';
 import CartSummary from '../components/CartSummary';
@@ -6,8 +6,27 @@ import CartSummary from '../components/CartSummary';
 export default function ShoppingCart() {
     const context = useContext(Context);
 
+    const [cartMedications, setCartMedications] = useState([]);
+
+    useEffect(() => {
+        let ignore = false;
+        fetch(`http://localhost:8090/medication?size=20&${context.cartItems.join()}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(result => result.json())
+            .then(data => {
+                if (!ignore) {
+                    setCartMedications(data.content);
+                }
+            });
+        return () => {
+            ignore = true;
+        }
+    }, [context.cartItems]);
+
     const showMedicationsInCart = () => {
-        const medications = context.allMedications.map(med => {
+        const medications = cartMedications.map(med => {
             const isInCart = context.cartItems.some(item => item === med.id);
             if (isInCart) {
                 return <CartItem key={med.id} {...med} />
