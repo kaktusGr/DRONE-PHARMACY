@@ -1,7 +1,9 @@
-import { React } from 'react';
+import { React, useContext } from 'react';
+import { Context } from "../Context";
 
 export default function CartItem(props) {
     const { id, status, name, weight, imgUrl } = props;
+    const context = useContext(Context);
 
     return (
         <>
@@ -30,7 +32,7 @@ export default function CartItem(props) {
                                 <img src="./images/icons/heart.svg" alt='heart' />
                                 Save
                             </button>
-                            <button>
+                            <button onClick={() => context.remove(id)}>
                                 <img src="./images/icons/trash.svg" alt='trash' />
                                 Delete
                             </button>
