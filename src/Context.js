@@ -1,5 +1,4 @@
 import { createContext, useState, useRef, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 
 const Context = createContext();
 
@@ -43,17 +42,7 @@ const ContextProvider = (props) => {
         return () => {
             ignore = true;
         }
-    }, [urlMedication]);
-
-    const location = useLocation();
-    useEffect(() => {
-        const handlePageChange = () => {
-            if (cartItems.length && location.pathname !== "/catalog") {
-                updateWithCartInfo(allMedications);
-            }
-        };
-        handlePageChange();
-    }, [location]);
+    }, [urlMedication, cartItems]);
 
     const updateWithCartInfo = (medications) => {
         const updateMedications = medications.map(med => {
@@ -61,7 +50,7 @@ const ContextProvider = (props) => {
             if (isInCart) {
                 return { ...med, status: "UNAVAILABLE" };
             } else {
-                return { ...med };
+                return { ...med, status: med.status };
             }
         });
         setAllMedications(updateMedications);
@@ -103,19 +92,19 @@ const ContextProvider = (props) => {
             : href + refPage.current + "&" + urlSelect);
     }
 
-    const append = (item) => {
+    const append = (id) => {
         if (cartItems.length === 0) {
-            setCartItems([item]);
+            setCartItems([id]);
         } else {
-            const indexCart = cartItems.findIndex(value => value.id === item);
+            const indexCart = cartItems.findIndex(value => value === id);
             if (indexCart < 0) {
-                setCartItems(prevItems => [...prevItems, item]);
+                setCartItems(prevIDs => [...prevIDs, id]);
             }
         }
     }
 
     const remove = (id) => {
-        const newCart = cartItems.filter(item => item.id !== id);
+        const newCart = cartItems.filter(item => item !== id);
         setCartItems(newCart);
     }
 
