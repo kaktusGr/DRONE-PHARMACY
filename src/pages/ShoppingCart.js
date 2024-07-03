@@ -50,6 +50,13 @@ export default function ShoppingCart() {
         return onlySelected.length;
     }
 
+    const handleDeleteSelected = () => {
+        const onlySelected = context.cartMedications
+            .filter(med => med.isSelected)
+            .map(med => med.id);
+        context.remove(onlySelected);
+    }
+
     const medicationsInCart = context.cartMedications
         .map(med => <CartItem key={med.id} {...med} 
             handleSelectItem={handleSelectItem} />);
@@ -75,7 +82,7 @@ export default function ShoppingCart() {
                                     onChange={handleSelectAll} />
                                 <label htmlFor="checkbox">Select all items</label>
                             </div>
-                            <button className='delete'>
+                            <button className='delete' onClick={handleDeleteSelected}>
                                 <img src="./images/icons/trash.svg" alt="trash" />
                                 Delete selected items
                             </button>

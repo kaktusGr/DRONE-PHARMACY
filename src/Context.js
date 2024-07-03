@@ -104,8 +104,9 @@ const ContextProvider = (props) => {
         }
     }
 
-    const remove = (id) => {
-        const newCart = cartItems.filter(item => item !== id);
+    const remove = (ids) => {
+        const idsArray = Array.isArray(ids) ? ids : [ids];
+        const newCart = cartItems.filter(item => !idsArray.includes(item));
         setCartItems(newCart);
         const filteredData = cartMedications.filter(med => newCart.includes(med.id));
         setCartMedications(filteredData);
