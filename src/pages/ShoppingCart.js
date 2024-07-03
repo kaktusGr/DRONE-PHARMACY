@@ -8,7 +8,7 @@ export default function ShoppingCart() {
     const cartIDs = context.cartItems.join();
 
     const [isSelectedAll, setIsSelectedAll] = useState(true);
-    
+
     useEffect(() => {
         let ignore = false;
         fetch(`http://localhost:8090/medication?size=20&${cartIDs}`, {
@@ -58,14 +58,16 @@ export default function ShoppingCart() {
     }
 
     const medicationsInCart = context.cartMedications
-        .map(med => <CartItem key={med.id} {...med} 
+        .map(med => <CartItem key={med.id} {...med}
             handleSelectItem={handleSelectItem} />);
 
     const totalWeight = context.cartMedications
+        .filter(med => med.isSelected)
         .map(med => med.weight)
         .reduce((accum, current) => accum + current, 0);
 
     const totalPrice = context.cartMedications
+        .filter(med => med.isSelected)
         .map(med => med.price)
         .reduce((accum, current) => accum + current, 0);
 
