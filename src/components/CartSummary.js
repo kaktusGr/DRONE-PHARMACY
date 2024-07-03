@@ -1,9 +1,7 @@
-import { React, useContext } from 'react';
-import { Context } from "../Context";
+import { React } from 'react';
+import { Link } from "react-router-dom";
 
 export default function CartSummary({ totalSelected, totalWeight, totalPrice }) {
-    const context = useContext(Context);
-
     return (
         <div className='cart-summary'>
             <table>
@@ -27,9 +25,17 @@ export default function CartSummary({ totalSelected, totalWeight, totalPrice }) 
                     </tr>
                 </tbody>
             </table>
+            {totalSelected() === 0 && <p className='summary-error'>
+                * Please select something to proceed to checkout
+            </p>}
             <div className='summary-btns'>
-                <button id='checkout'>Proceed to checkout</button>
-                <button id='catalog'>Continue shopping</button>
+                <Link to='/checkout' id='checkout' className={totalSelected() === 0 ? "disabled" : ""}
+                    onClick={(e) => totalSelected() === 0 && e.preventDefault()}>
+                    Proceed to checkout
+                </Link>
+                <Link to='/catalog' id='catalog'>
+                    Continue shopping
+                </Link>
             </div>
             <p>The available delivery methods and time can be selected at checkout.</p>
         </div>
