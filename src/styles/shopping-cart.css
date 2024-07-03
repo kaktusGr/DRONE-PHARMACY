@@ -86,6 +86,10 @@
         }
     }
 
+    & .summary-error {
+        color: var(--red-error);
+        margin-top: 20px;
+    }
 
     & .summary-btns {
         display: flex;
@@ -93,7 +97,9 @@
         gap: 16px;
         margin: 40px 0;
 
-        & button {
+        & a {
+            display: block;
+            text-align: center;
             font-size: 18px;
             border-radius: 70px;
             border: 2px solid var(--dark-grey);
@@ -102,6 +108,10 @@
             &#checkout {
                 background-color: var(--dark-grey);
                 color: var(--white);
+
+                &.disabled {
+                    cursor: not-allowed;
+                }
 
                 &:hover {
                     background-color: var(--grey);
@@ -116,8 +126,6 @@
                 }
             }
         }
-
-
     }
 
     &>p,
