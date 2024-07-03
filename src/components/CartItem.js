@@ -2,13 +2,15 @@ import { React, useContext } from 'react';
 import { Context } from "../Context";
 
 export default function CartItem(props) {
-    const { id, status, name, weight, imgUrl } = props;
+    const { id, status, name, weight, imgUrl, isSelected } = props;
+    const { handleSelectItem } = props;
     const context = useContext(Context);
 
     return (
         <>
             <div className='cart-item' id={id}>
-                <input type='checkbox' defaultChecked />
+                <input type='checkbox' checked={isSelected}
+                    onChange={() => handleSelectItem(id)} />
                 <img src={"http://localhost:8090" + imgUrl} alt='medication' />
                 <label>
                     <div className='item-info'>

@@ -1,4 +1,4 @@
-import { React, useContext, useEffect } from 'react';
+import { React, useState, useContext, useEffect } from 'react';
 import { Context } from "../Context";
 import CartItem from '../components/CartItem';
 import CartSummary from '../components/CartSummary';
@@ -7,6 +7,8 @@ export default function ShoppingCart() {
     const context = useContext(Context);
     const cartIDs = context.cartItems.join();
 
+    const [isSelectedAll, setIsSelectedAll] = useState(true);
+    
     useEffect(() => {
         let ignore = false;
         fetch(`http://localhost:8090/medication?size=20&${cartIDs}`, {
@@ -18,7 +20,7 @@ export default function ShoppingCart() {
                 if (!ignore) {
                     const filteredData = data.content
                         .filter(med => context.cartItems.includes(med.id))
-                        .map(med => ({ ...med, price: 29.99 }));
+                        .map(med => ({ ...med, price: 29.99, isSelected: true }));
                     context.setCartMedications(filteredData);
                 }
             });
@@ -27,8 +29,30 @@ export default function ShoppingCart() {
         }
     }, []);
 
+    const handleSelectItem = (id) => {
+        const updateItems = context.cartMedications
+            .map(med => med.id === id ? { ...med, isSelected: !med.isSelected } : med);
+        context.setCartMedications(updateItems);
+        setIsSelectedAll(updateItems.every(item => item.isSelected));
+    }
+
+    const handleSelectAll = () => {
+        const newSelectAll = !isSelectedAll;
+        setIsSelectedAll(newSelectAll);
+        const updatedItems = context.cartMedications
+            .map(med => ({ ...med, isSelected: newSelectAll }));
+        context.setCartMedications(updatedItems);
+    }
+
+    const totalSelected = () => {
+        const onlySelected = context.cartMedications
+            .filter(med => med.isSelected);
+        return onlySelected.length;
+    }
+
     const medicationsInCart = context.cartMedications
-        .map(med => <CartItem key={med.id} {...med} />);
+        .map(med => <CartItem key={med.id} {...med} 
+            handleSelectItem={handleSelectItem} />);
 
     const totalWeight = context.cartMedications
         .map(med => med.weight)
@@ -46,7 +70,9 @@ export default function ShoppingCart() {
                     <div>
                         <div className='selected-btn'>
                             <div className='checkbox'>
-                                <input type='checkbox' name='checkbox' />
+                                <input type='checkbox' name='checkbox'
+                                    checked={isSelectedAll}
+                                    onChange={handleSelectAll} />
                                 <label htmlFor="checkbox">Select all items</label>
                             </div>
                             <button className='delete'>
@@ -61,7 +87,8 @@ export default function ShoppingCart() {
                             </ul>
                         </div>
                     </div>
-                    <CartSummary totalWeight={totalWeight} totalPrice={totalPrice} />
+                    <CartSummary totalSelected={totalSelected}
+                        totalWeight={totalWeight} totalPrice={totalPrice} />
                 </div>
             ) : (
                 <div className='empty-cart'>Your cart is empty.</div>

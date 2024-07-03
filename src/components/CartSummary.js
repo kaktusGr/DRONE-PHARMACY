@@ -1,7 +1,7 @@
 import { React, useContext } from 'react';
 import { Context } from "../Context";
 
-export default function CartSummary({ totalWeight, totalPrice }) {
+export default function CartSummary({ totalSelected, totalWeight, totalPrice }) {
     const context = useContext(Context);
 
     return (
@@ -15,7 +15,7 @@ export default function CartSummary({ totalWeight, totalPrice }) {
                 <tbody>
                     <tr>
                         <td>Selected Items</td>
-                        <td>{context.cartItems.length}</td>
+                        <td>{totalSelected()}</td>
                     </tr>
                     <tr>
                         <td>Total Weight</td>
