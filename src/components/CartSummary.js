@@ -1,9 +1,7 @@
-import { React, useContext } from 'react';
-import { Context } from "../Context";
+import { React } from 'react';
+import { Link } from "react-router-dom";
 
-export default function CartSummary() {
-    const context = useContext(Context);
-
+export default function CartSummary({ totalSelected, totalWeight, totalPrice }) {
     return (
         <div className='cart-summary'>
             <table>
@@ -15,21 +13,29 @@ export default function CartSummary() {
                 <tbody>
                     <tr>
                         <td>Selected Items</td>
-                        <td>{context.cartItems.length}</td>
+                        <td>{totalSelected}</td>
                     </tr>
                     <tr>
                         <td>Total Weight</td>
-                        <td>400G</td>
+                        <td>{totalWeight} G</td>
                     </tr>
                     <tr>
                         <td>Subtotal</td>
-                        <td>$28.49</td>
+                        <td>${totalPrice}</td>
                     </tr>
                 </tbody>
             </table>
+            {totalSelected === 0 && <p className='summary-error'>
+                * Please select something to proceed to checkout
+            </p>}
             <div className='summary-btns'>
-                <button id='checkout'>Proceed to checkout</button>
-                <button id='catalog'>Continue shopping</button>
+                <Link to='/checkout' id='checkout' className={totalSelected === 0 ? "disabled" : undefined}
+                    onClick={(e) => totalSelected === 0 && e.preventDefault()}>
+                    Proceed to checkout
+                </Link>
+                <Link to='/catalog' id='catalog'>
+                    Continue shopping
+                </Link>
             </div>
             <p>The available delivery methods and time can be selected at checkout.</p>
         </div>
