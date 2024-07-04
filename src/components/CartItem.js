@@ -1,11 +1,13 @@
-import { React, useContext } from 'react';
+import { React, useState, useContext } from 'react';
 import { Context } from "../Context";
 
 export default function CartItem(props) {
     const { id, status, name, weight, imgUrl, isSelected } = props;
     const { handleSelectItem } = props;
     const context = useContext(Context);
-
+    const [count, setCount] = useState(1);
+    const [showInfo, setShowInfo] = useState(false);
+    
     return (
         <>
             <div className='cart-item' id={id}>
@@ -23,11 +25,20 @@ export default function CartItem(props) {
                             <p id='weight'>{weight}G</p>
                         </div>
                     </div>
+                    {showInfo && <p className='show-info'>
+                        Currently you can order only one medication in our store.
+                    </p>}
                     <div className='item-btns'>
                         <div className='qty'>
-                            <button>–</button>
-                            1
-                            <button>+</button>
+                            <button onClick={() => {
+                                setCount(0);
+                                setTimeout(() => context.remove(id), 400);
+                            }}>–</button>
+                            {count}
+                            <button onClick={() => {
+                                setShowInfo(true);
+                                setTimeout(() => setShowInfo(false), 4000);
+                            }}>+</button>
                         </div>
                         <div className='save-delete'>
                             <button>
