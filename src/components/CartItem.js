@@ -26,7 +26,7 @@ export default function CartItem(props) {
                         </div>
                     </div>
                     {showInfo && <p className='show-info'>
-                        Currently you can order only one medication in our store.
+                        Currently, in our store you can order this product only in one copy.
                     </p>}
                     <div className='item-btns'>
                         <div className='qty'>

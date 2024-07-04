@@ -13,7 +13,7 @@ export default function CartSummary({ totalSelected, totalWeight, totalPrice }) 
                 <tbody>
                     <tr>
                         <td>Selected Items</td>
-                        <td>{totalSelected()}</td>
+                        <td>{totalSelected}</td>
                     </tr>
                     <tr>
                         <td>Total Weight</td>
@@ -25,12 +25,12 @@ export default function CartSummary({ totalSelected, totalWeight, totalPrice }) 
                     </tr>
                 </tbody>
             </table>
-            {totalSelected() === 0 && <p className='summary-error'>
+            {totalSelected === 0 && <p className='summary-error'>
                 * Please select something to proceed to checkout
             </p>}
             <div className='summary-btns'>
-                <Link to='/checkout' id='checkout' className={totalSelected() === 0 ? "disabled" : ""}
-                    onClick={(e) => totalSelected() === 0 && e.preventDefault()}>
+                <Link to='/checkout' id='checkout' className={totalSelected === 0 ? "disabled" : undefined}
+                    onClick={(e) => totalSelected === 0 && e.preventDefault()}>
                     Proceed to checkout
                 </Link>
                 <Link to='/catalog' id='catalog'>

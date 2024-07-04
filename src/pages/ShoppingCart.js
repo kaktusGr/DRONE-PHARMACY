@@ -11,7 +11,7 @@ export default function ShoppingCart() {
 
     useEffect(() => {
         let ignore = false;
-        fetch(`http://localhost:8090/medication?size=20&${cartIDs}`, {
+        fetch(`http://localhost:8090/medication?size=20&ids=${cartIDs}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -44,12 +44,6 @@ export default function ShoppingCart() {
         context.setCartMedications(updatedItems);
     }
 
-    const totalSelected = () => {
-        const onlySelected = context.cartMedications
-            .filter(med => med.isSelected);
-        return onlySelected.length;
-    }
-
     const handleDeleteSelected = () => {
         const onlySelected = context.cartMedications
             .filter(med => med.isSelected)
@@ -60,6 +54,9 @@ export default function ShoppingCart() {
     const medicationsInCart = context.cartMedications
         .map(med => <CartItem key={med.id} {...med}
             handleSelectItem={handleSelectItem} />);
+
+    const totalSelected = context.cartMedications
+        .filter(med => med.isSelected).length;
 
     const totalWeight = context.cartMedications
         .filter(med => med.isSelected)
