@@ -6,6 +6,7 @@
 @import url(/src/styles/product-card.css);
 @import url(/src/styles/filters.css);
 @import url(/src/styles/shopping-cart.css);
+@import url(/src/styles/checkout.css);
 
 :root {
     --white: #FFFFFF;

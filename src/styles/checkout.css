@@ -1,0 +1,180 @@
+.checkout {
+    &>a {
+        margin-bottom: 24px;
+    }
+
+    & form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        & input {
+            display: block;
+            width: 100%;
+            border: 1px solid var(--dark-grey);
+            border-radius: 100px;
+            color: var(--dark-grey);
+            padding: 16px 18px;
+
+            &::placeholder {
+                color: var(--grey);
+            }
+
+            &:focus {
+                outline: 1px solid var(--dark-grey);
+            }
+        }
+    }
+
+    & .attention {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        background-color: #EFEFEF;
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    &>div {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+
+        & .checkout-details {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            width: 70%;
+
+            & a {
+                text-decoration: underline;
+
+                & img {
+                    transform: rotate(-90deg);
+                    vertical-align: middle;
+                    margin: 0 0 4px 8px;
+                }
+            }
+        }
+
+        & .checkout-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+
+            & .cart-summary {
+                max-width: 408px;
+                height: auto;
+            }
+
+            & .promo-code {
+                background-color: var(--white);
+                padding: 28px;
+                border-radius: 32px;
+
+                & div {
+                    display: flex;
+                    justify-content: space-between;
+                    cursor: pointer;
+
+                    & h3 img {
+                        vertical-align: middle;
+                        margin-right: 4px;
+                    }
+                }
+
+                & form {
+                    margin-top: 20px;
+                }
+            }
+        }
+    }
+}
+
+.checkout-customer,
+.checkout-delivery,
+.checkout-payment {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    background-color: var(--white);
+    padding: 28px;
+    border-radius: 32px;
+}
+
+.checkout-delivery {
+    & .delivery-inputs {
+        display: flex;
+        justify-content: space-between;
+        gap: 28px;
+
+        & div:is(#when, #where) {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 50%;
+
+            &>div>p {
+                margin-top: 4px;
+                font-size: 13px;
+                color: var(--grey);
+            }
+
+            & .delivery-dates {
+                display: flex;
+                gap: 12px;
+
+                & .date {
+                    border: 1px solid var(--grey);
+                    border-radius: 8px;
+                    padding: 10px;
+                    width: 108px;
+                    cursor: pointer;
+
+                    &.active {
+                        border: 1px solid var(--dark-grey);
+                        outline: 1px solid var(--dark-grey);
+                    }
+
+                    & p:first-child {
+                        color: var(--grey);
+                        margin-bottom: 4px;
+                    }
+                }
+            }
+
+            & .delivery-times li {
+                margin-bottom: 16px;
+                color: var(--grey);
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+
+                & label {
+                    margin-left: 8px;
+                }
+
+                & input {
+                    cursor: pointer;
+                }
+
+                &:has(input:checked) {
+                    color: var(--dark-grey);
+                }
+            }
+
+            & .map {
+                width: 378px;
+                height: 240px;
+
+                & iframe {
+                    border: 1px solid var(--white);
+                    border-radius: 32px;
+                    height: 100%;
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
