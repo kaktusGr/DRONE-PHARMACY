@@ -14,6 +14,9 @@ export default function Checkout() {
                     <Link to="/shopping-cart">
                         <img src="./images/icons/chevron-up.svg" alt="arrow-up" />Back to Cart
                     </Link>
+                    <div className='checkout-selected-med'>
+                        <h3>Selected medications</h3>
+                    </div>
                     <div className='checkout-customer'>
                         <h3>customer info</h3>
                         <form name="form-customer" action="" method="get">
@@ -33,7 +36,7 @@ export default function Checkout() {
                     </div>
                 </div>
                 <div className='checkout-summary'>
-                    <CartSummary />
+                    <CartSummary btnType="checkout" />
                     <div className='promo-code'>
                         <div onClick={() => setIsOpen(!isOpen)}>
                             <h3><img src="./images/icons/percentage-circle.svg" alt='percentage' /> Promo code</h3>

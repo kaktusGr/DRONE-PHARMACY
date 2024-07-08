@@ -22,6 +22,7 @@ export default function ShoppingCart() {
                         .filter(med => context.cartItems.includes(med.id))
                         .map(med => ({ ...med, price: 29.99, isSelected: true }));
                     context.setCartMedications(filteredData);
+                    context.setSelectedItems(filteredData);
                 }
             });
         return () => {
@@ -34,14 +35,16 @@ export default function ShoppingCart() {
             .map(med => med.id === id ? { ...med, isSelected: !med.isSelected } : med);
         context.setCartMedications(updateItems);
         setIsSelectedAll(updateItems.every(item => item.isSelected));
+        context.setSelectedItems(updateItems.filter(med => med.isSelected));
     }
 
     const handleSelectAll = () => {
         const newSelectAll = !isSelectedAll;
         setIsSelectedAll(newSelectAll);
-        const updatedItems = context.cartMedications
+        const updateItems = context.cartMedications
             .map(med => ({ ...med, isSelected: newSelectAll }));
-        context.setCartMedications(updatedItems);
+        context.setCartMedications(updateItems);
+        context.setSelectedItems(updateItems.filter(med => med.isSelected));
     }
 
     const handleDeleteSelected = () => {
@@ -54,19 +57,6 @@ export default function ShoppingCart() {
     const medicationsInCart = context.cartMedications
         .map(med => <CartItem key={med.id} {...med}
             handleSelectItem={handleSelectItem} />);
-
-    const totalSelected = context.cartMedications
-        .filter(med => med.isSelected).length;
-
-    const totalWeight = context.cartMedications
-        .filter(med => med.isSelected)
-        .map(med => med.weight)
-        .reduce((accum, current) => accum + current, 0);
-
-    const totalPrice = context.cartMedications
-        .filter(med => med.isSelected)
-        .map(med => med.price)
-        .reduce((accum, current) => accum + current, 0);
 
     return (
         <div className='shopping-cart'>
@@ -93,8 +83,7 @@ export default function ShoppingCart() {
                             </ul>
                         </div>
                     </div>
-                    <CartSummary totalSelected={totalSelected}
-                        totalWeight={totalWeight} totalPrice={totalPrice} />
+                    <CartSummary btnType="shopping-cart" />
                 </div>
             ) : (
                 <div className='empty-cart'>Your cart is empty.</div>
