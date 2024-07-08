@@ -52,6 +52,7 @@ export default function ShoppingCart() {
             .filter(med => med.isSelected)
             .map(med => med.id);
         context.remove(onlySelected);
+        context.setSelectedItems(null);
     }
 
     const medicationsInCart = context.cartMedications

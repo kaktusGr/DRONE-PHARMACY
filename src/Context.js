@@ -111,24 +111,25 @@ const ContextProvider = (props) => {
         setCartItems(newCart);
         const filteredData = cartMedications.filter(med => newCart.includes(med.id));
         setCartMedications(filteredData);
+        setSelectedItems(filteredData.filter(med => med.isSelected));
     }
 
     const value = {
-        allMedications: allMedications,
-        cartMedications: cartMedications,
-        setCartMedications: setCartMedications,
-        cartItems: cartItems,
-        selectedItems, 
+        allMedications,
+        cartMedications,
+        setCartMedications,
+        cartItems,
+        selectedItems,
         setSelectedItems,
-        availability: availability,
-        toggleAvailable: toggleAvailable,
-        selectSort: selectSort,
-        currentPage: currentPage,
+        availability,
+        toggleAvailable,
+        selectSort,
+        currentPage,
         refPage: refPage.current,
-        allPages: allPages,
-        totalMed: totalMed,
-        append: append,
-        remove: remove,
+        allPages,
+        totalMed,
+        append,
+        remove,
     }
 
     return (
