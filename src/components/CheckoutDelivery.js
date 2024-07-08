@@ -108,7 +108,7 @@ export default function CheckoutDelivery() {
                         <input type='text' placeholder='Delivery comment'></input>
                     </form>
                     <div className='map'>
-                        <iframe title="map" src="https://yandex.ru/map-widget/v1/?ll=83.051717%2C54.836438&mode=search&ol=geo&ouri=ymapsbm1%3A%2F%2Fgeo%3Fdata%3DCgoxNTk4MTkxOTM4EkbQoNC-0YHRgdC40Y8sINCd0L7QstC-0YHQuNCx0LjRgNGB0LosINCR0LXRgNC00YHQutC40Lkg0YLRg9C_0LjQuiwgOS8xIgoNcBmmQhUgWFtC&z=17.17" frameBorder="1" allowFullScreen={true} scroll="false"></iframe>
+                        <iframe title="map" src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d5745812.178461732!2d22.0656967!3d45.3170636!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2srs!4v1720444257584!5m2!1sen!2srs" allowFullScreen="" referrerPolicy="no-referrer-when-downgrade"></iframe>
                     </div>
                 </div>
             </div>
