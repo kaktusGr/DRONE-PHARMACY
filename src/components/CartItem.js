@@ -7,7 +7,7 @@ export default function CartItem(props) {
     const context = useContext(Context);
     const [count, setCount] = useState(1);
     const [showInfo, setShowInfo] = useState(false);
-    
+
     return (
         <>
             <div className='cart-item' id={id}>
@@ -25,9 +25,10 @@ export default function CartItem(props) {
                             <p id='weight'>{weight}G</p>
                         </div>
                     </div>
-                    {showInfo && <p className='show-info'>
-                        Currently, in our store you can order this product only in one copy.
-                    </p>}
+                    {showInfo && <div className='attention'>
+                        <img src="./images/icons/info-circle.svg" alt="attention" />
+                        <p>Currently, in our store you can order this product only in one copy.</p>
+                    </div>}
                     <div className='item-btns'>
                         <div className='qty'>
                             <button onClick={() => {

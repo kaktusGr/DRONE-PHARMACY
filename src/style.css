@@ -11,6 +11,7 @@
 :root {
     --white: #FFFFFF;
     --bg-color: #F3F3F3;
+    --attention-grey: #EFEFEF;
     --light-grey: #CCCCCC;
     --grey: #838383;
     --dark-grey: #383838;
@@ -87,4 +88,11 @@ h4 {
 
 hr {
     border: 1px solid #D5D5D5;
+}
+
+.attention {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    background-color: var(--attention-grey);
 }
