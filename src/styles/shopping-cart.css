@@ -45,7 +45,6 @@
     }
 }
 
-
 .cart-items,
 .cart-summary {
     background-color: var(--white);
@@ -55,6 +54,7 @@
 
 .cart-summary {
     max-width: 408px;
+    width: 408px;
     height: 100%;
     margin-top: 44px;
 
@@ -97,7 +97,12 @@
         gap: 16px;
         margin: 40px 0;
 
-        & a {
+        &:has(button) {
+            margin-bottom: 0;
+        }
+
+        & a,
+        button {
             display: block;
             text-align: center;
             font-size: 18px;
@@ -190,14 +195,12 @@
             align-items: flex-start;
         }
 
-        & .show-info {
+        & .attention {
             font-size: 13px;
-            line-height: 18px;
-            color: var(--white);
-            background-color: var(--grey);
+            line-height: 16px;
             border-radius: 8px;
             padding: 10px;
-            width: 250px;
+            width: 290px;
         }
 
         & .item-btns {

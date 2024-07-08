@@ -7,6 +7,7 @@ const ContextProvider = (props) => {
     const [cartMedications, setCartMedications] = useState([]);
     const [cartItems, setCartItems] = useState([]);
     const [availability, setAvailability] = useState(true);
+    const [selectedItems, setSelectedItems] = useState();
 
     const refPage = useRef(0);
     const [allPages, setAllPages] = useState(0);
@@ -110,22 +111,25 @@ const ContextProvider = (props) => {
         setCartItems(newCart);
         const filteredData = cartMedications.filter(med => newCart.includes(med.id));
         setCartMedications(filteredData);
+        setSelectedItems(filteredData.filter(med => med.isSelected));
     }
 
     const value = {
-        allMedications: allMedications,
-        cartMedications: cartMedications, 
-        setCartMedications: setCartMedications,
-        cartItems: cartItems,
-        availability: availability,
-        toggleAvailable: toggleAvailable,
-        selectSort: selectSort,
-        currentPage: currentPage,
+        allMedications,
+        cartMedications,
+        setCartMedications,
+        cartItems,
+        selectedItems,
+        setSelectedItems,
+        availability,
+        toggleAvailable,
+        selectSort,
+        currentPage,
         refPage: refPage.current,
-        allPages: allPages,
-        totalMed: totalMed,
-        append: append,
-        remove: remove,
+        allPages,
+        totalMed,
+        append,
+        remove,
     }
 
     return (
