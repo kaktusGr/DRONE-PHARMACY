@@ -11,7 +11,7 @@ export default function CartItem(props) {
     return (
         <>
             <div className='cart-item' id={id}>
-                <input type='checkbox' checked={isSelected}
+                <input type='checkbox' id='checkbox' checked={isSelected}
                     onChange={() => handleSelectItem(id)} />
                 <img src={"http://localhost:8090" + imgUrl} alt='medication' />
                 <label>

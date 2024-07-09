@@ -67,7 +67,7 @@ export default function ShoppingCart() {
                     <div>
                         <div className='selected-btn'>
                             <div className='checkbox'>
-                                <input type='checkbox' name='checkbox'
+                                <input type='checkbox' name='checkbox' id='checkbox'
                                     checked={isSelectedAll}
                                     onChange={handleSelectAll} />
                                 <label htmlFor="checkbox">Select all items</label>
@@ -84,7 +84,7 @@ export default function ShoppingCart() {
                             </ul>
                         </div>
                     </div>
-                    <CartSummary btnType="shopping-cart" />
+                    <CartSummary btnType="shopping-cart" handleSelectItem={handleSelectItem} />
                 </div>
             ) : (
                 <div className='empty-cart'>Your cart is empty.</div>
