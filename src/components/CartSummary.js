@@ -2,11 +2,10 @@ import { React, useContext, useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { Context } from "../Context";
 
-export default function CartSummary({ btnType, handleSelectItem }) {
+export default function CartSummary({ btnType, setIsSelectedAll }) {
     const context = useContext(Context);
 
     const [drones, setDrones] = useState([]);
-    const [isBestCapacity, setIsBestCapacity] = useState(false);
 
     useEffect(() => {
         let ignore = false;
@@ -30,18 +29,15 @@ export default function CartSummary({ btnType, handleSelectItem }) {
 
     const totalWeight = context.selectedItems ? (
         context.selectedItems
-            .map(med => med.weight)
-            .reduce((accum, current) => accum + current, 0)
+            .reduce((accum, current) => accum + current.weight, 0)
     ) : 0;
 
     const totalPrice = context.selectedItems ? (
         context.selectedItems
-            .map(med => med.price)
-            .reduce((accum, current) => accum + current, 0)
+            .reduce((accum, current) => accum + current.price, 0)
     ) : 0;
 
     const checkDronesWeight = (totalWeight) => {
-        console.log(totalWeight);
         const sortedDrones = [...drones].sort((a, b) => a.weightLimit - b.weightLimit);
         for (let drone of sortedDrones) {
             if (drone.weightLimit >= totalWeight) {
@@ -54,25 +50,44 @@ export default function CartSummary({ btnType, handleSelectItem }) {
     const handleChooseBestCapacity = () => {
         const sortedItems = context.selectedItems
             .filter(item => item.isSelected)
-            .sort((a, b) => b.weight - a.weight)
+            .sort((a, b) => b.weight - a.weight);
+
+        const calculateTotalWeight = (items) => {
+            return items.reduce((accum, current) => accum + current.weight, 0);
+        };
 
         const updateItemsSelection = (items) => {
-            const itemsWeight = items.reduce((total, item) => total + item.weight, 0);
-            if (checkDronesWeight(itemsWeight) !== null) {
-                return items;
+            let totalWeight = calculateTotalWeight(items);
+            while (totalWeight > 0 && checkDronesWeight(totalWeight) === null) {
+                let bestItemToRemoveIndex = -1;
+                let minDifference = Infinity;
+
+                for (let i = 0; i < items.length; i++) {
+                    const weightWithoutItem = totalWeight - items[i].weight;
+                    const droneId = checkDronesWeight(weightWithoutItem);
+                    if (droneId !== null && (totalWeight - weightWithoutItem) < minDifference) {
+                        bestItemToRemoveIndex = i;
+                        minDifference = totalWeight - weightWithoutItem;
+                    }
+                }
+
+                if (bestItemToRemoveIndex === -1) {
+                    bestItemToRemoveIndex = 0;
+                }
+                items[bestItemToRemoveIndex] = { ...items[bestItemToRemoveIndex], isSelected: false };
+                items = items.filter((item, index) => index !== bestItemToRemoveIndex);
+                totalWeight = calculateTotalWeight(items);
             }
-            items[items.length - 1] = { ...items[items.length - 1], isSelected: false };
-            context.setSelectedItems([...items]);
-            return updateItemsSelection(items.slice(0, items.length - 1));
+            return items;
         }
 
         const updatedItems = updateItemsSelection([...sortedItems]);
+        context.setSelectedItems(updatedItems);
         const newCartMedications = context.cartMedications.map(med => {
             const updatedItem = updatedItems.find(item => item.id === med.id);
             return updatedItem ? { ...med, isSelected: true } : { ...med, isSelected: false };
         })
         context.setCartMedications(newCartMedications);
-        context.setSelectedItems(newCartMedications.filter(item => item.isSelected));
     }
 
     return (
@@ -94,7 +109,7 @@ export default function CartSummary({ btnType, handleSelectItem }) {
                     </tr>
                     <tr>
                         <td>Subtotal</td>
-                        <td>${totalPrice}</td>
+                        <td>${totalPrice.toFixed(2)}</td>
                     </tr>
                 </tbody>
             </table>
@@ -107,10 +122,10 @@ export default function CartSummary({ btnType, handleSelectItem }) {
                     <p>Please choose the products yourself or click the button below and we will select the products according to the best capacity.</p>
                     <div>
                         <input type='checkbox' name='checkbox' id='checkbox'
-                            checked={isBestCapacity}
-                            onChange={(e) => {
-                                setIsBestCapacity(e.target.checked);
+                            defaultChecked={false}
+                            onChange={() => {
                                 handleChooseBestCapacity();
+                                setIsSelectedAll(false);
                             }} />
                         <label htmlFor='checkbox'>Choose the best capacity</label>
                     </div>

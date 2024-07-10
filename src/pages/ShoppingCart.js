@@ -84,7 +84,7 @@ export default function ShoppingCart() {
                             </ul>
                         </div>
                     </div>
-                    <CartSummary btnType="shopping-cart" handleSelectItem={handleSelectItem} />
+                    <CartSummary btnType="shopping-cart" setIsSelectedAll={setIsSelectedAll} />
                 </div>
             ) : (
                 <div className='empty-cart'>Your cart is empty.</div>
