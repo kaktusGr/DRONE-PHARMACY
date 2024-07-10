@@ -25,9 +25,8 @@ export default function CartSummary({ btnType, handleSelectItem }) {
         }
     }, []);
 
-    const totalSelected = context.selectedItems ? (
-        context.selectedItems.length
-    ) : 0;
+    const totalSelected = context.cartMedications
+        .filter(item => item.isSelected).length;
 
     const totalWeight = context.selectedItems ? (
         context.selectedItems
@@ -41,15 +40,39 @@ export default function CartSummary({ btnType, handleSelectItem }) {
             .reduce((accum, current) => accum + current, 0)
     ) : 0;
 
-    const checkDronesWeight = () => {
-        const sortDroneWeight = drones
-            .sort((a, b) => a.weightLimit - b.weightLimit)
-        for (let drone of sortDroneWeight) {
+    const checkDronesWeight = (totalWeight) => {
+        console.log(totalWeight);
+        const sortedDrones = [...drones].sort((a, b) => a.weightLimit - b.weightLimit);
+        for (let drone of sortedDrones) {
             if (drone.weightLimit >= totalWeight) {
                 return drone.id;
             }
         }
         return null;
+    }
+
+    const handleChooseBestCapacity = () => {
+        const sortedItems = context.selectedItems
+            .filter(item => item.isSelected)
+            .sort((a, b) => b.weight - a.weight)
+
+        const updateItemsSelection = (items) => {
+            const itemsWeight = items.reduce((total, item) => total + item.weight, 0);
+            if (checkDronesWeight(itemsWeight) !== null) {
+                return items;
+            }
+            items[items.length - 1] = { ...items[items.length - 1], isSelected: false };
+            context.setSelectedItems([...items]);
+            return updateItemsSelection(items.slice(0, items.length - 1));
+        }
+
+        const updatedItems = updateItemsSelection([...sortedItems]);
+        const newCartMedications = context.cartMedications.map(med => {
+            const updatedItem = updatedItems.find(item => item.id === med.id);
+            return updatedItem ? { ...med, isSelected: true } : { ...med, isSelected: false };
+        })
+        context.setCartMedications(newCartMedications);
+        context.setSelectedItems(newCartMedications.filter(item => item.isSelected));
     }
 
     return (
@@ -78,7 +101,7 @@ export default function CartSummary({ btnType, handleSelectItem }) {
             {totalSelected === 0 && <p className='summary-error null'>
                 * Please select something to proceed to checkout
             </p>}
-            {checkDronesWeight() === null &&
+            {checkDronesWeight(totalWeight) === null &&
                 <div className='summary-error overweight'>
                     <p>* Unfortunately, we don't have a free drone available for the total weight of the selected items. In this case, we may offer you to arrange several deliveries.</p>
                     <p>Please choose the products yourself or click the button below and we will select the products according to the best capacity.</p>
@@ -87,6 +110,7 @@ export default function CartSummary({ btnType, handleSelectItem }) {
                             checked={isBestCapacity}
                             onChange={(e) => {
                                 setIsBestCapacity(e.target.checked);
+                                handleChooseBestCapacity();
                             }} />
                         <label htmlFor='checkbox'>Choose the best capacity</label>
                     </div>
@@ -95,9 +119,12 @@ export default function CartSummary({ btnType, handleSelectItem }) {
                 <>
                     <div className='summary-btns'>
                         <Link to='/checkout' id='checkout'
-                            className={(totalSelected === 0 || checkDronesWeight() === null) ? "disabled" : undefined}
-                            onClick={(e) => (totalSelected === 0 || checkDronesWeight() === null)
-                                && e.preventDefault()}>
+                            className={(totalSelected === 0 ||
+                                checkDronesWeight(totalWeight) === null) ?
+                                "disabled" : undefined}
+                            onClick={(e) => (totalSelected === 0 ||
+                                checkDronesWeight(totalWeight) === null) &&
+                                e.preventDefault()}>
                             Proceed to checkout
                         </Link>
                         <Link to='/catalog' id='catalog'>
