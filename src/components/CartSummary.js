@@ -41,6 +41,7 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
         const sortedDrones = [...drones].sort((a, b) => a.weightLimit - b.weightLimit);
         for (let drone of sortedDrones) {
             if (drone.weightLimit >= totalWeight) {
+                context.setDroneId(drone.id);
                 return drone.id;
             }
         }
@@ -107,9 +108,15 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
                         <td>Total Weight</td>
                         <td>{totalWeight} G</td>
                     </tr>
+                    {btnType === "checkout" &&
+                        <tr>
+                            <td>Delivery</td>
+                            <td>$5</td>
+                        </tr>
+                    }
                     <tr>
                         <td>Subtotal</td>
-                        <td>${totalPrice.toFixed(2)}</td>
+                        <td>${btnType === "checkout" ? (totalPrice + 5).toFixed(2) : totalPrice.toFixed(2)}</td>
                     </tr>
                 </tbody>
             </table>

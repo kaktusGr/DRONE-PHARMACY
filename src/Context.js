@@ -13,6 +13,8 @@ const ContextProvider = (props) => {
     const [allPages, setAllPages] = useState(0);
     const [totalMed, setTotalMed] = useState(0);
 
+    const [droneId, setDroneId] = useState();
+
     const urlFilters = {
         available: "status=AVAILABLE",
         sort: {
@@ -130,6 +132,8 @@ const ContextProvider = (props) => {
         totalMed,
         append,
         remove,
+        droneId,
+        setDroneId,
     }
 
     return (
