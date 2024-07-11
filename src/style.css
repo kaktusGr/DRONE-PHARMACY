@@ -104,3 +104,15 @@ hr {
     width: 20px;
     border: 1px solid var(--grey);
 }
+
+.checkout-selected-med,
+.checkout-customer,
+.checkout-delivery,
+.checkout-payment,
+.drone-detail,
+.cart-items,
+.summary {
+    background-color: var(--white);
+    padding: 28px;
+    border-radius: 32px;
+}

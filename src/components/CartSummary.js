@@ -92,7 +92,7 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
     }
 
     return (
-        <div className='cart-summary'>
+        <div className='summary'>
             <table>
                 <thead>
                     <tr>
@@ -157,9 +157,9 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
                 </>
             ) : (
                 <div className='summary-btns'>
-                    <button id='checkout'>
+                    <Link to="/orders" id='checkout'>
                         Checkout
-                    </button>
+                    </Link>
                 </div>
             )}
         </div>

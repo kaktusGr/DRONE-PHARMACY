@@ -56,11 +56,6 @@
             flex-direction: column;
             gap: 24px;
 
-            & .cart-summary {
-                max-width: 408px;
-                height: auto;
-            }
-
             & .promo-code {
                 background-color: var(--white);
                 padding: 28px;
@@ -89,12 +84,8 @@
 .checkout-customer,
 .checkout-delivery,
 .checkout-payment,
-.checkout-drone-details,
 .drone-detail {
     display: flex;
     flex-direction: column;
     gap: 32px;
-    background-color: var(--white);
-    padding: 28px;
-    border-radius: 32px;
 }

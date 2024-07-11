@@ -37,13 +37,10 @@
             }
         }
     }
-}
 
-.cart-items,
-.cart-summary {
-    background-color: var(--white);
-    padding: 28px;
-    border-radius: 32px;
+    .summary {
+        margin-top: 48px;
+    }
 }
 
 .empty-cart {

@@ -1,4 +1,5 @@
-.cart-summary,
+.summary,
+.checkout-selected-med,
 .drone-detail {
     max-width: 408px;
     width: 408px;
@@ -8,10 +9,14 @@
     }
 
     &>p,
-    & td {
+    & td,
+    small {
         color: var(--grey);
     }
+}
 
+.summary,
+.drone-detail {
     & table {
         width: 100%;
 
@@ -26,17 +31,37 @@
     }
 }
 
-.drone-detail {
-    transform: translateY(48px);
+.checkout-selected-med {
+    margin-top: 48px;
 
+    &>div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px 36px;
+
+        & .medications {
+            margin-bottom: 20px;
+            height: 118px;
+            width: 118px;
+
+            & img {
+                border-radius: 20px;
+                object-fit: cover;
+                height: 100%;
+                width: 100%;
+            }
+        }
+    }
+}
+
+.drone-detail {
     & table td:last-child {
         text-transform: uppercase;
     }
 }
 
-.cart-summary {
+.summary {
     height: 100%;
-    margin-top: 48px;
 
     & table {
         & tr:last-child {
@@ -73,14 +98,13 @@
         display: flex;
         flex-direction: column;
         gap: 16px;
-        margin: 40px 0;
+        margin: 40px 0 0 0;
 
         &:has(button) {
             margin-bottom: 0;
         }
 
-        & a,
-        button {
+        & a {
             display: block;
             text-align: center;
             font-size: 18px;
@@ -109,5 +133,9 @@
                 }
             }
         }
+    }
+
+    & p {
+        margin-top: 40px;
     }
 }
