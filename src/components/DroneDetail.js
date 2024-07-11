@@ -24,7 +24,11 @@ export default function DroneDetail() {
                         console.log(data);
                         const updatedDroneDetail = Object.keys(droneDetail).reduce((accum, key) => {
                             if (data[key] !== undefined) {
-                                accum[key] = data[key];
+                                if (key === "serialNumber") {
+                                    accum[key] = data[key].slice(6);
+                                } else {
+                                    accum[key] = data[key];
+                                }
                             }
                             return accum;
                         }, {});
@@ -52,7 +56,7 @@ export default function DroneDetail() {
                     </tr>
                     <tr>
                         <td>Drone Number</td>
-                        <td>{droneDetail.serialNumber.slice(6)}</td>
+                        <td>{droneDetail.serialNumber}</td>
                     </tr>
                     <tr>
                         <td>Capacity</td>
