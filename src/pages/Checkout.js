@@ -2,6 +2,7 @@ import { React, useState } from 'react';
 import { Link } from "react-router-dom";
 import CheckoutDelivery from '../components/CheckoutDelivery';
 import CartSummary from '../components/CartSummary';
+import DroneDetail from '../components/DroneDetail';
 
 export default function Checkout() {
     const [isOpen, setIsOpen] = useState(false);
@@ -36,6 +37,7 @@ export default function Checkout() {
                     </div>
                 </div>
                 <div className='checkout-summary'>
+                    <DroneDetail />
                     <CartSummary btnType="checkout" />
                     <div className='promo-code'>
                         <div onClick={() => setIsOpen(!isOpen)}>
