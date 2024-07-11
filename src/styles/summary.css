@@ -1,0 +1,113 @@
+.cart-summary,
+.drone-detail {
+    max-width: 408px;
+    width: 408px;
+
+    & h3 {
+        text-align: left;
+    }
+
+    &>p,
+    & td {
+        color: var(--grey);
+    }
+
+    & table {
+        width: 100%;
+
+        & td {
+            vertical-align: bottom;
+            height: 40px;
+
+            &:last-child {
+                text-align: right;
+            }
+        }
+    }
+}
+
+.drone-detail {
+    transform: translateY(48px);
+
+    & table td:last-child {
+        text-transform: uppercase;
+    }
+}
+
+.cart-summary {
+    height: 100%;
+    margin-top: 48px;
+
+    & table {
+        & tr:last-child {
+            font-size: 32px;
+            font-weight: 700;
+            text-transform: uppercase;
+
+            &>td {
+                height: 63px;
+                color: var(--dark-grey);
+            }
+        }
+    }
+
+    & .summary-error {
+
+        &.null,
+        p {
+            color: var(--red-error);
+            margin: 20px 0;
+        }
+
+        &>div {
+            display: flex;
+            align-items: center;
+
+            & input {
+                margin-right: 10px;
+            }
+        }
+    }
+
+    & .summary-btns {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin: 40px 0;
+
+        &:has(button) {
+            margin-bottom: 0;
+        }
+
+        & a,
+        button {
+            display: block;
+            text-align: center;
+            font-size: 18px;
+            border-radius: 70px;
+            border: 2px solid var(--dark-grey);
+            padding: 20px 0;
+
+            &#checkout {
+                background-color: var(--dark-grey);
+                color: var(--white);
+
+                &.disabled {
+                    cursor: not-allowed;
+                }
+
+                &:hover {
+                    background-color: var(--grey);
+                }
+            }
+
+            &#catalog {
+                background-color: inherit;
+
+                &:hover {
+                    background-color: var(--light-grey);
+                }
+            }
+        }
+    }
+}

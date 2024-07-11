@@ -1,0 +1,76 @@
+.checkout-delivery {
+    & .delivery-inputs {
+        display: flex;
+        justify-content: space-between;
+        gap: 28px;
+
+        & div:is(#when, #where) {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 50%;
+
+            &>div>p {
+                margin-top: 4px;
+                font-size: 13px;
+                color: var(--grey);
+            }
+
+            & .delivery-dates {
+                display: flex;
+                gap: 12px;
+
+                & .date {
+                    border: 1px solid var(--grey);
+                    border-radius: 8px;
+                    padding: 10px;
+                    width: 108px;
+                    cursor: pointer;
+
+                    &.active {
+                        border: 1px solid var(--dark-grey);
+                        outline: 1px solid var(--dark-grey);
+                    }
+
+                    & p:first-child {
+                        color: var(--grey);
+                        margin-bottom: 4px;
+                    }
+                }
+            }
+
+            & .delivery-times li {
+                margin-bottom: 16px;
+                color: var(--grey);
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+
+                & label {
+                    margin-left: 8px;
+                }
+
+                & input {
+                    cursor: pointer;
+                }
+
+                &:has(input:checked) {
+                    color: var(--dark-grey);
+                }
+            }
+
+            & .map {
+                width: 378px;
+                height: 240px;
+
+                & iframe {
+                    border: 1px solid var(--white);
+                    border-radius: 32px;
+                    height: 100%;
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
