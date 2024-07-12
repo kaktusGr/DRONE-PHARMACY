@@ -67,6 +67,7 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
                     const weightWithoutItem = totalWeight - items[i].weight;
                     const droneId = checkDronesWeight(weightWithoutItem);
                     if (droneId !== null && (totalWeight - weightWithoutItem) < minDifference) {
+                        context.setDroneId(droneId);
                         bestItemToRemoveIndex = i;
                         minDifference = totalWeight - weightWithoutItem;
                     }

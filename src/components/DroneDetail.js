@@ -8,6 +8,7 @@ export default function DroneDetail() {
         model: "—",
         serialNumber: "—",
         batteryCapacity: "—",
+        weightLimit: "—",
         status: "—",
     });
 
@@ -21,7 +22,6 @@ export default function DroneDetail() {
                 .then(result => result.json())
                 .then(data => {
                     if (!ignore) {
-                        console.log(data);
                         const updatedDroneDetail = Object.keys(droneDetail).reduce((accum, key) => {
                             if (data[key] !== undefined) {
                                 if (key === "serialNumber") {
@@ -61,6 +61,10 @@ export default function DroneDetail() {
                     <tr>
                         <td>Capacity</td>
                         <td>{droneDetail.batteryCapacity}</td>
+                    </tr>
+                    <tr>
+                        <td>Weight Limit</td>
+                        <td>{droneDetail.weightLimit}</td>
                     </tr>
                     <tr>
                         <td>Status</td>
