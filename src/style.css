@@ -6,7 +6,9 @@
 @import url(/src/styles/product-card.css);
 @import url(/src/styles/filters.css);
 @import url(/src/styles/shopping-cart.css);
+@import url(/src/styles/summary.css);
 @import url(/src/styles/checkout.css);
+@import url(/src/styles/checkout-delivery.css);
 
 :root {
     --white: #FFFFFF;
@@ -95,4 +97,22 @@ hr {
     gap: 10px;
     align-items: flex-start;
     background-color: var(--attention-grey);
+}
+
+:is(.shopping-cart, .checkout) input#checkbox {
+    height: 20px;
+    width: 20px;
+    border: 1px solid var(--grey);
+}
+
+.checkout-selected-med,
+.checkout-customer,
+.checkout-delivery,
+.checkout-payment,
+.drone-detail,
+.cart-items,
+.summary {
+    background-color: var(--white);
+    padding: 28px;
+    border-radius: 32px;
 }

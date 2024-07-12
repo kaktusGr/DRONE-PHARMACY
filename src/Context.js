@@ -7,11 +7,13 @@ const ContextProvider = (props) => {
     const [cartMedications, setCartMedications] = useState([]);
     const [cartItems, setCartItems] = useState([]);
     const [availability, setAvailability] = useState(true);
-    const [selectedItems, setSelectedItems] = useState();
+    const [selectedItems, setSelectedItems] = useState([]);
 
     const refPage = useRef(0);
     const [allPages, setAllPages] = useState(0);
     const [totalMed, setTotalMed] = useState(0);
+
+    const [droneId, setDroneId] = useState();
 
     const urlFilters = {
         available: "status=AVAILABLE",
@@ -130,6 +132,8 @@ const ContextProvider = (props) => {
         totalMed,
         append,
         remove,
+        droneId,
+        setDroneId,
     }
 
     return (

@@ -1,9 +1,12 @@
-import { React, useState } from 'react';
+import { React, useState, useContext } from 'react';
 import { Link } from "react-router-dom";
+import { Context } from "../Context";
 import CheckoutDelivery from '../components/CheckoutDelivery';
 import CartSummary from '../components/CartSummary';
+import DroneDetail from '../components/DroneDetail';
 
 export default function Checkout() {
+    const context = useContext(Context);
     const [isOpen, setIsOpen] = useState(false);
 
     return (
@@ -14,9 +17,6 @@ export default function Checkout() {
                     <Link to="/shopping-cart">
                         <img src="./images/icons/chevron-up.svg" alt="arrow-up" />Back to Cart
                     </Link>
-                    <div className='checkout-selected-med'>
-                        <h3>Selected medications</h3>
-                    </div>
                     <div className='checkout-customer'>
                         <h3>customer info</h3>
                         <form name="form-customer" action="" method="get">
@@ -35,7 +35,22 @@ export default function Checkout() {
                         </div>
                     </div>
                 </div>
+
                 <div className='checkout-summary'>
+                    <div className='checkout-selected-med'>
+                        <h3>Selected medications</h3>
+                        {context.selectedItems.length > 0 &&
+                            <div>
+                                {context.selectedItems
+                                    .map(item =>
+                                        <div key={item.id} className='medications'>
+                                            <img src={"http://localhost:8090" + item.imgUrl} alt={item.name} />
+                                            <small>{item.name}</small>
+                                        </div>
+                                    )}
+                            </div>}
+                    </div>
+                    <DroneDetail />
                     <CartSummary btnType="checkout" />
                     <div className='promo-code'>
                         <div onClick={() => setIsOpen(!isOpen)}>

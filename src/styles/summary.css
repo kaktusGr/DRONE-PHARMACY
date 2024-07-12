@@ -1,0 +1,141 @@
+.summary,
+.checkout-selected-med,
+.drone-detail {
+    max-width: 408px;
+    width: 408px;
+
+    & h3 {
+        text-align: left;
+    }
+
+    &>p,
+    & td,
+    small {
+        color: var(--grey);
+    }
+}
+
+.summary,
+.drone-detail {
+    & table {
+        width: 100%;
+
+        & td {
+            vertical-align: bottom;
+            height: 40px;
+
+            &:last-child {
+                text-align: right;
+            }
+        }
+    }
+}
+
+.checkout-selected-med {
+    margin-top: 48px;
+
+    &>div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px 36px;
+
+        & .medications {
+            margin-bottom: 20px;
+            height: 118px;
+            width: 118px;
+
+            & img {
+                border-radius: 20px;
+                object-fit: cover;
+                height: 100%;
+                width: 100%;
+            }
+        }
+    }
+}
+
+.drone-detail {
+    & table td:last-child {
+        text-transform: uppercase;
+    }
+}
+
+.summary {
+    height: 100%;
+
+    & table {
+        & tr:last-child {
+            font-size: 32px;
+            font-weight: 700;
+            text-transform: uppercase;
+
+            &>td {
+                height: 63px;
+                color: var(--dark-grey);
+            }
+        }
+    }
+
+    & .summary-error {
+
+        &.null,
+        p {
+            color: var(--red-error);
+            margin: 20px 0;
+        }
+
+        &>div {
+            display: flex;
+            align-items: center;
+
+            & input {
+                margin-right: 10px;
+            }
+        }
+    }
+
+    & .summary-btns {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin: 40px 0 0 0;
+
+        &:has(button) {
+            margin-bottom: 0;
+        }
+
+        & a {
+            display: block;
+            text-align: center;
+            font-size: 18px;
+            border-radius: 70px;
+            border: 2px solid var(--dark-grey);
+            padding: 20px 0;
+
+            &#checkout {
+                background-color: var(--dark-grey);
+                color: var(--white);
+
+                &.disabled {
+                    cursor: not-allowed;
+                }
+
+                &:hover {
+                    background-color: var(--grey);
+                }
+            }
+
+            &#catalog {
+                background-color: inherit;
+
+                &:hover {
+                    background-color: var(--light-grey);
+                }
+            }
+        }
+    }
+
+    & p {
+        margin-top: 40px;
+    }
+}
