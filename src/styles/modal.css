@@ -1,0 +1,91 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    max-width: 840px;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+
+    & button {
+        position: absolute;
+        top: 30px;
+        right: 0;
+        background-color: inherit;
+        border: none;
+        transform: rotate(45deg) translate(-70%);
+        cursor: pointer;
+
+        & img#close {
+            height: 34px;
+        }
+    }
+}
+
+.modal-flex {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+
+    & .modal-order-status {
+        position: relative;
+
+        & ul {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+
+            & li {
+                font-size: 14px;
+                color: var(--grey);
+            }
+        }
+
+        & img {
+            position: absolute;
+            top: 12px;
+            left: 6px;
+        }
+    }
+
+    & .modal-map {
+        width: 780px;
+        height: 314px;
+    }
+
+    & table {
+        width: 100%;
+        vertical-align: top;
+
+        & th {
+            text-align: left;
+            height: 40px;
+            vertical-align: top;
+        }
+
+        & td {
+            vertical-align: top;
+            width: 27%;
+        }
+
+        & tr:nth-child(2) {
+            height: 36px;
+        }
+
+        & tr:nth-child(2),
+        tr:nth-child(4) {
+            font-size: 13px;
+            color: var(--grey);
+        }
+    }
+}
