@@ -35,8 +35,8 @@ export default function Header() {
                         <Link to='favourites'><img src="./images/icons/heart.svg" alt="favourites" /></Link>
                         <Link to='shopping-cart'>
                             <img src="./images/icons/cart.svg" alt="cart" />
-                            {context.cartItems.length > 0
-                                && <span className="count-products">{context.cartItems.length}</span>}
+                            {context.cartItemsId.length > 0
+                                && <span className="count-products">{context.cartItemsId.length}</span>}
                         </Link>
                     </div>
                 </div>

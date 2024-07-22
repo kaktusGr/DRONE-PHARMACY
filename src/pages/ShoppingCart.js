@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 export default function ShoppingCart() {
     const context = useContext(Context);
-    const cartIDs = context.cartItems.join();
+    const cartIDs = context.cartItemsId.join();
 
     const [isSelectedAll, setIsSelectedAll] = useState(true);
 
@@ -20,7 +20,7 @@ export default function ShoppingCart() {
             .then(data => {
                 if (!ignore) {
                     const filteredData = data.content
-                        .filter(med => context.cartItems.includes(med.id))
+                        .filter(med => context.cartItemsId.includes(med.id))
                         .map(med => ({ ...med, price: 29.99, isSelected: true }));
                     context.setCartMedications(filteredData);
                     context.setSelectedItems(filteredData);
@@ -70,12 +70,10 @@ export default function ShoppingCart() {
                 handleSelectItem={handleSelectItem} />
         });
 
-    console.log(medicationsInCartUn);
-
     return (
         <div className='shopping-cart'>
-            <h1>Shopping cart {context.cartItems.length > 0 && `(${context.cartItems.length})`}</h1>
-            {context.cartItems.length ? (
+            <h1>Shopping cart {context.cartItemsId.length > 0 && `(${context.cartItemsId.length})`}</h1>
+            {context.cartItemsId.length ? (
                 <div className='cart-flex'>
                     <div>
                         <div className='selected-btn'>
