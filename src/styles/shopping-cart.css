@@ -38,6 +38,18 @@
         }
     }
 
+    .cart-items.unavailable {
+        margin-top: 24px;
+
+        & h3 {
+            color: var(--red-error);
+        }
+
+        & .attention {
+            margin-top: 24px;
+        }
+    }
+
     .summary {
         margin-top: 48px;
     }

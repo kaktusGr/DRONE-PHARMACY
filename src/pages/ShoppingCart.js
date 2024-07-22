@@ -2,6 +2,7 @@ import { React, useState, useContext, useEffect } from 'react';
 import { Context } from "../Context";
 import CartItem from '../components/CartItem';
 import CartSummary from '../components/CartSummary';
+import { Link } from 'react-router-dom';
 
 export default function ShoppingCart() {
     const context = useContext(Context);
@@ -55,9 +56,21 @@ export default function ShoppingCart() {
         context.setSelectedItems(null);
     }
 
-    const medicationsInCart = context.cartMedications
-        .map(med => <CartItem key={med.id} {...med}
-            handleSelectItem={handleSelectItem} />);
+    const medicationsInCartA = context.cartMedications
+        .filter(med => med.status === 'AVAILABLE')
+        .map(med => {
+            return <CartItem key={med.id} {...med}
+                handleSelectItem={handleSelectItem} />
+        });
+
+    const medicationsInCartUn = context.cartMedications
+        .filter(med => med.status === 'UNAVAILABLE')
+        .map(med => {
+            return <CartItem key={med.id} {...med}
+                handleSelectItem={handleSelectItem} />
+        });
+
+    console.log(medicationsInCartUn);
 
     return (
         <div className='shopping-cart'>
@@ -77,12 +90,24 @@ export default function ShoppingCart() {
                                 Delete selected items
                             </button>
                         </div>
-                        <div className='cart-items'>
+                        <div className='cart-items available'>
                             <h3>Available for delivery</h3>
                             <ul>
-                                {medicationsInCart}
+                                {medicationsInCartA}
                             </ul>
                         </div>
+                        {medicationsInCartUn.length > 0 &&
+                            <div className='cart-items unavailable'>
+                                <h3>Unavailable for delivery</h3>
+                                <ul>
+                                    {medicationsInCartUn}
+                                </ul>
+                                <div className='attention'>
+                                    <img src="./images/icons/info-circle.svg" alt="attention" />
+                                    <p>Unfortunately, this item is not available, but we can offer you similar products.<br /><Link to="/catalog">See products</Link></p>
+                                </div>
+                            </div>
+                        }
                     </div>
                     <CartSummary btnType="shopping-cart" setIsSelectedAll={setIsSelectedAll} />
                 </div>
