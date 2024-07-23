@@ -15,6 +15,9 @@ const ContextProvider = (props) => {
 
     const [droneId, setDroneId] = useState();
 
+    const [deliveryDetail, setDeliveryDetail] = useState();
+    const [isReadyPostFetch, setIsReadyPostFetch] = useState(false);
+
     const urlFilters = {
         available: "status=AVAILABLE",
         sort: {
@@ -134,6 +137,10 @@ const ContextProvider = (props) => {
         remove,
         droneId,
         setDroneId,
+        deliveryDetail,
+        setDeliveryDetail,
+        isReadyPostFetch,
+        setIsReadyPostFetch,
     }
 
     return (

@@ -158,7 +158,8 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
                 </>
             ) : (
                 <div className='summary-btns'>
-                    <Link to="/orders" id='checkout'>
+                    <Link to="/orders" id='checkout'
+                        onClick={() => context.setIsReadyPostFetch(true)}>
                         Checkout
                     </Link>
                 </div>
