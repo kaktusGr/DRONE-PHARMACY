@@ -63,13 +63,6 @@
             & .map {
                 width: 378px;
                 height: 240px;
-
-                & iframe {
-                    border: 1px solid var(--white);
-                    border-radius: 32px;
-                    height: 100%;
-                    width: 100%;
-                }
             }
         }
     }

@@ -23,11 +23,6 @@
         }
     }
 
-    & .attention {
-        padding: 12px;
-        border-radius: 12px;
-    }
-
     &>div {
         display: flex;
         justify-content: space-between;

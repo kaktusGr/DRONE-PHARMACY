@@ -9,6 +9,7 @@
 @import url(/src/styles/summary.css);
 @import url(/src/styles/checkout.css);
 @import url(/src/styles/checkout-delivery.css);
+@import url(/src/styles/modal.css);
 
 :root {
     --white: #FFFFFF;
@@ -69,6 +70,7 @@ li {
 }
 
 h1,
+h2,
 h3,
 h4 {
     font-weight: 700;
@@ -78,6 +80,10 @@ h4 {
 h1 {
     font-size: 44px;
     margin-bottom: 24px;
+}
+
+h2 {
+    font-size: 28px;
 }
 
 h3 {
@@ -92,11 +98,20 @@ hr {
     border: 1px solid #D5D5D5;
 }
 
-.attention {
+iframe {
+    border: 1px solid var(--white);
+    border-radius: 32px;
+    height: 100%;
+    width: 100%;
+}
+
+& .attention {
     display: flex;
     gap: 10px;
     align-items: flex-start;
     background-color: var(--attention-grey);
+    padding: 12px;
+    border-radius: 12px;
 }
 
 :is(.shopping-cart, .checkout) input#checkbox {
@@ -111,7 +126,8 @@ hr {
 .checkout-payment,
 .drone-detail,
 .cart-items,
-.summary {
+.summary,
+.modal-content {
     background-color: var(--white);
     padding: 28px;
     border-radius: 32px;
