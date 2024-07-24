@@ -5,9 +5,8 @@ import Modal from '../components/Modal';
 function debounce(func, delay) {
     let timeout;
     return function (...args) {
-        const context = this;
         clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(context, args), delay);
+        timeout = setTimeout(() => func.apply(this, args), delay);
     };
 }
 
@@ -43,7 +42,7 @@ export default function Orders() {
                     context.setIsReadyPostFetch(false);
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Error: ', error);
             }
         }, 500),
         [context]
@@ -52,7 +51,7 @@ export default function Orders() {
     useEffect(() => {
         if (!context.isReadyPostFetch || hasFetched) return;
         postRequest(order);
-    }, [context.isReadyPostFetch, context.droneId, hasFetched, postRequest]);
+    }, [context.isReadyPostFetch, hasFetched]);
 
 
     const deliveryNumber = context.deliveryDetail?.id?.slice(0, 8);
