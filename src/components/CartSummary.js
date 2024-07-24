@@ -24,18 +24,13 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
         }
     }, []);
 
-    const totalSelected = context.cartMedications
-        .filter(item => item.isSelected).length;
+    const totalSelected = context?.selectedItems?.length || 0;
 
-    const totalWeight = context.selectedItems ? (
-        context.selectedItems
-            .reduce((accum, current) => accum + current.weight, 0)
-    ) : 0;
+    const totalWeight = context?.selectedItems
+        ?.reduce((accum, current) => accum + current.weight, 0) || 0;
 
-    const totalPrice = context.selectedItems ? (
-        context.selectedItems
-            .reduce((accum, current) => accum + current.price, 0)
-    ) : 0;
+    const totalPrice = context?.selectedItems
+        ?.reduce((accum, current) => accum + current.price, 0) || 0;
 
     const checkDronesWeight = (totalWeight) => {
         const sortedDrones = [...drones].sort((a, b) => a.weightLimit - b.weightLimit);
@@ -158,7 +153,8 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
                 </>
             ) : (
                 <div className='summary-btns'>
-                    <Link to="/orders" id='checkout'>
+                    <Link to="/orders" id='checkout'
+                        onClick={() => context.setIsReadyPostFetch(true)}>
                         Checkout
                     </Link>
                 </div>
