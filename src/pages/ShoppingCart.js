@@ -8,7 +8,7 @@ export default function ShoppingCart() {
     const context = useContext(Context);
     const cartIDs = context.cartItemsId.join();
 
-    const [isSelectedAll, setIsSelectedAll] = useState(true);
+    const [isSelectedAll, setIsSelectedAll] = useState(false);
 
     useEffect(() => {
         let ignore = false;
@@ -21,9 +21,13 @@ export default function ShoppingCart() {
                 if (!ignore) {
                     const filteredData = data.content
                         .filter(med => context.cartItemsId.includes(med.id))
-                        .map(med => ({ ...med, price: 29.99, isSelected: true }));
+                        .map(med => med.status === 'AVAILABLE' ?
+                            ({ ...med, price: 29.99, isSelected: true }) :
+                            ({ ...med, price: 29.99, isSelected: false }));
                     context.setCartMedications(filteredData);
-                    context.setSelectedItems(filteredData);
+                    context.setSelectedItems(filteredData.filter(med => med.status === 'AVAILABLE'));
+                    setIsSelectedAll(filteredData
+                        .filter(med => med.status === 'AVAILABLE').length > 0 ? true : false);
                 }
             });
         return () => {
@@ -33,17 +37,25 @@ export default function ShoppingCart() {
 
     const handleSelectItem = (id) => {
         const updateItems = context.cartMedications
-            .map(med => med.id === id ? { ...med, isSelected: !med.isSelected } : med);
+            .map(med => med.id === id ? (
+                med.status === 'AVAILABLE' ?
+                    { ...med, isSelected: !med.isSelected } :
+                    { ...med, isSelected: false }) : med);
         context.setCartMedications(updateItems);
-        setIsSelectedAll(updateItems.every(item => item.isSelected));
-        context.setSelectedItems(updateItems.filter(med => med.isSelected));
+        setIsSelectedAll(updateItems
+            .filter(item => item.status === 'AVAILABLE')
+            .every(item => item.isSelected));
+        context.setSelectedItems(updateItems
+            .filter(med => med.isSelected));
     }
 
     const handleSelectAll = () => {
         const newSelectAll = !isSelectedAll;
         setIsSelectedAll(newSelectAll);
         const updateItems = context.cartMedications
-            .map(med => ({ ...med, isSelected: newSelectAll }));
+            .map(med => med.status === 'AVAILABLE' ?
+                ({ ...med, isSelected: newSelectAll }) :
+                ({ ...med, isSelected: false }));
         context.setCartMedications(updateItems);
         context.setSelectedItems(updateItems.filter(med => med.isSelected));
     }
@@ -53,7 +65,8 @@ export default function ShoppingCart() {
             .filter(med => med.isSelected)
             .map(med => med.id);
         context.remove(onlySelected);
-        context.setSelectedItems(null);
+        context.setSelectedItems([]);
+        setIsSelectedAll(false);
     }
 
     const medicationsInCartA = context.cartMedications
@@ -102,7 +115,8 @@ export default function ShoppingCart() {
                                 </ul>
                                 <div className='attention'>
                                     <img src="./images/icons/info-circle.svg" alt="attention" />
-                                    <p>Unfortunately, this item is not available, but we can offer you similar products.<br /><Link to="/catalog">See products</Link></p>
+                                    <p>Unfortunately, this item is not available, but we can offer you similar products.<br />
+                                        <Link to="/catalog">See products</Link></p>
                                 </div>
                             </div>
                         }

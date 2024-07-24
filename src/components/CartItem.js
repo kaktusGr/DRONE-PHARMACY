@@ -13,8 +13,7 @@ export default function CartItem(props) {
             <div className='cart-item' id={id}>
                 <input type='checkbox' id='checkbox'
                     checked={status === 'AVAILABLE' ? isSelected : false}
-                    onChange={(e) => status === 'AVAILABLE' ?
-                        handleSelectItem(id) : e.preventDefault()} />
+                    onChange={() => handleSelectItem(id)} />
                 <img src={"http://localhost:8090" + imgUrl} alt='medication' />
                 <label>
                     <div className='item-info'>
