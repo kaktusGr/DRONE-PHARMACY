@@ -8,9 +8,12 @@ export default function Product(props) {
     const productStatus = status === "AVAILABLE";
 
     return (
-        <div id={"product-" + id} className={productStatus ? "product-card" : "product-card unavailable"}>
-            {productStatus ? <img id="med" src={"http://localhost:8090" + imgUrl} alt="medication" />
-                : <img id="close" src="./images/icons/plus.svg" alt="close" />}
+        <div id={"product-" + name} className="product-card">
+            {!productStatus && <div className="unavailable-med"></div>}
+            <div className="product-img">
+                <img src={"http://localhost:8090" + imgUrl} alt={name} />
+            </div>
+
             <div className="product-info">
                 <p className="brand">Brand name</p>
                 <div className="product-name">
