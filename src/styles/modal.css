@@ -48,6 +48,11 @@
             & li {
                 font-size: 14px;
                 color: var(--grey);
+
+                &.drone-current-status {
+                    font-weight: 600;
+                    color: var(--dark-grey);
+                }
             }
         }
 

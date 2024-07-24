@@ -47,6 +47,10 @@
 
         & .attention {
             margin-top: 24px;
+
+            & a {
+                text-decoration: underline;
+            }
         }
     }
 
