@@ -1,6 +1,15 @@
-import { React, useState, useContext, useEffect } from 'react';
+import { React, useState, useContext, useEffect, useCallback } from 'react';
 import { Context } from "../Context";
 import Modal from '../components/Modal';
+
+function debounce(func, delay) {
+    let timeout;
+    return function (...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), delay);
+    };
+}
 
 export default function Orders() {
     const context = useContext(Context);
@@ -11,31 +20,40 @@ export default function Orders() {
         "medicationItems": context.selectedItems.map(item => item.id),
     };
 
-    useEffect(() => {
-        if (!context.isReadyPostFetch) return;
-        const postRequest = () => {
+    const [hasFetched, setHasFetched] = useState(false);
+
+    const postRequest = useCallback(
+        debounce(async (order) => {
             try {
                 if (context.droneId) {
-                    fetch(`http://localhost:8090/delivery/create`, {
+                    const response = await fetch('http://localhost:8090/delivery/create', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(order)
-                    })
-                        .then(result => result.json())
-                        .then(data => {
-                            console.log(data);
-                            context.setDeliveryDetail(data);
-                            context.remove(order.medicationItems);
-                        });
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    const data = await response.json();
+                    context.setDeliveryDetail(data);
+                    context.remove(order.medicationItems);
+                    setHasFetched(true);
+                    context.setIsReadyPostFetch(false);
                 }
             } catch (error) {
-                console.log('Error: ' + error);
-            } finally {
-                context.setIsReadyPostFetch(false);
+                console.error('Error:', error);
             }
-        }
-        postRequest();
-    }, [context.setIsReadyPostFetch]);
+        }, 500),
+        [context]
+    );
+
+    useEffect(() => {
+        if (!context.isReadyPostFetch || hasFetched) return;
+        postRequest(order);
+    }, [context.isReadyPostFetch, context.droneId, hasFetched, postRequest]);
+
 
     const deliveryNumber = context.deliveryDetail?.id?.slice(0, 8);
     const deliveryQtyItems = context.deliveryDetail?.items?.length;
@@ -75,16 +93,10 @@ export default function Orders() {
                         <h2>Order #{deliveryNumber}</h2>
                         <div className='modal-order-status'>
                             <ul>
-                                {Object.keys(deliveryStatus).map((key, idx) => {
-                                    if (context.deliveryDetail?.status === key) {
-                                        return <li key={idx} style={{
-                                            fontWeight: "600",
-                                            color: "#383838"
-                                        }}>{key}</li>
-                                    } else {
-                                        return <li key={idx}>{key}</li>
-                                    }
-                                })}
+                                {Object.keys(deliveryStatus).map((key, idx) =>
+                                    <li key={idx} className={context.deliveryDetail?.status === key ?
+                                        'drone-current-status' : null}>{key}</li>
+                                )}
                             </ul>
                             <hr />
                             <img src='./images/icons/drone.svg' alt='drone' style={{
