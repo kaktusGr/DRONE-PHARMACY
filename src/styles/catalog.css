@@ -31,6 +31,7 @@
 
     & button {
         cursor: pointer;
+        border: none;
     }
 
     & .choose-page {
@@ -39,7 +40,6 @@
         & button {
             width: 52px;
             height: 52px;
-            border: none;
             border-radius: 50%;
             background-color: var(--dark-grey);
             position: relative;
@@ -75,7 +75,6 @@
     }
 
     & .back-to-top {
-        border: none;
         background-color: inherit;
         font-size: 16px;
 
