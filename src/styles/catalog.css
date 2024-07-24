@@ -29,6 +29,10 @@
 .catalog-pages {
     justify-content: space-between;
 
+    & button {
+        cursor: pointer;
+    }
+
     & .choose-page {
         gap: 20px;
 
@@ -38,7 +42,6 @@
             border: none;
             border-radius: 50%;
             background-color: var(--dark-grey);
-            cursor: pointer;
             position: relative;
 
             & img {
