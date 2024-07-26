@@ -1,6 +1,7 @@
 import { React, useState, useContext, useEffect, useCallback } from 'react';
 import { Context } from "../Context";
 import Modal from '../components/Modal';
+import OrderShortInfo from '../components/OrderShortInfo';
 
 function debounce(func, delay) {
     let timeout;
@@ -53,6 +54,16 @@ export default function Orders() {
         postRequest(order);
     }, [context.isReadyPostFetch, hasFetched]);
 
+    const [allDeliveriesId, setAllDeliveriesId] = useState([
+        'cee1232a-eb3a-4019-9744-f84599577afa',
+        'ed0050ca-6bf9-4374-b493-0396798732b6',
+        '64c92691-fc79-4f8a-971a-7aaa3c09c1c9',
+        '897dce16-26f5-4af3-87ca-7fa36b52391b',
+        'b6810de9-e376-43e0-83c3-e6379bdc3359',
+    ]);
+    // const [allDeliveries, setAllDeliveries] = useState([]);
+
+    const allOrders = allDeliveriesId.map(item => <OrderShortInfo key={item} id={item} />);
 
     const deliveryNumber = context.deliveryDetail?.id?.slice(0, 8);
     const deliveryQtyItems = context.deliveryDetail?.items?.length;
@@ -73,7 +84,10 @@ export default function Orders() {
 
     return (
         <div className='orders'>
-            <h1>Orders</h1>
+            <h1>Orders ({allDeliveriesId.length})</h1>
+            <div className='all-orders'>
+                {allOrders}
+            </div>
             {context.deliveryDetail && (
                 <>
                     <button onClick={() => setModalIsOpen(true)}
