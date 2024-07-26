@@ -86,7 +86,7 @@ export default function ShoppingCart() {
     return (
         <div className='shopping-cart'>
             <h1>Shopping cart {context.cartItemsId.length > 0 && `(${context.cartItemsId.length})`}</h1>
-            {context.cartItemsId.length ? (
+            {context.cartItemsId.length > 0 ? (
                 <div className='cart-flex'>
                     <div>
                         <div className='selected-btn'>
