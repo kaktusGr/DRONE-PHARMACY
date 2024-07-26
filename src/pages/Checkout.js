@@ -44,7 +44,7 @@ export default function Checkout() {
                                 {context.selectedItems
                                     .map(item =>
                                         <div key={item.id} className='medications'>
-                                            <img src={"http://localhost:8090" + item.imgUrl} alt={item.name} />
+                                            <img id='img' src={"http://localhost:8090" + item.imgUrl} alt={item.name} />
                                             <small>{item.name}</small>
                                         </div>
                                     )}

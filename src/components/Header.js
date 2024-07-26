@@ -31,10 +31,10 @@ export default function Header() {
                         </button>
                     </div>
                     <div className="header-icons">
-                        <Link to='orders'><img src="./images/icons/user.svg" alt="account" /></Link>
-                        <Link to='favourites'><img src="./images/icons/heart.svg" alt="favourites" /></Link>
+                        <Link to='orders'><img id="img" src="./images/icons/user.svg" alt="account" /></Link>
+                        <Link to='favourites'><img id="img" src="./images/icons/heart.svg" alt="favourites" /></Link>
                         <Link to='shopping-cart'>
-                            <img src="./images/icons/cart.svg" alt="cart" />
+                            <img id="img" src="./images/icons/cart.svg" alt="cart" />
                             {context.cartItemsId.length > 0
                                 && <span className="count-products">{context.cartItemsId.length}</span>}
                         </Link>
