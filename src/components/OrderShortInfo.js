@@ -1,0 +1,59 @@
+import { React, useState, useEffect } from 'react';
+
+export default function OrderShortInfo({ id }) {
+    const [orderDetail, setOrderDetail] = useState([]);
+
+    useEffect(() => {
+        let ignore = false;
+        fetch(`http://localhost:8090/delivery/${id}/full-info`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(result => result.json())
+            .then(data => {
+                if (!ignore) {
+                    // console.log(data);
+                    setOrderDetail(data);
+                }
+            });
+        return () => {
+            ignore = true;
+        }
+    }, []);
+
+    return (
+        <div className='order-short-info'>
+            <div className='order-title'>
+                <h3>Order</h3>
+                <div className={orderDetail.status === "DELIVERED" ? 'order-status delivered' : 'order-status'}>
+                    {orderDetail.status}
+                </div>
+            </div>
+            <p className='order-number'>#{orderDetail?.id?.slice(0, 8)}</p>
+            <div className='order-info'>
+                <div className='delivery-data'>
+                    <h4>Delivery date</h4>
+                    <p>Today, 13:20</p>
+                    <h4>total weight</h4>
+                    <p>{orderDetail.capacity} G</p>
+                    <h4>total price</h4>
+                    <p>${(orderDetail.items.length * 29.99 + 5).toFixed(2)}</p>
+                </div>
+                <div className='delivery-items'>
+                    {orderDetail?.items?.map(item =>
+                        <div key={item.id} className='medications'>
+                            <img id='img' src={"http://localhost:8090" + item.imgUrl} alt={item.name} />
+                        </div>
+                    )}
+                </div>
+            </div>
+            {orderDetail.status === "DELIVERED" ? (
+                <div className='order-btns'>
+                    <button id='important'>Repeat the order</button>
+                    <button>View details</button>
+                </div>) : (
+                <button id='important'>View details</button>
+            )}
+        </div>
+    )
+}
