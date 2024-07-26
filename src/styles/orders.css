@@ -1,0 +1,77 @@
+.all-orders {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.order-short-info {
+    & .order-title {
+        display: flex;
+        justify-content: space-between;
+
+        & .order-status {
+            font-size: 10px;
+            padding: 10px;
+            border-radius: 100px;
+            background-color: var(--green);
+
+            &.delivered {
+                background-color: var(--bg-color);
+            }
+        }
+    }
+
+    & .order-number {
+        color: var(--grey);
+        text-transform: uppercase;
+    }
+
+    & .order-info,
+    .order-btns {
+        margin-top: 24px;
+    }
+
+    & .order-info {
+        display: flex;
+        justify-content: space-between;
+
+        & .delivery-data p {
+            color: var(--grey);
+            font-size: 13px;
+            margin: 4px 0 16px 0;
+        }
+
+        & .delivery-items {
+            display: flex;
+            gap: 16px;
+
+            & .medications {
+                height: 118px;
+                width: 118px;
+                background-color: var(--light-grey);
+                border-radius: 20px;
+            }
+        }
+    }
+
+    & .order-btns {
+        display: flex;
+        gap: 16px;
+    }
+
+    & button {
+        display: block;
+        text-align: center;
+        font-size: 18px;
+        padding: 16px 28px;
+        border-radius: 70px;
+        border: 2px solid var(--dark-grey);
+        background-color: var(--white);
+        cursor: pointer;
+
+        &#important {
+            background-color: var(--dark-grey);
+            color: var(--white);
+        }
+    }
+}
