@@ -5,7 +5,9 @@ const Context = createContext();
 const ContextProvider = (props) => {
     const [allMedications, setAllMedications] = useState([]);
     const [cartMedications, setCartMedications] = useState([]);
-    const [cartItemsId, setCartItemsId] = useState([]);
+    const [cartItemsId, setCartItemsId] = useState(localStorage.getItem('cart') ?
+        JSON.parse(localStorage.getItem('cart')) : []);
+
     const [availability, setAvailability] = useState(true);
     const [selectedItems, setSelectedItems] = useState([]);
 
@@ -53,7 +55,7 @@ const ContextProvider = (props) => {
 
     const updateWithCartInfo = (medications) => {
         const updateMedications = medications.map(med => {
-            const isInCart = cartItemsId.some(item => item === med.id);
+            const isInCart = cartItemsId.find(item => item === med.id);
             if (isInCart) {
                 return { ...med, status: "UNAVAILABLE" };
             } else {
@@ -102,10 +104,12 @@ const ContextProvider = (props) => {
     const append = (id) => {
         if (cartItemsId.length === 0) {
             setCartItemsId([id]);
+            localStorage.setItem('cart', JSON.stringify([id]));
         } else {
             const indexCart = cartItemsId.findIndex(value => value === id);
             if (indexCart < 0) {
                 setCartItemsId(prevIDs => [...prevIDs, id]);
+                localStorage.setItem('cart', JSON.stringify(([...cartItemsId, id])));
             }
         }
     }
@@ -114,6 +118,7 @@ const ContextProvider = (props) => {
         const idsArray = Array.isArray(ids) ? ids : [ids];
         const newCart = cartItemsId.filter(item => !idsArray.includes(item));
         setCartItemsId(newCart);
+        localStorage.setItem('cart', JSON.stringify(newCart));
         const filteredData = cartMedications.filter(med => newCart.includes(med.id));
         setCartMedications(filteredData);
         setSelectedItems(filteredData.filter(med => med.isSelected));
