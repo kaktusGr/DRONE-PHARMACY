@@ -57,21 +57,22 @@
     & .order-btns {
         display: flex;
         gap: 16px;
-    }
 
-    & button {
-        display: block;
-        text-align: center;
-        font-size: 18px;
-        padding: 16px 28px;
-        border-radius: 70px;
-        border: 2px solid var(--dark-grey);
-        background-color: var(--white);
-        cursor: pointer;
+        & button {
+            display: block;
+            text-align: center;
+            font-size: 18px;
+            padding: 16px 28px;
+            border-radius: 70px;
+            border: 2px solid var(--dark-grey);
+            background-color: var(--white);
+            cursor: pointer;
 
-        &#important {
-            background-color: var(--dark-grey);
-            color: var(--white);
+            &.important {
+                background-color: var(--dark-grey);
+                color: var(--white);
+            }
         }
     }
+
 }
