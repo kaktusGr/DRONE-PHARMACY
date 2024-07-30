@@ -5,21 +5,25 @@ export default function ModalOrder({ orderId }) {
 
     useEffect(() => {
         let ignore = false;
-        fetch(`http://localhost:8090/delivery/${orderId}/full-info`, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        })
-            .then(result => result.json())
-            .then(data => {
-                if (!ignore) {
-                    console.log(data);
-                    setCurrentOrder(data);
-                }
-            });
+        const fetchRequest = () => {
+            fetch(`http://localhost:8090/delivery/${orderId}/full-info`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            })
+                .then(result => result.json())
+                .then(data => {
+                    if (!ignore) {
+                        setCurrentOrder(data);
+                    }
+                });
+        }
+        fetchRequest();
+        const interval = setInterval(fetchRequest, 10000);
         return () => {
             ignore = true;
+            clearInterval(interval);
         }
-    }, []);
+    }, [orderId]);
 
     const deliveryNumber = currentOrder?.id?.slice(0, 8);
     const deliveryQtyItems = currentOrder?.items?.length;
