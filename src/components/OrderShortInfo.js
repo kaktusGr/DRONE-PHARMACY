@@ -1,7 +1,10 @@
 import { React, useState, useEffect } from 'react';
+import Modal from '../modals/Modal';
+import ModalOrder from '../modals/ModalOrder';
 
 export default function OrderShortInfo({ id }) {
     const [orderDetail, setOrderDetail] = useState([]);
+    const [modalIsOpen, setModalIsOpen] = useState(false);
 
     useEffect(() => {
         let ignore = false;
@@ -12,7 +15,6 @@ export default function OrderShortInfo({ id }) {
             .then(result => result.json())
             .then(data => {
                 if (!ignore) {
-                    // console.log(data);
                     setOrderDetail(data);
                 }
             });
@@ -37,7 +39,7 @@ export default function OrderShortInfo({ id }) {
                     <h4>total weight</h4>
                     <p>{orderDetail.capacity} G</p>
                     <h4>total price</h4>
-                    <p>${(orderDetail.items.length * 29.99 + 5).toFixed(2)}</p>
+                    <p>${((orderDetail?.items?.length) * 29.99 + 5).toFixed(2)}</p>
                 </div>
                 <div className='delivery-items'>
                     {orderDetail?.items?.map(item =>
@@ -47,13 +49,16 @@ export default function OrderShortInfo({ id }) {
                     )}
                 </div>
             </div>
-            {orderDetail.status === "DELIVERED" ? (
-                <div className='order-btns'>
-                    <button id='important'>Repeat the order</button>
-                    <button>View details</button>
-                </div>) : (
-                <button id='important'>View details</button>
-            )}
+            <div className='order-btns'>
+                {orderDetail.status === "DELIVERED" && <button className='important'>Repeat the order</button>}
+                <button className={orderDetail.status !== "DELIVERED" ? 'important' : null}
+                    onClick={() => setModalIsOpen(true)}>
+                    View details
+                </button>
+            </div>
+            <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
+                <ModalOrder orderId={orderDetail.id} />
+            </Modal>
         </div>
     )
 }
