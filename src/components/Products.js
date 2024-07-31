@@ -1,14 +1,11 @@
-import { React, useContext } from "react";
+import { React } from "react";
 import Product from "./Product";
-import { Context } from "../Context";
 
-export default function Products() {
-    const context = useContext(Context);
-
+export default function Products({ allMedications }) {
     return (
         <div className="catalog-products">
-            {context.allMedications.length ? (
-                context.allMedications.map(item => <Product key={item.id} {...item} />)
+            {allMedications.length ? (
+                allMedications.map(item => <Product key={item.id} {...item} />)
             ) : (
                 <p>Failed to load product list</p>
             )}
