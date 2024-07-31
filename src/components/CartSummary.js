@@ -36,12 +36,18 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
         const sortedDrones = [...drones].sort((a, b) => a.weightLimit - b.weightLimit);
         for (let drone of sortedDrones) {
             if (drone.weightLimit >= totalWeight) {
-                context.setDroneId(drone.id);
                 return drone.id;
             }
         }
         return null;
     }
+
+    useEffect(() => {
+        const droneId = checkDronesWeight(totalWeight);
+        if (droneId) {
+            context.setDroneId(droneId);
+        }
+    }, [totalWeight]);
 
     const handleChooseBestCapacity = () => {
         const sortedItems = context.selectedItems
