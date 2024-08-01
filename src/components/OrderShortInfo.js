@@ -23,10 +23,30 @@ export default function OrderShortInfo({ id }) {
         }
     }, []);
 
+    const deliveryDate = (value) => {
+        const today = new Date();
+        const months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        ];
+        return `${months[today.getMonth()]} ${today.getDate()}`;
+    }
+
     return (
         <div className='order-short-info'>
             <div className='order-title'>
-                <h3>Order</h3>
+                <h3>Order on {orderDetail?.status !== 'DELIVERED' ?
+                    deliveryDate() : 'March 17'}</h3>
                 <div className={orderDetail.status === "DELIVERED" ? 'order-status delivered' : 'order-status'}>
                     {orderDetail.status}
                 </div>
@@ -35,7 +55,8 @@ export default function OrderShortInfo({ id }) {
             <div className='order-info'>
                 <div className='delivery-data'>
                     <h4>Delivery date</h4>
-                    <p>Today, 13:20</p>
+                    <p>{orderDetail?.status !== 'DELIVERED' ?
+                        'Today, in 30 minutes' : 'March 17, 10:40'}</p>
                     <h4>total weight</h4>
                     <p>{orderDetail.capacity} G</p>
                     <h4>total price</h4>

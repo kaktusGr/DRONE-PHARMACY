@@ -75,9 +75,11 @@ export default function ModalOrder({ orderId }) {
                             <td><h4>Medications</h4></td>
                         </tr>
                         <tr>
-                            <td>Today, 13:20</td>
-                            <td>Belgrade</td>
-                            <td>Anna Smith</td>
+                            {currentOrder?.status !== 'DELIVERED' ?
+                                <td>Today, in 30 minutes</td> :
+                                <td>March 8, 10:40</td>}
+                            <td>12 Default St, City, Country</td>
+                            <td>Full Name</td>
                             <td rowSpan='3'>
                                 {currentOrder?.items?.map(item => (
                                     <li key={item.id}>{item.name}</li>
