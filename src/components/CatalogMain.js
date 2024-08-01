@@ -84,7 +84,7 @@ export default function CatalogMain() {
     const currentPage = (value) => {
         switch (value) {
             case "left":
-                refPage.current = refPage.current === 0 ? refPage.current = 0 : refPage.current - 1;
+                refPage.current = refPage.current === 0 ? 0 : refPage.current - 1;
                 break;
             case "right":
                 refPage.current = refPage.current === allPages - 1
