@@ -20,7 +20,6 @@ export default function ShoppingCart() {
             .then(data => {
                 if (!ignore) {
                     const filteredData = data.content
-                        .filter(med => context.cartItemsId.includes(med.id))
                         .map(med => med.status === 'AVAILABLE' ?
                             ({ ...med, price: 29.99, isSelected: true }) :
                             ({ ...med, price: 29.99, isSelected: false }));

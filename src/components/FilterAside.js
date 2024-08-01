@@ -1,8 +1,6 @@
-import { React, useState, useContext } from "react";
-import { Context } from "../Context";
+import { React, useState } from "react";
 
-export default function FilterAside() {
-    const context = useContext(Context);
+export default function FilterAside({ availability, toggleAvailable, totalMed }) {
     const [showMore, setShowMore] = useState({ display: 'none' });
     const [hideBtn, setHideBtn] = useState(false);
 
@@ -12,7 +10,7 @@ export default function FilterAside() {
                 <h3>Medicines</h3>
                 <button className="btn-underline">Clear All</button>
             </div>
-            <p>{context.totalMed} results</p>
+            <p>{totalMed} results</p>
 
             <div className="filter-ul">
                 <h4>weight</h4>
@@ -58,8 +56,8 @@ export default function FilterAside() {
                 <h4>availability</h4>
                 <div className="toggle-container">
                     <input type="checkbox" id="availability" name="availability"
-                        checked={context.availability}
-                        onChange={(e) => context.toggleAvailable(e.target.checked)} />
+                        checked={availability}
+                        onChange={(e) => toggleAvailable(e.target.checked)} />
                     <label htmlFor="availability">
                         <div className="toggle-ball"></div>
                     </label>
