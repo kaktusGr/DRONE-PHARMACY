@@ -1,46 +1,46 @@
 import { React } from 'react';
 
+const now = new Date();
+
+const getDay = (value) => {
+    const week = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+    const dateCopy = new Date(now);
+    switch (value) {
+        case "today":
+            break;
+        case "tomorrow":
+            dateCopy.setDate(dateCopy.getDate() + 1);
+            break;
+        case "dayAfterTomorrow":
+            dateCopy.setDate(dateCopy.getDate() + 2);
+            break;
+        default:
+            console.log("Error switch");
+    }
+    return week[dateCopy.getDay()];
+}
+
+const setDateAfterTomorrow = () => {
+    const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    ];
+    const dateCopy = new Date(now);
+    dateCopy.setDate(dateCopy.getDate() + 2);
+    return `${months[dateCopy.getMonth()]} ${dateCopy.getDate()}`;
+}
+
 export default function CheckoutDelivery() {
-    const now = new Date();
-
-    const getDay = (value) => {
-        const week = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-        const dateCopy = new Date(now);
-        switch (value) {
-            case "today":
-                break;
-            case "tomorrow":
-                dateCopy.setDate(dateCopy.getDate() + 1);
-                break;
-            case "dayAfterTomorrow":
-                dateCopy.setDate(dateCopy.getDate() + 2);
-                break;
-            default:
-                console.log("Error switch");
-        }
-        return week[dateCopy.getDay()];
-    }
-
-    const setDateAfterTomorrow = () => {
-        const months = [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December"
-        ];
-        const dateCopy = new Date(now);
-        dateCopy.setDate(dateCopy.getDate() + 2);
-        return `${months[dateCopy.getMonth()]} ${dateCopy.getDate()}`;
-    }
-
     function handleClick(e) {
         if (!e.target.closest('.date.active')) {
             document.querySelectorAll('.active').forEach(item => item.classList.remove('active'));
@@ -119,3 +119,5 @@ export default function CheckoutDelivery() {
         </div>
     )
 }
+
+module.exports = { getDay, setDateAfterTomorrow };
