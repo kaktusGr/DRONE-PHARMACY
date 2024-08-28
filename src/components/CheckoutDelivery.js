@@ -1,26 +1,25 @@
 import { React } from 'react';
 
-const now = new Date();
-
 const getDay = (value) => {
+    const now = new Date();
     const week = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-    const dateCopy = new Date(now);
     switch (value) {
         case "today":
             break;
         case "tomorrow":
-            dateCopy.setDate(dateCopy.getDate() + 1);
+            now.setDate(now.getDate() + 1);
             break;
         case "dayAfterTomorrow":
-            dateCopy.setDate(dateCopy.getDate() + 2);
+            now.setDate(now.getDate() + 2);
             break;
         default:
-            console.log("Error switch");
+            throw new Error("Invalid value provided");
     }
-    return week[dateCopy.getDay()];
+    return week[now.getDay()];
 }
 
 const setDateAfterTomorrow = () => {
+    const now = new Date();
     const months = [
         "January",
         "February",
@@ -35,9 +34,8 @@ const setDateAfterTomorrow = () => {
         "November",
         "December"
     ];
-    const dateCopy = new Date(now);
-    dateCopy.setDate(dateCopy.getDate() + 2);
-    return `${months[dateCopy.getMonth()]} ${dateCopy.getDate()}`;
+    now.setDate(now.getDate() + 2);
+    return `${months[now.getMonth()]} ${now.getDate()}`;
 }
 
 export default function CheckoutDelivery() {
