@@ -1,6 +1,10 @@
 import { React } from 'react';
 
-const getDay = (value) => {
+const getDay = function (value) {
+    if (arguments.length > 1) {
+        throw new Error("Too many arguments provided");
+    }
+
     const now = new Date();
     const week = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
     switch (value) {
@@ -18,7 +22,11 @@ const getDay = (value) => {
     return week[now.getDay()];
 }
 
-const setDateAfterTomorrow = () => {
+const setDateAfterTomorrow = function () {
+    if (arguments.length > 0) {
+        throw new Error("Unnecessary argument provided");
+    }
+
     const now = new Date();
     const months = [
         "January",
@@ -118,4 +126,4 @@ export default function CheckoutDelivery() {
     )
 }
 
-module.exports = { getDay, setDateAfterTomorrow };
+export { getDay, setDateAfterTomorrow };
