@@ -23,7 +23,7 @@ describe('Checkout delivery:', () => {
             expect(getDay('today')).toBe('WED');
         })
 
-        it('should return correct "tomorrow" (THU)', () => {
+        it('should return correct "tomorrow" day (THU)', () => {
             expect(getDay('tomorrow')).toBe("THU");
         })
 
@@ -38,7 +38,7 @@ describe('Checkout delivery:', () => {
             expect(getDay('dayAfterTomorrow')).toBe('MON');
         })
 
-        it('should handle leap year correctly', () => {
+        it('should return correct day in leap year', () => {
             jest.setSystemTime(new Date('2024-02-28T00:00:00'));
             expect(getDay('tomorrow')).toBe('THU');
             expect(getDay('dayAfterTomorrow')).toBe('FRI');
