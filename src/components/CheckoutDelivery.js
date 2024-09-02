@@ -1,46 +1,52 @@
 import { React } from 'react';
 
-export default function CheckoutDelivery() {
+const getDay = function (value) {
+    if (arguments.length > 1) {
+        throw new Error("Too many arguments provided");
+    }
+
     const now = new Date();
+    const week = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+    switch (value) {
+        case "today":
+            break;
+        case "tomorrow":
+            now.setDate(now.getDate() + 1);
+            break;
+        case "dayAfterTomorrow":
+            now.setDate(now.getDate() + 2);
+            break;
+        default:
+            throw new Error("Invalid value provided");
+    }
+    return week[now.getDay()];
+}
 
-    const getDay = (value) => {
-        const week = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-        const dateCopy = new Date(now);
-        switch (value) {
-            case "today":
-                break;
-            case "tomorrow":
-                dateCopy.setDate(dateCopy.getDate() + 1);
-                break;
-            case "dayAfterTomorrow":
-                dateCopy.setDate(dateCopy.getDate() + 2);
-                break;
-            default:
-                console.log("Error switch");
-        }
-        return week[dateCopy.getDay()];
+const setDateAfterTomorrow = function () {
+    if (arguments.length > 0) {
+        throw new Error("Unnecessary argument provided");
     }
 
-    const setDateAfterTomorrow = () => {
-        const months = [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December"
-        ];
-        const dateCopy = new Date(now);
-        dateCopy.setDate(dateCopy.getDate() + 2);
-        return `${months[dateCopy.getMonth()]} ${dateCopy.getDate()}`;
-    }
+    const now = new Date();
+    const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    ];
+    now.setDate(now.getDate() + 2);
+    return `${months[now.getMonth()]} ${now.getDate()}`;
+}
 
+export default function CheckoutDelivery() {
     function handleClick(e) {
         if (!e.target.closest('.date.active')) {
             document.querySelectorAll('.active').forEach(item => item.classList.remove('active'));
@@ -119,3 +125,5 @@ export default function CheckoutDelivery() {
         </div>
     )
 }
+
+export { getDay, setDateAfterTomorrow };
