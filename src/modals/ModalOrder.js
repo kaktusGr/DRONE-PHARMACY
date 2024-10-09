@@ -77,7 +77,7 @@ export default function ModalOrder({ orderId }) {
                         <tr>
                             {currentOrder?.status !== 'DELIVERED' ?
                                 <td>Today, in 30 minutes</td> :
-                                <td>March 8, 10:40</td>}
+                                <td>March 17, 10:40</td>}
                             <td>12 Default St, City, Country</td>
                             <td>Full Name</td>
                             <td rowSpan='3'>

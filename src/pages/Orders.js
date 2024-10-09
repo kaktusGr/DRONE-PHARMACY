@@ -2,6 +2,8 @@ import { React, useState, useContext, useEffect, useCallback } from 'react';
 import { Context } from "../Context";
 import OrderShortInfo from '../components/OrderShortInfo';
 import PersonalInfo from '../components/PersonalInfo';
+import Modal from '../modals/Modal';
+import ModalOrder from '../modals/ModalOrder';
 
 function debounce(func, delay) {
     let timeout;
@@ -21,7 +23,8 @@ export default function Orders() {
 
     const [hasFetched, setHasFetched] = useState(false);
     const [allDeliveries, setAllDeliveries] = useState([]);
-    const [currentOrderId, setCurrentOrderId] = useState('');
+    const [currentOrderId, setCurrentOrderId] = useState();
+    const [modalIsOpen, setModalIsOpen] = useState(true);
 
     const postRequest = useCallback(
         debounce(async (order) => {
@@ -71,7 +74,7 @@ export default function Orders() {
         return () => {
             ignore = true;
         }
-    }, []);
+    }, [currentOrderId]);
 
     const allOrders = allDeliveries.map(item =>
         <OrderShortInfo key={item.id} id={item.id} />);
@@ -85,6 +88,11 @@ export default function Orders() {
                     {allOrders}
                 </div>
             </div>
+            {currentOrderId && 
+                <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
+                    <ModalOrder orderId={currentOrderId} />
+                </Modal>
+            }
         </div>
     )
 }
