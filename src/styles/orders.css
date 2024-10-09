@@ -40,10 +40,6 @@
             & ul {
                 color: var(--grey);
 
-                & :has(input:checked) label {
-                    color: var(--dark-grey);
-                }
-
                 & li {
                     margin-bottom: 8px;
 
@@ -58,10 +54,6 @@
                         background-color: var(--light-grey);
                         padding: 8px;
                         border-radius: 8px;
-                    }
-
-                    &:hover:not(.active) {
-                        text-decoration: underline;
                     }
                 }
             }
@@ -142,15 +134,11 @@
             border-radius: 70px;
             border: 2px solid var(--dark-grey);
             background-color: var(--white);
-            cursor: pointer;
 
             &.important {
                 background-color: var(--dark-grey);
                 color: var(--white);
-            }
-
-            &#repeat-order {
-                cursor: default;
+                cursor: pointer;
             }
         }
     }

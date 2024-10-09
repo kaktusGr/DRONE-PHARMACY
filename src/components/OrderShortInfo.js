@@ -28,8 +28,7 @@ export default function OrderShortInfo(props) {
     return (
         <div className='order-short-info'>
             <div className='order-title'>
-                <h3>Order on {status !== 'DELIVERED' ?
-                    deliveryDate() : 'March 17'}</h3>
+                <h3>Order on {status === 'DELIVERED' ? 'March 17' : deliveryDate()}</h3>
                 <div className={status === "DELIVERED" ? 'order-status delivered' : 'order-status'}>
                     {status}
                 </div>
@@ -38,8 +37,7 @@ export default function OrderShortInfo(props) {
             <div className='order-info'>
                 <div className='delivery-data'>
                     <h4>Delivery date</h4>
-                    <p>{status !== 'DELIVERED' ?
-                        'Today, in 30 minutes' : 'March 17, 10:40'}</p>
+                    <p>{status === 'DELIVERED' ? 'March 17, 10:40' : 'Today, in 30 minutes'}</p>
                     <h4>total weight</h4>
                     <p>{capacity} G</p>
                     <h4>total price</h4>
@@ -57,7 +55,7 @@ export default function OrderShortInfo(props) {
                 <button className='important' onClick={() => setModalIsOpen(true)}>
                     View details
                 </button>
-                {status === "DELIVERED" && <button id='repeat-order'>Repeat the order</button>}
+                {status === "DELIVERED" && <button>Repeat the order</button>}
             </div>
             <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
                 <ModalOrder orderId={id} />
