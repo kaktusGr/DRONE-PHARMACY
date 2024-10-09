@@ -20,6 +20,8 @@ export default function Orders() {
     };
 
     const [hasFetched, setHasFetched] = useState(false);
+    const [allDeliveries, setAllDeliveries] = useState([]);
+    const [currentOrderId, setCurrentOrderId] = useState('');
 
     const postRequest = useCallback(
         debounce(async (order) => {
@@ -36,7 +38,7 @@ export default function Orders() {
                     }
 
                     const data = await response.json();
-                    setAllDeliveriesId(prevId => [data.id, ...prevId]);
+                    setCurrentOrderId(data.id);
                     context.remove(order.medicationItems);
                     setHasFetched(true);
                     context.setIsReadyPostFetch(false);
@@ -51,24 +53,34 @@ export default function Orders() {
     useEffect(() => {
         if (!context.isReadyPostFetch || hasFetched) return;
         postRequest(order);
-    }, [context.isReadyPostFetch, hasFetched]);
+    }, [context.isReadyPostFetch, hasFetched, order]);
 
-    const [allDeliveriesId, setAllDeliveriesId] = useState([
-        'cee1232a-eb3a-4019-9744-f84599577afa',
-        'ed0050ca-6bf9-4374-b493-0396798732b6',
-        '64c92691-fc79-4f8a-971a-7aaa3c09c1c9',
-        '897dce16-26f5-4af3-87ca-7fa36b52391b',
-        'b6810de9-e376-43e0-83c3-e6379bdc3359',
-    ]);
+    useEffect(() => {
+        let ignore = false;
+        fetch("http://localhost:8090/delivery", {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(result => result.json())
+            .then(data => {
+                if (!ignore) {
+                    // setAllPages(data.totalPages);
+                    setAllDeliveries(data.content);
+                }
+            });
+        return () => {
+            ignore = true;
+        }
+    }, []);
 
-    const allOrders = allDeliveriesId.map(item =>
-        <OrderShortInfo key={item} id={item} />);
+    const allOrders = allDeliveries.map(item =>
+        <OrderShortInfo key={item.id} id={item.id} />);
 
     return (
         <div className='orders'>
             <PersonalInfo />
             <div className='orders-info'>
-                <h1>Orders ({allDeliveriesId.length})</h1>
+                <h1>Orders ({allDeliveries.length})</h1>
                 <div className='all-orders'>
                     {allOrders}
                 </div>
