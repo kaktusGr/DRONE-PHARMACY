@@ -60,14 +60,13 @@ export default function Orders() {
 
     useEffect(() => {
         let ignore = false;
-        fetch("http://localhost:8090/delivery", {
+        fetch("http://localhost:8090/delivery?sort=status,desc", {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
             .then(result => result.json())
             .then(data => {
                 if (!ignore) {
-                    // setAllPages(data.totalPages);
                     setAllDeliveries(data.content);
                 }
             });
@@ -76,8 +75,8 @@ export default function Orders() {
         }
     }, [currentOrderId]);
 
-    const allOrders = allDeliveries.map(item =>
-        <OrderShortInfo key={item.id} id={item.id} />);
+    const allOrders = allDeliveries.map(delivery =>
+        <OrderShortInfo key={delivery.id} {...delivery} />);
 
     return (
         <div className='orders'>

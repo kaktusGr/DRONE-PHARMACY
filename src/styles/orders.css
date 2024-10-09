@@ -148,6 +148,10 @@
                 background-color: var(--dark-grey);
                 color: var(--white);
             }
+
+            &#repeat-order {
+                cursor: default;
+            }
         }
     }
 
