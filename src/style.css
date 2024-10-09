@@ -9,6 +9,7 @@
 @import url(/src/styles/summary.css);
 @import url(/src/styles/checkout.css);
 @import url(/src/styles/checkout-delivery.css);
+@import url(/src/styles/orders.css);
 @import url(/src/styles/modal.css);
 
 :root {
@@ -19,6 +20,7 @@
     --grey: #838383;
     --dark-grey: #383838;
     --red-error: #B60000;
+    --green: #C0E9D7;
 }
 
 * {
@@ -105,6 +107,17 @@ iframe {
     width: 100%;
 }
 
+.medications img {
+    box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.1);
+}
+
+& img#img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+    border-radius: 20px;
+}
+
 & .attention {
     display: flex;
     gap: 10px;
@@ -120,6 +133,8 @@ iframe {
     border: 1px solid var(--grey);
 }
 
+.filter-aside,
+.personal-info,
 .checkout-selected-med,
 .checkout-customer,
 .checkout-delivery,
@@ -127,7 +142,8 @@ iframe {
 .drone-detail,
 .cart-items,
 .summary,
-.modal-content {
+.modal-content,
+.order-short-info {
     background-color: var(--white);
     padding: 28px;
     border-radius: 32px;

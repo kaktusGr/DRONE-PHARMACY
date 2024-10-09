@@ -78,9 +78,10 @@
     gap: 20px;
     margin: 24px 0;
 
-    &>img {
+
+    & .medications {
         width: 178px;
-        min-height: 178px;
+        height: 178px;
         border-radius: 32px;
         background-color: var(--grey);
     }

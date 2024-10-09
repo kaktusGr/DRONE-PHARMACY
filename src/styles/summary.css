@@ -43,13 +43,8 @@
             margin-bottom: 20px;
             height: 118px;
             width: 118px;
-
-            & img {
-                border-radius: 20px;
-                object-fit: cover;
-                height: 100%;
-                width: 100%;
-            }
+            background-color: var(--light-grey);
+            border-radius: 20px;
         }
     }
 }

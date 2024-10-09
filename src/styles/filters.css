@@ -4,9 +4,6 @@
     gap: 24px;
     height: 100%;
     width: clamp(240px, 30vw, 300px);
-    background-color: var(--white);
-    border-radius: 32px;
-    padding: 28px;
 
     @media (width < 646px) {
         position: absolute;
