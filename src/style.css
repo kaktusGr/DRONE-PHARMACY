@@ -133,6 +133,8 @@ iframe {
     border: 1px solid var(--grey);
 }
 
+.filter-aside,
+.personal-info,
 .checkout-selected-med,
 .checkout-customer,
 .checkout-delivery,

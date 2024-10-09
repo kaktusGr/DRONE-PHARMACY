@@ -1,6 +1,7 @@
 import { React, useState, useContext, useEffect, useCallback } from 'react';
 import { Context } from "../Context";
 import OrderShortInfo from '../components/OrderShortInfo';
+import PersonalInfo from '../components/PersonalInfo';
 
 function debounce(func, delay) {
     let timeout;
@@ -65,9 +66,12 @@ export default function Orders() {
 
     return (
         <div className='orders'>
-            <h1>Orders ({allDeliveriesId.length})</h1>
-            <div className='all-orders'>
-                {allOrders}
+            <PersonalInfo />
+            <div className='orders-info'>
+                <h1>Orders ({allDeliveriesId.length})</h1>
+                <div className='all-orders'>
+                    {allOrders}
+                </div>
             </div>
         </div>
     )

@@ -1,7 +1,83 @@
-.all-orders {
+.orders {
     display: flex;
-    flex-direction: column;
     gap: 24px;
+    justify-content: space-between;
+    position: relative;
+
+    & .personal-info {
+        position: sticky;
+        top: 103.5px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        height: 100%;
+        min-width: 300px;
+
+        @media (width < 1100px) {
+            top: 225px;
+        }
+
+        &>div:first-child {
+            margin: 0 auto;
+
+            & .personal-photo {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                background-color: var(--light-grey);
+                margin-bottom: 16px;
+                position: relative;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+
+        & div {
+            & h4 {
+                margin-bottom: 16px;
+            }
+
+            & ul {
+                color: var(--grey);
+
+                & :has(input:checked) label {
+                    color: var(--dark-grey);
+                }
+
+                & li {
+                    margin-bottom: 8px;
+
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+
+                    &.active {
+                        display: inline-block;
+                        font-weight: 700;
+                        color: var(--dark-grey);
+                        background-color: var(--light-grey);
+                        padding: 8px;
+                        border-radius: 8px;
+                    }
+
+                    &:hover:not(.active) {
+                        text-decoration: underline;
+                    }
+                }
+            }
+        }
+
+    }
+
+    & .orders-info {
+        width: 100%;
+
+        & .all-orders {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+    }
 }
 
 .order-short-info {
