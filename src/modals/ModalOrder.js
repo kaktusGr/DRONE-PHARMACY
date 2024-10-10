@@ -5,6 +5,7 @@ export default function ModalOrder({ orderId }) {
 
     useEffect(() => {
         let ignore = false;
+        let checkStatus = '';
         const fetchRequest = () => {
             fetch(`http://localhost:8090/delivery/${orderId}/full-info`, {
                 method: 'GET',
@@ -14,11 +15,16 @@ export default function ModalOrder({ orderId }) {
                 .then(data => {
                     if (!ignore) {
                         setCurrentOrder(data);
+                        checkStatus = data.status;
                     }
                 });
         }
         fetchRequest();
-        const interval = setInterval(fetchRequest, 10000);
+        const interval = setInterval(() => {
+            if (checkStatus !== "DELIVERED") {
+                fetchRequest();
+            }
+        }, 10000);
         return () => {
             ignore = true;
             clearInterval(interval);
