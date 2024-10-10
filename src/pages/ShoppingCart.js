@@ -12,23 +12,25 @@ export default function ShoppingCart() {
 
     useEffect(() => {
         let ignore = false;
-        fetch(`http://localhost:8090/medication?size=20&ids=${cartIDs}`, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        })
-            .then(result => result.json())
-            .then(data => {
-                if (!ignore) {
-                    const filteredData = data.content
-                        .map(med => med.status === 'AVAILABLE' ?
-                            ({ ...med, price: 29.99, isSelected: true }) :
-                            ({ ...med, price: 29.99, isSelected: false }));
-                    context.setCartMedications(filteredData);
-                    context.setSelectedItems(filteredData.filter(med => med.status === 'AVAILABLE'));
-                    setIsSelectedAll(filteredData
-                        .filter(med => med.status === 'AVAILABLE').length > 0 ? true : false);
-                }
-            });
+        if (cartIDs) {
+            fetch(`http://localhost:8090/medication?size=20&ids=${cartIDs}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            })
+                .then(result => result.json())
+                .then(data => {
+                    if (!ignore) {
+                        const filteredData = data.content
+                            .map(med => med.status === 'AVAILABLE' ?
+                                ({ ...med, price: 29.99, isSelected: true }) :
+                                ({ ...med, price: 29.99, isSelected: false }));
+                        context.setCartMedications(filteredData);
+                        context.setSelectedItems(filteredData.filter(med => med.status === 'AVAILABLE'));
+                        setIsSelectedAll(filteredData
+                            .filter(med => med.status === 'AVAILABLE').length > 0 ? true : false);
+                    }
+                });
+        }
         return () => {
             ignore = true;
         }
