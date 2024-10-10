@@ -16,64 +16,68 @@ function debounce(func, delay) {
 export default function Orders() {
     const context = useContext(Context);
 
-    const order = {
-        "droneId": context.droneId,
-        "medicationItems": context.selectedItems.map(item => item.id),
-    };
-
     const [hasFetched, setHasFetched] = useState(false);
     const [allDeliveries, setAllDeliveries] = useState([]);
     const [currentOrderId, setCurrentOrderId] = useState();
     const [modalIsOpen, setModalIsOpen] = useState(true);
 
-    const postRequest = useCallback(
-        debounce(async (order) => {
-            try {
-                if (context.droneId) {
-                    const response = await fetch('http://localhost:8090/delivery/create', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(order)
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-
-                    const data = await response.json();
-                    setCurrentOrderId(data.id);
-                    context.remove(order.medicationItems);
-                    setHasFetched(true);
-                    context.setIsReadyPostFetch(false);
-                }
-            } catch (error) {
-                console.error('Error: ', error);
-            }
-        }, 500),
-        [context]
-    );
-
-    useEffect(() => {
-        if (!context.isReadyPostFetch || hasFetched) return;
-        postRequest(order);
-    }, [context.isReadyPostFetch, hasFetched, order]);
-
-    useEffect(() => {
-        let ignore = false;
-        fetch("http://localhost:8090/delivery?sort=status,desc", {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        })
-            .then(result => result.json())
-            .then(data => {
-                if (!ignore) {
-                    setAllDeliveries(data.content);
-                }
+    const getDeliveries = useCallback(async () => {
+        try {
+            const response = await fetch("http://localhost:8090/delivery?sort=status,desc", {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
             });
-        return () => {
-            ignore = true;
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            setAllDeliveries(data.content);
+        } catch (error) {
+            console.error('Error getting order history: ', error);
         }
-    }, [currentOrderId]);
+    }, []);
+
+    const postAndGetDeliveries = useCallback(
+        debounce(async (order) => {
+        try {
+            if (context.droneId && context.isReadyPostFetch && !hasFetched) {
+                const response = await fetch('http://localhost:8090/delivery/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(order)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                setCurrentOrderId(data.id);
+                context.remove(order.medicationItems);
+                context.setIsReadyPostFetch(false);
+                setHasFetched(true);
+
+                await getDeliveries();
+            } else if (!hasFetched) {
+                await getDeliveries();
+                setHasFetched(true);
+            }
+        } catch (error) {
+            console.error('Error order creation: ', error);
+        }
+    }, 500), [context, hasFetched, getDeliveries]);
+
+    useEffect(() => {
+        const order = {
+                "droneId": context.droneId,
+                "medicationItems": context.selectedItems.map(item => item.id),
+            };
+        if (!hasFetched) {
+            postAndGetDeliveries(order);
+        }
+    });
 
     const allOrders = allDeliveries.map(delivery =>
         <OrderShortInfo key={delivery.id} {...delivery} />);
@@ -87,7 +91,7 @@ export default function Orders() {
                     {allOrders}
                 </div>
             </div>
-            {currentOrderId && 
+            {currentOrderId &&
                 <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
                     <ModalOrder orderId={currentOrderId} />
                 </Modal>
