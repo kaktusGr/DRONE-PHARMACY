@@ -30,7 +30,7 @@ export default function Orders() {
     const getDeliveries = useCallback(async () => {
         try {
             if (!allDataLoaded) {
-                const response = await fetch(`http://localhost:8090/delivery?sort=status,asc&size=3&page=${currentPage}`, {
+                const response = await fetch(`http://localhost:8090/delivery?sort=status,id,desc&size=3&page=${currentPage}`, {
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json' }
                 });
