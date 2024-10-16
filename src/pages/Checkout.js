@@ -1,13 +1,13 @@
-import { React, useState, useContext } from 'react';
+import { React, useState } from 'react';
 import { Link } from "react-router-dom";
-import { Context } from "../Context";
 import CheckoutDelivery from '../components/CheckoutDelivery';
 import CartSummary from '../components/CartSummary';
 import DroneDetail from '../components/DroneDetail';
 
 export default function Checkout() {
-    const context = useContext(Context);
     const [isOpen, setIsOpen] = useState(false);
+
+    const selectedItems = JSON.parse(localStorage.getItem('selected-items'));
 
     return (
         <div className='checkout'>
@@ -39,9 +39,9 @@ export default function Checkout() {
                 <div className='checkout-summary'>
                     <div className='checkout-selected-med'>
                         <h3>Selected medications</h3>
-                        {context.selectedItems.length > 0 &&
+                        {selectedItems.length > 0 &&
                             <div>
-                                {context.selectedItems
+                                {selectedItems
                                     .map(item =>
                                         <div key={item.id} className='medications'>
                                             <img id='img' src={"http://localhost:8090" + item.imgUrl} alt={item.name} />

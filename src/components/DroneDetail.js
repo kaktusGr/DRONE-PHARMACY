@@ -1,9 +1,6 @@
-import { React, useState, useContext, useEffect } from 'react';
-import { Context } from "../Context";
+import { React, useState, useEffect } from 'react';
 
 export default function DroneDetail() {
-    const context = useContext(Context);
-
     const [droneDetail, setDroneDetail] = useState({
         model: "—",
         serialNumber: "—",
@@ -12,10 +9,12 @@ export default function DroneDetail() {
         status: "—",
     });
 
+    const availableDroneId = JSON.parse(localStorage.getItem('drone'));
+
     useEffect(() => {
         let ignore = false;
-        if (context.droneId) {
-            fetch(`http://localhost:8090/drone/${context.droneId}/state`, {
+        if (availableDroneId) {
+            fetch(`http://localhost:8090/drone/${availableDroneId}/state`, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' }
             })
@@ -39,7 +38,7 @@ export default function DroneDetail() {
         return () => {
             ignore = true;
         }
-    }, []);
+    }, [availableDroneId]);
 
     return (
         <div className='drone-detail'>

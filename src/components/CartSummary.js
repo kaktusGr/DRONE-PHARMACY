@@ -24,34 +24,34 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
         }
     }, []);
 
-    const totalSelected = context?.selectedItems?.length || 0;
+    const selectedItems = localStorage.getItem('selected-items') ?
+        JSON.parse(localStorage.getItem('selected-items')) : [];
 
-    const totalWeight = context?.selectedItems
-        ?.reduce((accum, current) => accum + current.weight, 0) || 0;
+    const totalSelected = selectedItems.length || 0;
 
-    const totalPrice = context?.selectedItems
-        ?.reduce((accum, current) => accum + current.price, 0) || 0;
+    const totalWeight = selectedItems
+        .reduce((accum, current) => accum + current.weight, 0) || 0;
+
+    const totalPrice = selectedItems
+        .reduce((accum, current) => accum + current.price, 0) || 0;
 
     const checkDronesWeight = (totalWeight) => {
+        if (totalSelected === 0) {
+            localStorage.setItem('drone', null);
+            return;
+        }
         const sortedDrones = [...drones].sort((a, b) => a.weightLimit - b.weightLimit);
         for (let drone of sortedDrones) {
             if (drone.weightLimit >= totalWeight) {
+                localStorage.setItem('drone', JSON.stringify(drone.id));
                 return drone.id;
             }
         }
         return null;
     }
 
-    useEffect(() => {
-        const droneId = checkDronesWeight(totalWeight);
-        if (droneId) {
-            context.setDroneId(droneId);
-        }
-    }, [totalWeight]);
-
     const handleChooseBestCapacity = () => {
-        const sortedItems = context.selectedItems
-            .filter(item => item.isSelected)
+        const sortedItems = context.cartMedications
             .sort((a, b) => b.weight - a.weight);
 
         const calculateTotalWeight = (items) => {
@@ -67,8 +67,8 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
                 for (let i = 0; i < items.length; i++) {
                     const weightWithoutItem = totalWeight - items[i].weight;
                     const droneId = checkDronesWeight(weightWithoutItem);
-                    if (droneId !== null && (totalWeight - weightWithoutItem) < minDifference) {
-                        context.setDroneId(droneId);
+                    if (droneId && (totalWeight - weightWithoutItem) < minDifference) {
+                        localStorage.setItem('drone', JSON.stringify(droneId));
                         bestItemToRemoveIndex = i;
                         minDifference = totalWeight - weightWithoutItem;
                     }
@@ -85,6 +85,7 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
         }
 
         const updatedItems = updateItemsSelection([...sortedItems]);
+        localStorage.setItem('selected-items', JSON.stringify(updatedItems));
         context.setSelectedItems(updatedItems);
         const newCartMedications = context.cartMedications.map(med => {
             const updatedItem = updatedItems.find(item => item.id === med.id);

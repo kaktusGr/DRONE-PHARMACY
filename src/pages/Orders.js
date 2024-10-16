@@ -27,6 +27,8 @@ export default function Orders() {
     const totalPages = useRef(0);
     const [currentPage, setCurrentPage] = useState(0);
 
+    const availableDroneId = JSON.parse(localStorage.getItem('drone'));
+
     const getDeliveries = useCallback(async () => {
         try {
             if (!allDataLoaded) {
@@ -56,7 +58,7 @@ export default function Orders() {
     const postAndGetDeliveries = useCallback(
         debounce(async (order) => {
             try {
-                if (context.droneId && context.isReadyPostFetch && !hasFetched) {
+                if (availableDroneId && context.isReadyPostFetch && !hasFetched) {
                     const response = await fetch('http://localhost:8090/delivery/create', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -86,13 +88,13 @@ export default function Orders() {
 
     useEffect(() => {
         const order = {
-            "droneId": context.droneId,
-            "medicationItems": context.selectedItems.map(item => item.id),
+            "droneId": availableDroneId,
+            "medicationItems": JSON.parse(localStorage.getItem('selected-items')).map(item => item.id),
         };
         if (!allDataLoaded) {
             postAndGetDeliveries(order);
         }
-    }, [hasFetched, context, postAndGetDeliveries, allDataLoaded]);
+    }, [hasFetched, availableDroneId, postAndGetDeliveries, allDataLoaded]);
 
     const handleScroll = debounce(() => {
         const elemScrollTriger = document.getElementById('scroll-point');
@@ -125,7 +127,7 @@ export default function Orders() {
     }, [allDataLoaded, handleScroll])
 
     const ordersList = [...allDeliveries].map(delivery =>
-            <OrderShortInfo key={delivery.id} {...delivery} />);
+        <OrderShortInfo key={delivery.id} {...delivery} />);
 
     return (
         <div className='orders'>
