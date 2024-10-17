@@ -7,20 +7,20 @@ import { Link } from 'react-router-dom';
 export default function ShoppingCart() {
     const context = useContext(Context);
     const cartIDs = context.cartItemsId.join();
-
     const [isSelectedAll, setIsSelectedAll] = useState(false);
 
     useEffect(() => {
         let ignore = false;
-        if (cartIDs) {
-            fetch(`http://localhost:8090/medication?size=20&ids=${cartIDs}`, {
+        const fetchRequest = () => {
+            fetch(`http://localhost:8090/medication?size=20&ids=${cartIDs}&sort=name,asc`, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' }
             })
                 .then(result => result.json())
                 .then(data => {
                     if (!ignore) {
-                        const selectedItemsId = localStorage.getItem('selected-items').length > 0 ?
+                        const selectedItemsId = localStorage.getItem('selected-items') &&
+                            localStorage.getItem('selected-items').length > 0 ?
                             JSON.parse(localStorage.getItem('selected-items')).map(item => item.id) : null;
 
                         const filteredData = data.content
@@ -42,23 +42,24 @@ export default function ShoppingCart() {
                             });
                         context.setCartMedications(filteredData);
 
-                        if (selectedItemsId.length === 0) {
-                            localStorage.setItem('selected-items', JSON.stringify(filteredData
-                                .filter(med => med.status === 'AVAILABLE')));
-                            context.setSelectedItems(filteredData.filter(med => med.status === 'AVAILABLE'));
-                        } else {
-                            context.setSelectedItems(localStorage.setItem('selected-items', localStorage.getItem('selected-items')));
-                        }
+                        const checkAvailableItems = filteredData
+                            .filter(med => med.status === 'AVAILABLE' && med.isSelected);
+                        localStorage.setItem('selected-items', JSON.stringify(checkAvailableItems));
+                        context.setSelectedItems(checkAvailableItems);
 
-                        setIsSelectedAll(data.content.length === selectedItemsId.length ||
+                        setIsSelectedAll(filteredData
+                            .filter(med => med.status === 'AVAILABLE').length === selectedItemsId.length ||
                             selectedItemsId.length === 0 ? true : false);
                     }
                 });
         }
+        if (cartIDs) {
+            fetchRequest();
+        }
         return () => {
             ignore = true;
         }
-    }, []);
+    }, [cartIDs]);
 
     const handleSelectItem = (id) => {
         const updateItems = context.cartMedications

@@ -4,7 +4,6 @@ import { Context } from "../Context";
 
 export default function CartSummary({ btnType, setIsSelectedAll }) {
     const context = useContext(Context);
-
     const [drones, setDrones] = useState([]);
 
     useEffect(() => {
@@ -28,10 +27,8 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
         JSON.parse(localStorage.getItem('selected-items')) : [];
 
     const totalSelected = selectedItems.length || 0;
-
     const totalWeight = selectedItems
         .reduce((accum, current) => accum + current.weight, 0) || 0;
-
     const totalPrice = selectedItems
         .reduce((accum, current) => accum + current.price, 0) || 0;
 
@@ -52,6 +49,7 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
 
     const handleChooseBestCapacity = () => {
         const sortedItems = context.cartMedications
+            .filter(med => med.status === 'AVAILABLE')
             .sort((a, b) => b.weight - a.weight);
 
         const calculateTotalWeight = (items) => {
@@ -115,8 +113,7 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
                         <tr>
                             <td>Delivery</td>
                             <td>$5</td>
-                        </tr>
-                    }
+                        </tr>}
                     <tr>
                         <td>Subtotal</td>
                         <td>${btnType === "checkout" ? (totalPrice + 5).toFixed(2) : totalPrice.toFixed(2)}</td>
@@ -124,7 +121,7 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
                 </tbody>
             </table>
             {totalSelected === 0 && <p className='summary-error null'>
-                * Please select something to proceed to checkout
+                * Please select something to proceed to checkout.
             </p>}
             {checkDronesWeight(totalWeight) === null &&
                 <div className='summary-error overweight'>
