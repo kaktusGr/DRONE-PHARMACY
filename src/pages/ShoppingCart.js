@@ -7,32 +7,59 @@ import { Link } from 'react-router-dom';
 export default function ShoppingCart() {
     const context = useContext(Context);
     const cartIDs = context.cartItemsId.join();
-
     const [isSelectedAll, setIsSelectedAll] = useState(false);
 
     useEffect(() => {
         let ignore = false;
-        fetch(`http://localhost:8090/medication?size=20&ids=${cartIDs}`, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        })
-            .then(result => result.json())
-            .then(data => {
-                if (!ignore) {
-                    const filteredData = data.content
-                        .map(med => med.status === 'AVAILABLE' ?
-                            ({ ...med, price: 29.99, isSelected: true }) :
-                            ({ ...med, price: 29.99, isSelected: false }));
-                    context.setCartMedications(filteredData);
-                    context.setSelectedItems(filteredData.filter(med => med.status === 'AVAILABLE'));
-                    setIsSelectedAll(filteredData
-                        .filter(med => med.status === 'AVAILABLE').length > 0 ? true : false);
-                }
-            });
+        const fetchRequest = () => {
+            fetch(`http://localhost:8090/medication?size=20&ids=${cartIDs}&sort=name,asc`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            })
+                .then(result => result.json())
+                .then(data => {
+                    if (!ignore) {
+                        const selectedItemsId = localStorage.getItem('selected-items') &&
+                            localStorage.getItem('selected-items').length > 0 ?
+                            JSON.parse(localStorage.getItem('selected-items')).map(item => item.id) : null;
+
+                        const filteredData = data.content
+                            .map(med => ({ ...med, price: 29.99 }))
+                            .map(med => {
+                                if (selectedItemsId.length === 0) {
+                                    return med.status === 'AVAILABLE' ?
+                                        ({ ...med, isSelected: true }) :
+                                        ({ ...med, isSelected: false });
+                                } else {
+                                    const findSelectedItems = selectedItemsId
+                                        .find(item => item === med.id);
+                                    if (findSelectedItems && med.status === 'AVAILABLE') {
+                                        return { ...med, isSelected: true };
+                                    } else {
+                                        return { ...med, isSelected: false };
+                                    }
+                                }
+                            });
+                        context.setCartMedications(filteredData);
+
+                        const checkAvailableItems = filteredData
+                            .filter(med => med.status === 'AVAILABLE' && med.isSelected);
+                        localStorage.setItem('selected-items', JSON.stringify(checkAvailableItems));
+                        context.setSelectedItems(checkAvailableItems);
+
+                        setIsSelectedAll(filteredData
+                            .filter(med => med.status === 'AVAILABLE').length === selectedItemsId.length ||
+                            selectedItemsId.length === 0 ? true : false);
+                    }
+                });
+        }
+        if (cartIDs) {
+            fetchRequest();
+        }
         return () => {
             ignore = true;
         }
-    }, []);
+    }, [cartIDs]);
 
     const handleSelectItem = (id) => {
         const updateItems = context.cartMedications
@@ -44,6 +71,8 @@ export default function ShoppingCart() {
         setIsSelectedAll(updateItems
             .filter(item => item.status === 'AVAILABLE')
             .every(item => item.isSelected));
+        localStorage.setItem('selected-items', JSON.stringify(updateItems
+            .filter(med => med.isSelected)));
         context.setSelectedItems(updateItems
             .filter(med => med.isSelected));
     }
@@ -56,6 +85,7 @@ export default function ShoppingCart() {
                 ({ ...med, isSelected: newSelectAll }) :
                 ({ ...med, isSelected: false }));
         context.setCartMedications(updateItems);
+        localStorage.setItem('selected-items', JSON.stringify(updateItems.filter(med => med.isSelected)));
         context.setSelectedItems(updateItems.filter(med => med.isSelected));
     }
 
@@ -64,6 +94,7 @@ export default function ShoppingCart() {
             .filter(med => med.isSelected)
             .map(med => med.id);
         context.remove(onlySelected);
+        localStorage.setItem('selected-items', JSON.stringify([]));
         context.setSelectedItems([]);
         setIsSelectedAll(false);
     }

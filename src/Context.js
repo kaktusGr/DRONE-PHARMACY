@@ -6,9 +6,13 @@ const ContextProvider = (props) => {
     const [cartMedications, setCartMedications] = useState([]);
     const [cartItemsId, setCartItemsId] = useState(localStorage.getItem('cart') ?
         JSON.parse(localStorage.getItem('cart')) : []);
-    const [selectedItems, setSelectedItems] = useState([]);
+    const [selectedItems, setSelectedItems] = useState(localStorage.getItem('selected-items') ?
+        JSON.parse(localStorage.getItem('selected-items')) :
+        localStorage.setItem('selected-items', JSON.stringify([])));
 
-    const [droneId, setDroneId] = useState();
+    const [availableDroneId, setAvailableDroneId] = useState(localStorage.getItem('drone') ?
+        JSON.parse(localStorage.getItem('drone')) : 
+        localStorage.setItem('drone', null));
     const [deliveryDetail, setDeliveryDetail] = useState();
     const [isReadyPostFetch, setIsReadyPostFetch] = useState(false);
 
@@ -32,7 +36,12 @@ const ContextProvider = (props) => {
         localStorage.setItem('cart', JSON.stringify(newCart));
         const filteredData = cartMedications.filter(med => newCart.includes(med.id));
         setCartMedications(filteredData);
-        setSelectedItems(filteredData.filter(med => med.isSelected));
+        const onlySelectedData = filteredData.filter(med => med.isSelected);
+        localStorage.setItem('selected-items', JSON.stringify(onlySelectedData));
+        setSelectedItems(onlySelectedData);
+        if (onlySelectedData.length === 0) {
+            localStorage.setItem('drone', null);
+        }
     }
 
     const value = {
@@ -44,8 +53,8 @@ const ContextProvider = (props) => {
         setSelectedItems,
         append,
         remove,
-        droneId,
-        setDroneId,
+        availableDroneId,
+        setAvailableDroneId,
         deliveryDetail,
         setDeliveryDetail,
         isReadyPostFetch,

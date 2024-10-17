@@ -69,18 +69,7 @@
                 &:hover {
                     background-color: var(--light-grey);
                 }
-
             }
-        }
-    }
-
-    & .back-to-top {
-        background-color: inherit;
-        font-size: 16px;
-
-        & img {
-            vertical-align: middle;
-            margin: 0 0 4px 8px;
         }
     }
 }
