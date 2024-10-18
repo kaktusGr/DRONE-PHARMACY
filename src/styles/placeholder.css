@@ -28,12 +28,10 @@
     }
 
     & .animated-block {
-        height: 44px;
-        font-size: 44px;
-        width: 240px;
-        border-radius: 10px;
-        background-color: var(--white);
-        /* background-color: var(--light-grey); */
+        background-color: var(--light-grey);
+        height: 60px;
+        width: 157px;
+        border-radius: 70px;
     }
 
     & .filter-aside {
@@ -50,6 +48,73 @@
 
     & .filter-top {
         height: 44px;
+    }
+
+    & .summary {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        max-height: 460px;
+        max-width: 408px;
+
+        & span:nth-child(4) {
+            height: 80px;
+        }
+
+        & .summary-btns .animated-block {
+            width: 100%;
+        }
+    }
+
+    & .selected-btn>div {
+        height: 24px;
+        width: 150px;
+        border-radius: 10px;
+    }
+
+    & .cart-items {
+        width: 840px;
+    }
+
+    & .orders-info {
+        width: 948px;
+
+        & .order-short-info {
+            height: 370px;
+
+            & .order-title {
+                height: 40px;
+
+                & span:first-child {
+                    height: 32px;
+                    width: 230px;
+                }
+
+                & span:last-child {
+                    height: 32px;
+                    width: 64px;
+                }
+            }
+
+            & .order-number {
+                width: 110px;
+            }
+
+            & .order-info {
+                & span {
+                    display: block;
+                    margin-bottom: 5px;
+
+                    &.animated-title {
+                        width: 130px;
+                    }
+
+                    &.animated-text {
+                        width: 100px;
+                    }
+                }
+            }
+        }
     }
 }
 
