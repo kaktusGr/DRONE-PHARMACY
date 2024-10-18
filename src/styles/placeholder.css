@@ -1,0 +1,64 @@
+.placeholder {
+    & .animated-bg {
+        background-image: linear-gradient(to right,
+                #f6f7f8 0%,
+                #edeef1 10%,
+                #f6f7f8 20%,
+                #f6f7f8 100%);
+        background-size: 200% 100%;
+        animation: bgPos 1s linear infinite;
+    }
+
+    & .animated-title,
+    .animated-text {
+        display: inline-block;
+        border-radius: 20px;
+        width: 100%;
+        background-color: var(--light-grey);
+    }
+
+    & .animated-title {
+        height: 24px;
+        font-size: 24px;
+    }
+
+    & .animated-text {
+        height: 16px;
+        font-size: 16px;
+    }
+
+    & .animated-block {
+        height: 44px;
+        font-size: 44px;
+        width: 240px;
+        border-radius: 10px;
+        background-color: var(--white);
+        /* background-color: var(--light-grey); */
+    }
+
+    & .filter-aside {
+        height: 588px;
+
+        & .animated-title:first-child {
+            margin-bottom: 15px;
+        }
+
+        & .animated-text {
+            margin-bottom: 5px;
+        }
+    }
+
+    & .filter-top {
+        height: 44px;
+    }
+}
+
+@keyframes bgPos {
+    0% {
+        background-position: 50% 0;
+    }
+
+    100% {
+        background-position: -150% 0;
+    }
+}
