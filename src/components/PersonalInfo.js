@@ -1,10 +1,10 @@
 import React from 'react';
 
-export default function PersonalInfo() {
+export default function PersonalInfo(isLoading) {
     return (
         <div className='personal-info'>
             <div>
-                <div className='personal-photo'></div>
+                <div className={`personal-photo ${isLoading ? 'animated-bg' : ''}`}></div>
                 <h3>Full Name</h3>
             </div>
             <div>

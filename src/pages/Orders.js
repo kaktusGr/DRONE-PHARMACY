@@ -144,7 +144,7 @@ export default function Orders() {
 
     return (
         <div className='orders'>
-            {isLoading ? <PlaceholderOrders /> : <>
+            {isLoading ? <PlaceholderOrders isLoading={isLoading} /> : <>
                 <PersonalInfo />
                 <div className='orders-info'>
                     <h1>Orders ({totalOrders.current})</h1>
