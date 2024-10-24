@@ -116,7 +116,7 @@ export default function Orders() {
                 }
             }
         }
-    }, 200);
+    }, 500);
 
     useEffect(() => {
         if (!allDataLoaded) {
@@ -150,7 +150,7 @@ export default function Orders() {
                     <h1>Orders ({totalOrders.current})</h1>
                     <div id='scroll-point' className='all-orders'>
                         {ordersList}
-                        {!allDataLoaded && <p>Loading more orders...</p>}
+                        {!allDataLoaded && <div className='loader-spinner'></div>}
                     </div>
                     <button className='back-to-top' onClick={() => {
                         window.scrollTo({
