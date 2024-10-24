@@ -112,14 +112,14 @@ iframe {
     box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.1);
 }
 
-& img#img {
+#img {
     object-fit: cover;
     height: 100%;
     width: 100%;
     border-radius: 20px;
 }
 
-& .attention {
+.attention {
     display: flex;
     gap: 10px;
     align-items: flex-start;

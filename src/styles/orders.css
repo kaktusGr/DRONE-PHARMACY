@@ -125,8 +125,8 @@
             gap: 16px;
 
             & .medications {
-                height: 118px;
-                width: 118px;
+                height: 138px;
+                width: 138px;
                 background-color: var(--light-grey);
                 border-radius: 20px;
             }
