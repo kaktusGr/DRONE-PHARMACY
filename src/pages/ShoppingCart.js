@@ -120,7 +120,7 @@ export default function ShoppingCart() {
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsLoading(false);
-        }, 2000);
+        }, 1500);
 
         return () => {
             clearTimeout(timer);
@@ -129,7 +129,8 @@ export default function ShoppingCart() {
 
     return (
         <div className='shopping-cart'>
-            <h1>Shopping cart {context.cartItemsId.length > 0 && `(${context.cartItemsId.length})`}</h1>
+            <h1>Shopping cart {(context.cartItemsId.length > 0 && !isLoading)
+                && `(${context.cartItemsId.length})`}</h1>
             {context.cartItemsId.length > 0 ? (
                 <div className='cart-flex'>
                     {isLoading ? <PlaceholderShoppingCart /> :

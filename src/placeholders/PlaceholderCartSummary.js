@@ -10,9 +10,12 @@ export default function PlaceholderCartSummary({ btnType }) {
                 <span className="animated-bg animated-title">&nbsp;</span>
                 <div className='summary-btns'>
                     <div className='animated-bg animated-block'></div>
-                    {btnType === "shopping-cart" && <div className='animated-bg animated-block'></div>}
+                    {btnType === "shopping-cart" && <>
+                        <div className='animated-bg animated-block'></div>
+                        <span className="animated-bg animated-text">&nbsp;</span>
+                    </>}
                 </div>
-                <span className="animated-bg animated-text">&nbsp;</span>
+
             </div>
         </div>
     )

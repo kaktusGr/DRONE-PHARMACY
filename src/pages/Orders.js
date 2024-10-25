@@ -135,7 +135,7 @@ export default function Orders() {
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsLoading(false);
-        }, 2000);
+        }, 1500);
 
         return () => {
             clearTimeout(timer);
@@ -144,8 +144,8 @@ export default function Orders() {
 
     return (
         <div className='orders'>
-            {isLoading ? <PlaceholderOrders isLoading={isLoading} /> : <>
-                <PersonalInfo />
+            {isLoading ? <PlaceholderOrders isLoading={isLoading} setIsLoading={setIsLoading} /> : <>
+                <PersonalInfo isLoading={isLoading} setIsLoading={setIsLoading} />
                 <div className='orders-info'>
                     <h1>Orders ({totalOrders.current})</h1>
                     <div id='scroll-point' className='all-orders'>

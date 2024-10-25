@@ -1,13 +1,13 @@
 import { React } from "react";
 import PersonalInfo from "../components/PersonalInfo";
 
-export default function PlaceholderOrders(isLoading) {
+export default function PlaceholderOrders({ isLoading, setIsLoading }) {
     const defaultAmount = [1, 2, 3];
 
     return (
         <div className="placeholder">
             <div className="orders">
-                <PersonalInfo isLoading={isLoading} />
+                <PersonalInfo isLoading={isLoading} setIsLoading={setIsLoading} />
                 <div className='orders-info'>
                     <h1>Orders</h1>
                     <div className='all-orders'>

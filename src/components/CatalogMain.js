@@ -118,7 +118,7 @@ export default function CatalogMain() {
         const timer = setTimeout(() => {
             setIsLoadingCatalog(false);
             setIsLoadingProducts(false);
-        }, 2000);
+        }, 1500);
 
         return () => {
             clearTimeout(timer);
