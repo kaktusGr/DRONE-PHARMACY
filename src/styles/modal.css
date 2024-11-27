@@ -32,7 +32,7 @@
     }
 }
 
-.modal-flex {
+.modal-flex-order {
     display: flex;
     flex-direction: column;
     gap: 32px;

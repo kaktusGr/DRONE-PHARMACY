@@ -63,7 +63,7 @@ export default function ModalOrder({ orderId }) {
 
     return (
         isLoading ? <PlaceholderModalOrder /> :
-            <>
+            <div className="modal-flex-order">
                 <div>
                     <h2>Order #{deliveryNumber}</h2>
                     <small className='full-order-id'>Full order ID: #{currentOrder?.id}</small>
@@ -127,6 +127,6 @@ export default function ModalOrder({ orderId }) {
                         </tbody>
                     </table>
                 </div>
-            </>
+            </div>
     )
 }
