@@ -2,6 +2,8 @@ import { React, useState, useContext, useEffect } from 'react';
 import { Context } from "../Context";
 import CartItem from '../components/CartItem';
 import CartSummary from '../components/CartSummary';
+import PlaceholderCartSummary from '../placeholders/PlaceholderCartSummary';
+import PlaceholderShoppingCart from '../placeholders/PlaceholderShoppingCart';
 import { Link } from 'react-router-dom';
 
 export default function ShoppingCart() {
@@ -113,45 +115,61 @@ export default function ShoppingCart() {
                 handleSelectItem={handleSelectItem} />
         });
 
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 1500);
+
+        return () => {
+            clearTimeout(timer);
+        };
+    }, []);
+
     return (
         <div className='shopping-cart'>
-            <h1>Shopping cart {context.cartItemsId.length > 0 && `(${context.cartItemsId.length})`}</h1>
+            <h1>Shopping cart {(context.cartItemsId.length > 0 && !isLoading)
+                && `(${context.cartItemsId.length})`}</h1>
             {context.cartItemsId.length > 0 ? (
                 <div className='cart-flex'>
-                    <div>
-                        <div className='selected-btn'>
-                            <div className='checkbox'>
-                                <input type='checkbox' name='checkbox' id='checkbox'
-                                    checked={isSelectedAll}
-                                    onChange={handleSelectAll} />
-                                <label htmlFor="checkbox">Select all items</label>
-                            </div>
-                            <button className='delete' onClick={handleDeleteSelected}>
-                                <img src="./images/icons/trash.svg" alt="trash" />
-                                Delete selected items
-                            </button>
-                        </div>
-                        <div className='cart-items available'>
-                            <h3>Available for delivery</h3>
-                            <ul>
-                                {medicationsInCartA}
-                            </ul>
-                        </div>
-                        {medicationsInCartUn.length > 0 &&
-                            <div className='cart-items unavailable'>
-                                <h3>Unavailable for delivery</h3>
-                                <ul>
-                                    {medicationsInCartUn}
-                                </ul>
-                                <div className='attention'>
-                                    <img src="./images/icons/info-circle.svg" alt="attention" />
-                                    <p>Unfortunately, this item is not available, but we can offer you similar products.<br />
-                                        <Link to="/catalog">See products</Link></p>
+                    {isLoading ? <PlaceholderShoppingCart /> :
+                        <div>
+                            <div className='selected-btn'>
+                                <div className='checkbox'>
+                                    <input type='checkbox' name='checkbox' id='checkbox'
+                                        checked={isSelectedAll}
+                                        onChange={handleSelectAll} />
+                                    <label htmlFor="checkbox">Select all items</label>
                                 </div>
+                                <button className='delete' onClick={handleDeleteSelected}>
+                                    <img src="./images/icons/trash.svg" alt="trash" />
+                                    Delete selected items
+                                </button>
                             </div>
-                        }
-                    </div>
-                    <CartSummary btnType="shopping-cart" setIsSelectedAll={setIsSelectedAll} />
+                            <div className='cart-items available'>
+                                <h3>Available for delivery</h3>
+                                <ul>
+                                    {medicationsInCartA}
+                                </ul>
+                            </div>
+                            {medicationsInCartUn.length > 0 &&
+                                <div className='cart-items unavailable'>
+                                    <h3>Unavailable for delivery</h3>
+                                    <ul>
+                                        {medicationsInCartUn}
+                                    </ul>
+                                    <div className='attention'>
+                                        <img src="./images/icons/info-circle.svg" alt="attention" />
+                                        <p>Unfortunately, this item is not available, but we can offer you similar products.<br />
+                                            <Link to="/catalog">See products</Link></p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    {isLoading ? <PlaceholderCartSummary btnType="shopping-cart" /> :
+                        <CartSummary btnType="shopping-cart" setIsSelectedAll={setIsSelectedAll} />}
                 </div>
             ) : (
                 <div className='empty-cart'>Your cart is empty.</div>

@@ -4,6 +4,7 @@ import OrderShortInfo from '../components/OrderShortInfo';
 import PersonalInfo from '../components/PersonalInfo';
 import Modal from '../modals/Modal';
 import ModalOrder from '../modals/ModalOrder';
+import PlaceholderOrders from '../placeholders/PlaceholderOrders';
 
 function debounce(func, delay) {
     let timeout;
@@ -115,7 +116,7 @@ export default function Orders() {
                 }
             }
         }
-    }, 200);
+    }, 500);
 
     useEffect(() => {
         if (!allDataLoaded) {
@@ -124,30 +125,44 @@ export default function Orders() {
                 window.removeEventListener('scroll', handleScroll);
             })
         }
-    }, [allDataLoaded, handleScroll])
+    }, [allDataLoaded, handleScroll]);
 
     const ordersList = [...allDeliveries].map(delivery =>
         <OrderShortInfo key={delivery.id} {...delivery} />);
 
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 1500);
+
+        return () => {
+            clearTimeout(timer);
+        };
+    }, []);
+
     return (
         <div className='orders'>
-            <PersonalInfo />
-            <div className='orders-info'>
-                <h1>Orders ({totalOrders.current})</h1>
-                <div id='scroll-point' className='all-orders'>
-                    {ordersList}
-                    {!allDataLoaded && <p>Loading more orders...</p>}
+            {isLoading ? <PlaceholderOrders isLoading={isLoading} setIsLoading={setIsLoading} /> : <>
+                <PersonalInfo isLoading={isLoading} setIsLoading={setIsLoading} />
+                <div className='orders-info'>
+                    <h1>Orders ({totalOrders.current})</h1>
+                    <div id='scroll-point' className='all-orders'>
+                        {ordersList}
+                        {!allDataLoaded && <div className='loader-spinner'></div>}
+                    </div>
+                    <button className='back-to-top' onClick={() => {
+                        window.scrollTo({
+                            top: 0,
+                            left: 0,
+                            behavior: "smooth"
+                        });
+                    }}>
+                        Back to Top <img src="./images/icons/chevron-up.svg" alt="arrow-up" />
+                    </button>
                 </div>
-                <button className='back-to-top' onClick={() => {
-                    window.scrollTo({
-                        top: 0,
-                        left: 0,
-                        behavior: "smooth"
-                    });
-                }}>
-                    Back to Top <img src="./images/icons/chevron-up.svg" alt="arrow-up" />
-                </button>
-            </div>
+            </>}
             {currentOrderId &&
                 <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
                     <ModalOrder orderId={currentOrderId} />

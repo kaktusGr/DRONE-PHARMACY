@@ -2,6 +2,8 @@ import { React, useState, useRef, useContext, useEffect } from "react";
 import FilterAside from "./FilterAside";
 import FilterTop from "./FilterTop";
 import Products from "./Products";
+import PlaceholderFilterAside from "../placeholders/PlaceholderFilterAside";
+import PlaceholderProducts from "../placeholders/PlaceholderProducts";
 import { Context } from "../Context";
 
 export default function CatalogMain() {
@@ -109,14 +111,40 @@ export default function CatalogMain() {
         return arrPage;
     }
 
+    const [isLoadingCatalog, setIsLoadingCatalog] = useState(true);
+    const [isLoadingProducts, setIsLoadingProducts] = useState(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsLoadingCatalog(false);
+            setIsLoadingProducts(false);
+        }, 1500);
+
+        return () => {
+            clearTimeout(timer);
+            setIsLoadingProducts(true);
+        };
+    }, [urlMedication]);
+
     return (
         <div className="catalog">
             <h1>Catalog</h1>
             <div>
-                <FilterAside availability={availability} toggleAvailable={toggleAvailable} totalMed={totalMed} />
+                {isLoadingCatalog ? <PlaceholderFilterAside /> :
+                    <FilterAside availability={availability}
+                        toggleAvailable={toggleAvailable}
+                        totalMed={totalMed} />
+                }
                 <div className="catalog-filtered">
-                    <FilterTop availability={availability} toggleAvailable={toggleAvailable} selectSort={selectSort} />
-                    <Products allMedications={allMedications} />
+                    {isLoadingCatalog ?
+                        <FilterTop toggleAvailable={toggleAvailable}
+                            selectSort={selectSort} /> :
+                        <FilterTop availability={availability}
+                            toggleAvailable={toggleAvailable}
+                            selectSort={selectSort} />
+                    }
+                    {isLoadingCatalog || isLoadingProducts ? <PlaceholderProducts /> :
+                        <Products allMedications={allMedications} />}
                     <hr />
                     <div className="catalog-pages">
                         <div className="choose-page">

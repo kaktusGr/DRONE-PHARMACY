@@ -1,11 +1,22 @@
-import React from 'react';
+import { React, useEffect } from 'react';
 
-export default function PersonalInfo() {
+export default function PersonalInfo({ isLoading, setIsLoading }) {
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 1500);
+
+        return () => {
+            clearTimeout(timer);
+        };
+    }, []);
+
     return (
         <div className='personal-info'>
             <div>
-                <div className='personal-photo'></div>
-                <h3>Full Name</h3>
+                <div className={`personal-photo ${isLoading ? 'animated-bg' : ''}`}></div>
+                {isLoading ? <span className='animated-bg animated-title'></span> :
+                    <h3>Full Name</h3>}
             </div>
             <div>
                 <h4>Personal information</h4>
