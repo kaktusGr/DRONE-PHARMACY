@@ -1,23 +1,44 @@
 import { React, useContext, useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { Context } from "../Context";
+import Modal from "../modals/Modal";
+import ModalError from "../modals/ModalError";
 
 export default function CartSummary({ btnType, setIsSelectedAll }) {
     const context = useContext(Context);
     const [drones, setDrones] = useState([]);
+    const [errorMessage, setErrorMessage] = useState();
+    const [modalIsOpen, setModalIsOpen] = useState(true);
 
     useEffect(() => {
         let ignore = false;
-        fetch('http://localhost:8090/drone/available', {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        })
-            .then(result => result.json())
-            .then(data => {
+        const fetchAvailableDrones = async () => {
+            try {
+                const response = await fetch('http://localhost:8090/drone/available', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch available drones');
+                }
+
+                const data = await response.json();
+
                 if (!ignore) {
+                    if (data.length === 0) {
+                        throw new Error('No drones available');
+                    }
                     setDrones(data);
                 }
-            });
+            } catch (error) {
+                if (!ignore) {
+                    console.log(error);
+                    setErrorMessage(error.message);
+                }
+            }
+        };
+        fetchAvailableDrones();
         return () => {
             ignore = true;
         }
@@ -120,10 +141,13 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
                     </tr>
                 </tbody>
             </table>
-            {totalSelected === 0 && <p className='summary-error null'>
-                * Please select something to proceed to checkout.
-            </p>}
-            {checkDronesWeight(totalWeight) === null &&
+
+            {(totalSelected === 0 && drones.length !== 0) &&
+                <p className='summary-error null'>
+                    * Please select something to proceed to checkout.
+                </p>}
+
+            {(checkDronesWeight(totalWeight) === null && drones.length !== 0) &&
                 <div className='summary-error overweight'>
                     <p>* Unfortunately, we don't have a free drone available for the total weight of the selected items. In this case, we may offer you to arrange several deliveries.</p>
                     <p>Please choose the products yourself or click the button below and we will select the products according to the best capacity.</p>
@@ -137,6 +161,12 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
                         <label htmlFor='checkbox'>Choose the best capacity</label>
                     </div>
                 </div>}
+
+            {drones.length === 0 &&
+                <p className='summary-error null'>
+                    * Unfortunately, we don't have a free drone available for the total weight of the selected items.
+                </p>}
+
             {btnType === "shopping-cart" ? (
                 <>
                     <div className='summary-btns'>
@@ -163,6 +193,11 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
                     </Link>
                 </div>
             )}
+
+            {errorMessage &&
+                <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
+                    <ModalError errorMessage={errorMessage} optional={"We will send you a notification when the drone becomes available."} />
+                </Modal>}
         </div>
     )
 }
