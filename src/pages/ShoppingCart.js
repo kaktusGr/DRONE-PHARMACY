@@ -5,59 +5,89 @@ import CartSummary from '../components/CartSummary';
 import PlaceholderCartSummary from '../placeholders/PlaceholderCartSummary';
 import PlaceholderShoppingCart from '../placeholders/PlaceholderShoppingCart';
 import { Link } from 'react-router-dom';
+import Modal from "../modals/Modal";
+import ModalError from "../modals/ModalError";
 
 export default function ShoppingCart() {
     const context = useContext(Context);
     const cartIDs = context.cartItemsId.join();
     const [isSelectedAll, setIsSelectedAll] = useState(false);
 
+    const [errorMessage, setErrorMessage] = useState();
+    const [modalIsOpen, setModalIsOpen] = useState(true);
+
     useEffect(() => {
         let ignore = false;
-        const fetchRequest = () => {
-            fetch(`http://localhost:8090/medication?size=20&ids=${cartIDs}&sort=name,asc`, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' }
-            })
-                .then(result => result.json())
-                .then(data => {
-                    if (!ignore) {
-                        const selectedItemsId = localStorage.getItem('selected-items') &&
-                            localStorage.getItem('selected-items').length > 0 ?
-                            JSON.parse(localStorage.getItem('selected-items')).map(item => item.id) : null;
-
-                        const filteredData = data.content
-                            .map(med => ({ ...med, price: 29.99 }))
-                            .map(med => {
-                                if (selectedItemsId.length === 0) {
-                                    return med.status === 'AVAILABLE' ?
-                                        ({ ...med, isSelected: true }) :
-                                        ({ ...med, isSelected: false });
-                                } else {
-                                    const findSelectedItems = selectedItemsId
-                                        .find(item => item === med.id);
-                                    if (findSelectedItems && med.status === 'AVAILABLE') {
-                                        return { ...med, isSelected: true };
-                                    } else {
-                                        return { ...med, isSelected: false };
-                                    }
-                                }
-                            });
-                        context.setCartMedications(filteredData);
-
-                        const checkAvailableItems = filteredData
-                            .filter(med => med.status === 'AVAILABLE' && med.isSelected);
-                        localStorage.setItem('selected-items', JSON.stringify(checkAvailableItems));
-                        context.setSelectedItems(checkAvailableItems);
-
-                        setIsSelectedAll(filteredData
-                            .filter(med => med.status === 'AVAILABLE').length === selectedItemsId.length ||
-                            selectedItemsId.length === 0 ? true : false);
-                    }
+        const fetchRequest = async () => {
+            try {
+                const response = await fetch(`http://localhost:8090/medication?size=20&ids=${cartIDs}&sort=name,asc`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
                 });
+
+                if (!response.ok) {
+                    switch (response.status) {
+                        case 400:
+                            throw new Error('Bad request sent');
+                        case 404:
+                            throw new Error('Resource not found for the given request');
+                        case 429:
+                            throw new Error('Too many requests');
+                        case 500:
+                            throw new Error('Internal server error');
+                        case 503:
+                            throw new Error('Service unavailable');
+                        default:
+                            throw new Error(`Unexpected error: ${response.status}`);
+                    }
+                }
+
+                const data = await response.json();
+
+                if (!ignore) {
+                    const selectedItemsId = localStorage.getItem('selected-items') &&
+                        localStorage.getItem('selected-items').length > 0 ?
+                        JSON.parse(localStorage.getItem('selected-items')).map(item => item.id) : null;
+
+                    const filteredData = data.content
+                        .map(med => ({ ...med, price: 29.99 }))
+                        .map(med => {
+                            if (selectedItemsId.length === 0) {
+                                return med.status === 'AVAILABLE' ?
+                                    ({ ...med, isSelected: true }) :
+                                    ({ ...med, isSelected: false });
+                            } else {
+                                const findSelectedItems = selectedItemsId
+                                    .find(item => item === med.id);
+                                if (findSelectedItems && med.status === 'AVAILABLE') {
+                                    return { ...med, isSelected: true };
+                                } else {
+                                    return { ...med, isSelected: false };
+                                }
+                            }
+                        });
+                    context.setCartMedications(filteredData);
+
+                    const checkAvailableItems = filteredData
+                        .filter(med => med.status === 'AVAILABLE' && med.isSelected);
+                    localStorage.setItem('selected-items', JSON.stringify(checkAvailableItems));
+                    context.setSelectedItems(checkAvailableItems);
+
+                    setIsSelectedAll(filteredData
+                        .filter(med => med.status === 'AVAILABLE').length === selectedItemsId.length ||
+                        selectedItemsId.length === 0 ? true : false);
+                }
+            } catch (error) {
+                if (!ignore) {
+                    setErrorMessage('Error getting medications: ' + error.message);
+                }
+            }
         }
+
         if (cartIDs) {
             fetchRequest();
         }
+
         return () => {
             ignore = true;
         }
@@ -174,6 +204,11 @@ export default function ShoppingCart() {
             ) : (
                 <div className='empty-cart'>Your cart is empty.</div>
             )}
+
+            {errorMessage &&
+                <Modal dal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
+                    <ModalError errorMessage={errorMessage} optional={"We will send you a notification when the drone becomes available."} />
+                </Modal>}
         </div>
     )
 }
