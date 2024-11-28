@@ -4,10 +4,10 @@ import Product from "./Product";
 export default function Products({ allMedications }) {
     return (
         <div className="catalog-products">
-            {allMedications.length ? (
+            {allMedications.length > 0 ? (
                 allMedications.map(item => <Product key={item.id} {...item} />)
             ) : (
-                <p>Failed to load product list</p>
+                <p className="error">Failed to load product list.</p>
             )}
         </div>
     )

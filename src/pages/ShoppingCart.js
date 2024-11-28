@@ -206,8 +206,8 @@ export default function ShoppingCart() {
             )}
 
             {errorMessage &&
-                <Modal dal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
-                    <ModalError errorMessage={errorMessage} optional={"We will send you a notification when the drone becomes available."} />
+                <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
+                    <ModalError errorMessage={errorMessage} />
                 </Modal>}
         </div>
     )

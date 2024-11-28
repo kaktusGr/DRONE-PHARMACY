@@ -28,6 +28,7 @@
 
         & img#close {
             height: 34px;
+            z-index: -1;
         }
     }
 }
@@ -74,7 +75,6 @@
             position: absolute;
             top: 12px;
             left: 8px;
-            z-index: -1;
         }
     }
 
@@ -131,7 +131,7 @@
         z-index: 1;
     }
 
-    & h2 {
+    & h2 span {
         color: var(--red-error);
     }
 

@@ -17,6 +17,11 @@
         display: flex;
         flex-wrap: wrap;
         gap: 24px;
+
+        & p.error {
+            font-size: 18px;
+            color: var(--red-error);
+        }
     }
 }
 
