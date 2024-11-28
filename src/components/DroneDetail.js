@@ -1,4 +1,6 @@
 import { React, useState, useEffect } from 'react';
+import Modal from "../modals/Modal";
+import ModalError from "../modals/ModalError";
 
 export default function DroneDetail() {
     const [droneDetail, setDroneDetail] = useState({
@@ -9,17 +11,40 @@ export default function DroneDetail() {
         status: "—",
     });
 
+    const [errorMessage, setErrorMessage] = useState();
+    const [modalIsOpen, setModalIsOpen] = useState(true);
+
     const availableDroneId = JSON.parse(localStorage.getItem('drone'));
 
     useEffect(() => {
         let ignore = false;
-        if (availableDroneId) {
-            fetch(`http://localhost:8090/drone/${availableDroneId}/state`, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' }
-            })
-                .then(result => result.json())
-                .then(data => {
+        const fetchDroneDetail = async () => {
+            try {
+                if (availableDroneId) {
+                    const response = await fetch(`http://localhost:8090/drone/${availableDroneId}/state`, {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'application/json' }
+                    })
+
+                    if (!response.ok) {
+                        switch (response.status) {
+                            case 400:
+                                throw new Error('Bad request sent');
+                            case 404:
+                                throw new Error('Resource not found for the given request');
+                            case 429:
+                                throw new Error('Too many requests');
+                            case 500:
+                                throw new Error('Internal server error');
+                            case 503:
+                                throw new Error('Service unavailable');
+                            default:
+                                throw new Error(`Unexpected error: ${response.status}`);
+                        }
+                    }
+
+                    const data = await response.json();
+
                     if (!ignore) {
                         const updatedDroneDetail = Object.keys(droneDetail).reduce((accum, key) => {
                             if (data[key] !== undefined) {
@@ -33,8 +58,15 @@ export default function DroneDetail() {
                         }, {});
                         setDroneDetail(updatedDroneDetail);
                     }
-                });
+                } else {
+                    window.location.href = '#/shopping-cart';
+                }
+            } catch (error) {
+                setErrorMessage("Error getting drone's detail: " + error.message);
+            }
         }
+        fetchDroneDetail();
+
         return () => {
             ignore = true;
         }
@@ -75,6 +107,11 @@ export default function DroneDetail() {
                 <img src="./images/icons/info-circle.svg" alt="attention" />
                 <p>Once the drone has landed, it will release the package. Wait until the drone has fully retracted and ascended before approaching the delivered package.</p>
             </div>
+
+            {errorMessage &&
+                <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
+                    <ModalError errorMessage={errorMessage} />
+                </Modal>}
         </div>
     )
 }
