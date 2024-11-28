@@ -8,6 +8,7 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
     const context = useContext(Context);
     const [drones, setDrones] = useState([]);
     const [errorMessage, setErrorMessage] = useState();
+    const [optional, setOptional] = useState();
     const [modalIsOpen, setModalIsOpen] = useState(true);
 
     useEffect(() => {
@@ -20,21 +21,34 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
                 });
 
                 if (!response.ok) {
-                    throw new Error('Failed to fetch available drones');
+                    switch (response.status) {
+                        case 400:
+                            throw new Error('Bad request sent');
+                        case 404:
+                            throw new Error('Resource not found for the given request');
+                        case 429:
+                            throw new Error('Too many requests');
+                        case 500:
+                            throw new Error('Internal server error');
+                        case 503:
+                            throw new Error('Service unavailable');
+                        default:
+                            throw new Error(`Unexpected error: ${response.status}`);
+                    }
                 }
 
                 const data = await response.json();
 
                 if (!ignore) {
                     if (data.length === 0) {
+                        setOptional('We will send you a notification when the drone becomes available.');
                         throw new Error('No drones available');
                     }
                     setDrones(data);
                 }
             } catch (error) {
                 if (!ignore) {
-                    console.log(error);
-                    setErrorMessage(error.message);
+                    setErrorMessage('Error getting available drones: ' + error.message);
                 }
             }
         };
@@ -188,7 +202,13 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
             ) : (
                 <div className='summary-btns'>
                     <Link to="/orders" id='checkout'
-                        onClick={() => context.setIsReadyPostFetch(true)}>
+                        className={(totalSelected === 0 ||
+                            checkDronesWeight(totalWeight) === null) ?
+                            "disabled" : undefined}
+                        onClick={(e) => (totalSelected === 0 ||
+                            checkDronesWeight(totalWeight) === null) ?
+                            e.preventDefault() :
+                            context.setIsReadyPostFetch(true)}>
                         Checkout
                     </Link>
                 </div>
@@ -196,7 +216,7 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
 
             {errorMessage &&
                 <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
-                    <ModalError errorMessage={errorMessage} optional={"We will send you a notification when the drone becomes available."} />
+                    <ModalError errorMessage={errorMessage} optional={optional} />
                 </Modal>}
         </div>
     )
