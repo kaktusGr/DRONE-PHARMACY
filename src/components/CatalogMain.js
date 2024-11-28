@@ -5,6 +5,8 @@ import Products from "./Products";
 import PlaceholderFilterAside from "../placeholders/PlaceholderFilterAside";
 import PlaceholderProducts from "../placeholders/PlaceholderProducts";
 import { Context } from "../Context";
+import Modal from "../modals/Modal";
+import ModalError from "../modals/ModalError";
 
 export default function CatalogMain() {
     const context = useContext(Context);
@@ -32,20 +34,50 @@ export default function CatalogMain() {
     const [urlSelect, setUrlSelect] = useState(urlFilters.sort.nameAZ);
     const [urlMedication, setUrlMedication] = useState(refPage.current + "&" + urlFilters.available + "&" + urlSelect);
 
+    const [errorMessage, setErrorMessage] = useState();
+    const [modalIsOpen, setModalIsOpen] = useState(true);
+
     useEffect(() => {
         let ignore = false;
-        fetch("http://localhost:8090/medication?size=6&page=" + urlMedication, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        })
-            .then(result => result.json())
-            .then(data => {
+        const fetchRequest = async () => {
+            try {
+                const response = await fetch("http://localhost:8090/medication?size=6&page=" + urlMedication, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (!response.ok) {
+                    switch (response.status) {
+                        case 400:
+                            throw new Error('Bad request sent');
+                        case 404:
+                            throw new Error('Resource not found for the given request');
+                        case 429:
+                            throw new Error('Too many requests');
+                        case 500:
+                            throw new Error('Internal server error');
+                        case 503:
+                            throw new Error('Service unavailable');
+                        default:
+                            throw new Error(`Unexpected error: ${response.status}`);
+                    }
+                }
+
+                const data = await response.json();
+
                 if (!ignore) {
                     setAllPages(data.totalPages);
                     setTotalMed(data.totalElements);
                     updateWithCartInfo(data.content);
                 }
-            });
+            } catch (error) {
+                if (!ignore) {
+                    setErrorMessage('Error getting medications: ' + error.message);
+                }
+            }
+        }
+        fetchRequest();
+
         return () => {
             ignore = true;
         }
@@ -146,31 +178,38 @@ export default function CatalogMain() {
                     {isLoadingCatalog || isLoadingProducts ? <PlaceholderProducts /> :
                         <Products allMedications={allMedications} />}
                     <hr />
-                    <div className="catalog-pages">
-                        <div className="choose-page">
-                            <button id="left" onClick={() => {
-                                currentPage("left");
+                    {allMedications.length > 0 &&
+                        <div className="catalog-pages">
+                            <div className="choose-page">
+                                <button id="left" onClick={() => {
+                                    currentPage("left");
+                                    window.scrollTo(scrollOptions);
+                                }}>
+                                    <img src="./images/icons/chevron-left.svg" alt="arrow-left" />
+                                </button>
+                                <ul className="pages">
+                                    {addPages()}
+                                </ul>
+                                <button id="right" onClick={() => {
+                                    currentPage("right");
+                                    window.scrollTo(scrollOptions);
+                                }}>
+                                    <img src="./images/icons/chevron-right.svg" alt="arrow-right" />
+                                </button>
+                            </div>
+                            <button className="back-to-top" onClick={() => {
                                 window.scrollTo(scrollOptions);
                             }}>
-                                <img src="./images/icons/chevron-left.svg" alt="arrow-left" />
-                            </button>
-                            <ul className="pages">
-                                {addPages()}
-                            </ul>
-                            <button id="right" onClick={() => {
-                                currentPage("right");
-                                window.scrollTo(scrollOptions);
-                            }}>
-                                <img src="./images/icons/chevron-right.svg" alt="arrow-right" />
+                                Back to Top <img src="./images/icons/chevron-up.svg" alt="arrow-up" />
                             </button>
                         </div>
-                        <button className="back-to-top" onClick={() => {
-                            window.scrollTo(scrollOptions);
-                        }}>
-                            Back to Top <img src="./images/icons/chevron-up.svg" alt="arrow-up" />
-                        </button>
-                    </div>
+                    }
                 </div>
+
+                {errorMessage &&
+                    <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
+                        <ModalError errorMessage={errorMessage} />
+                    </Modal>}
             </div>
         </div>
     )
