@@ -14,6 +14,7 @@ export default function ShoppingCart() {
     const [isSelectedAll, setIsSelectedAll] = useState(false);
 
     const [errorMessage, setErrorMessage] = useState();
+    const [optional, setOptional] = useState();
     const [modalIsOpen, setModalIsOpen] = useState(true);
 
     useEffect(() => {
@@ -79,7 +80,12 @@ export default function ShoppingCart() {
                 }
             } catch (error) {
                 if (!ignore) {
-                    setErrorMessage('Error getting medications: ' + error.message);
+                    if (error.message.includes('Failed to fetch')) {
+                        setErrorMessage('Network error');
+                        setOptional('Check your Internet connection and the requested URL.');
+                    } else {
+                        setErrorMessage('Error getting medications: ' + error.message);
+                    }
                 }
             }
         }
@@ -159,55 +165,57 @@ export default function ShoppingCart() {
 
     return (
         <div className='shopping-cart'>
-            <h1>Shopping cart {(context.cartItemsId.length > 0 && !isLoading)
+            <h1>Shopping cart {(context.cartItemsId.length > 0 && !isLoading && !errorMessage)
                 && `(${context.cartItemsId.length})`}</h1>
             {context.cartItemsId.length > 0 ? (
-                <div className='cart-flex'>
-                    {isLoading ? <PlaceholderShoppingCart /> :
-                        <div>
-                            <div className='selected-btn'>
-                                <div className='checkbox'>
-                                    <input type='checkbox' name='checkbox' id='checkbox'
-                                        checked={isSelectedAll}
-                                        onChange={handleSelectAll} />
-                                    <label htmlFor="checkbox">Select all items</label>
-                                </div>
-                                <button className='delete' onClick={handleDeleteSelected}>
-                                    <img src="./images/icons/trash.svg" alt="trash" />
-                                    Delete selected items
-                                </button>
-                            </div>
-                            <div className='cart-items available'>
-                                <h3>Available for delivery</h3>
-                                <ul>
-                                    {medicationsInCartA}
-                                </ul>
-                            </div>
-                            {medicationsInCartUn.length > 0 &&
-                                <div className='cart-items unavailable'>
-                                    <h3>Unavailable for delivery</h3>
-                                    <ul>
-                                        {medicationsInCartUn}
-                                    </ul>
-                                    <div className='attention'>
-                                        <img src="./images/icons/info-circle.svg" alt="attention" />
-                                        <p>Unfortunately, this item is not available, but we can offer you similar products.<br />
-                                            <Link to="/catalog">See products</Link></p>
+                (!errorMessage || isLoading) ?
+                    <div className='cart-flex'>
+                        {isLoading ? <PlaceholderShoppingCart /> :
+                            <div>
+                                <div className='selected-btn'>
+                                    <div className='checkbox'>
+                                        <input type='checkbox' name='checkbox' id='checkbox'
+                                            checked={isSelectedAll}
+                                            onChange={handleSelectAll} />
+                                        <label htmlFor="checkbox">Select all items</label>
                                     </div>
+                                    <button className='delete' onClick={handleDeleteSelected}>
+                                        <img src="./images/icons/trash.svg" alt="trash" />
+                                        Delete selected items
+                                    </button>
                                 </div>
-                            }
-                        </div>
-                    }
-                    {isLoading ? <PlaceholderCartSummary btnType="shopping-cart" /> :
-                        <CartSummary btnType="shopping-cart" setIsSelectedAll={setIsSelectedAll} />}
-                </div>
+                                <div className='cart-items available'>
+                                    <h3>Available for delivery</h3>
+                                    <ul>
+                                        {medicationsInCartA}
+                                    </ul>
+                                </div>
+                                {medicationsInCartUn.length > 0 &&
+                                    <div className='cart-items unavailable'>
+                                        <h3>Unavailable for delivery</h3>
+                                        <ul>
+                                            {medicationsInCartUn}
+                                        </ul>
+                                        <div className='attention'>
+                                            <img src="./images/icons/info-circle.svg" alt="attention" />
+                                            <p>Unfortunately, this item is not available, but we can offer you similar products.<br />
+                                                <Link to="/catalog">See products</Link></p>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        {isLoading ? <PlaceholderCartSummary btnType="shopping-cart" /> :
+                            <CartSummary btnType="shopping-cart" setIsSelectedAll={setIsSelectedAll} />}
+                    </div> :
+                    <div className='loader-spinner' />
             ) : (
                 <div className='empty-cart'>Your cart is empty.</div>
             )}
 
             {errorMessage &&
                 <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
-                    <ModalError errorMessage={errorMessage} />
+                    <ModalError errorMessage={errorMessage} optional={optional} />
                 </Modal>}
         </div>
     )

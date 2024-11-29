@@ -35,6 +35,7 @@ export default function CatalogMain() {
     const [urlMedication, setUrlMedication] = useState(refPage.current + "&" + urlFilters.available + "&" + urlSelect);
 
     const [errorMessage, setErrorMessage] = useState();
+    const [optional, setOptional] = useState();
     const [modalIsOpen, setModalIsOpen] = useState(true);
 
     useEffect(() => {
@@ -72,7 +73,12 @@ export default function CatalogMain() {
                 }
             } catch (error) {
                 if (!ignore) {
-                    setErrorMessage('Error getting medications: ' + error.message);
+                    if (error.message.includes('Failed to fetch')) {
+                        setErrorMessage('Network error');
+                        setOptional('Check your Internet connection and the requested URL.');
+                    } else {
+                        setErrorMessage('Error getting medications: ' + error.message);
+                    }
                 }
             }
         }
@@ -167,48 +173,52 @@ export default function CatalogMain() {
                         toggleAvailable={toggleAvailable}
                         totalMed={totalMed} />
                 }
-                <div className="catalog-filtered">
-                    {isLoadingCatalog ?
-                        <FilterTop toggleAvailable={toggleAvailable}
-                            selectSort={selectSort} /> :
-                        <FilterTop availability={availability}
-                            toggleAvailable={toggleAvailable}
-                            selectSort={selectSort} />
-                    }
-                    {isLoadingCatalog || isLoadingProducts ? <PlaceholderProducts /> :
-                        <Products allMedications={allMedications} />}
-                    <hr />
-                    {allMedications.length > 0 &&
-                        <div className="catalog-pages">
-                            <div className="choose-page">
-                                <button id="left" onClick={() => {
-                                    currentPage("left");
+
+                {(!errorMessage || isLoadingCatalog) ?
+                    <div className="catalog-filtered">
+                        {isLoadingCatalog ?
+                            <FilterTop toggleAvailable={toggleAvailable}
+                                selectSort={selectSort} /> :
+                            <FilterTop availability={availability}
+                                toggleAvailable={toggleAvailable}
+                                selectSort={selectSort} />
+                        }
+                        {isLoadingCatalog || isLoadingProducts ? <PlaceholderProducts /> :
+                            <Products allMedications={allMedications} />}
+                        <hr />
+                        {allMedications.length > 0 &&
+                            <div className="catalog-pages">
+                                <div className="choose-page">
+                                    <button id="left" onClick={() => {
+                                        currentPage("left");
+                                        window.scrollTo(scrollOptions);
+                                    }}>
+                                        <img src="./images/icons/chevron-left.svg" alt="arrow-left" />
+                                    </button>
+                                    <ul className="pages">
+                                        {addPages()}
+                                    </ul>
+                                    <button id="right" onClick={() => {
+                                        currentPage("right");
+                                        window.scrollTo(scrollOptions);
+                                    }}>
+                                        <img src="./images/icons/chevron-right.svg" alt="arrow-right" />
+                                    </button>
+                                </div>
+                                <button className="back-to-top" onClick={() => {
                                     window.scrollTo(scrollOptions);
                                 }}>
-                                    <img src="./images/icons/chevron-left.svg" alt="arrow-left" />
-                                </button>
-                                <ul className="pages">
-                                    {addPages()}
-                                </ul>
-                                <button id="right" onClick={() => {
-                                    currentPage("right");
-                                    window.scrollTo(scrollOptions);
-                                }}>
-                                    <img src="./images/icons/chevron-right.svg" alt="arrow-right" />
+                                    Back to Top <img src="./images/icons/chevron-up.svg" alt="arrow-up" />
                                 </button>
                             </div>
-                            <button className="back-to-top" onClick={() => {
-                                window.scrollTo(scrollOptions);
-                            }}>
-                                Back to Top <img src="./images/icons/chevron-up.svg" alt="arrow-up" />
-                            </button>
-                        </div>
-                    }
-                </div>
+                        }
+                    </div> :
+                    <div className='loader-spinner' />
+                }
 
                 {errorMessage &&
                     <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
-                        <ModalError errorMessage={errorMessage} />
+                        <ModalError errorMessage={errorMessage} optional={optional} />
                     </Modal>}
             </div>
         </div>

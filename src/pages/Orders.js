@@ -69,7 +69,12 @@ export default function Orders() {
                 }
             }
         } catch (error) {
-            setErrorMessage('Error getting order history: ' + error.message);
+            if (error.message.includes('Failed to fetch')) {
+                setErrorMessage('Network error');
+                setOptional('Check your Internet connection and the requested URL.');
+            } else {
+                setErrorMessage('Error getting order history: ' + error.message);
+            }
         }
     }, [currentPage, allDataLoaded]);
 
@@ -178,26 +183,27 @@ export default function Orders() {
 
     return (
         <div className='orders'>
-            {isLoading ? <PlaceholderOrders isLoading={isLoading} setIsLoading={setIsLoading} /> : 
-            <>
-                <PersonalInfo isLoading={isLoading} setIsLoading={setIsLoading} />
-                <div className='orders-info'>
-                    <h1>Orders ({totalOrders.current})</h1>
-                    <div id='scroll-point' className='all-orders'>
-                        {ordersList}
-                        {!allDataLoaded && <div className='loader-spinner'></div>}
+            {isLoading ? <PlaceholderOrders isLoading={isLoading} setIsLoading={setIsLoading} /> :
+                <>
+                    <PersonalInfo isLoading={isLoading} setIsLoading={setIsLoading} />
+                    <div className='orders-info'>
+                        <h1>Orders {!errorMessage && `(${totalOrders.current})`}</h1>
+                        <div id='scroll-point' className='all-orders'>
+                            {ordersList}
+                            {!allDataLoaded && <div className='loader-spinner' />}
+                        </div>
+                        {!errorMessage &&
+                            <button className='back-to-top' onClick={() => {
+                                window.scrollTo({
+                                    top: 0,
+                                    left: 0,
+                                    behavior: "smooth"
+                                });
+                            }}>
+                                Back to Top <img src="./images/icons/chevron-up.svg" alt="arrow-up" />
+                            </button>}
                     </div>
-                    <button className='back-to-top' onClick={() => {
-                        window.scrollTo({
-                            top: 0,
-                            left: 0,
-                            behavior: "smooth"
-                        });
-                    }}>
-                        Back to Top <img src="./images/icons/chevron-up.svg" alt="arrow-up" />
-                    </button>
-                </div>
-            </>}
+                </>}
 
             {currentOrderId &&
                 <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
