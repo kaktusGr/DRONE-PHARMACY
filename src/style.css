@@ -159,3 +159,25 @@ button.back-to-top {
         margin: 0 0 4px 8px;
     }
 }
+
+.loader-spinner {
+    border: 4px solid var(--white);
+    border-top: 4px solid var(--light-grey);
+    border-radius: 50%;
+    width: 64px;
+    height: 64px;
+    animation: spinner 1.5s linear infinite;
+    margin: 0 auto;
+    margin-top: 80px;
+    margin-bottom: 80px;
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
