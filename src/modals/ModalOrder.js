@@ -1,14 +1,24 @@
 import { React, useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import PlaceholderModalOrder from '../placeholders/PlaceholderModalOrder';
 import ModalError from "../modals/ModalError";
 
 export default function ModalOrder({ orderId }) {
     const [currentOrder, setCurrentOrder] = useState();
     const [errorMessage, setErrorMessage] = useState();
+    const [optional, setOptional] = useState();
+
+    const navigate = useNavigate();
+    const MAX_ATTEMPTS = 5;
+    const INTERVAL = 2000;
+    const TIMEOUT = 10000;
 
     useEffect(() => {
         let ignore = false;
         let checkStatus = '';
+        let attempts = 0;
+        let checkStatusIntervalId, intervalId, timeoutId;
+
         const fetchRequest = async () => {
             try {
                 const response = await fetch(`http://localhost:8090/delivery/${orderId}/full-info`, {
@@ -36,24 +46,60 @@ export default function ModalOrder({ orderId }) {
                 const data = await response.json();
 
                 if (!ignore) {
+                    clearInterval(intervalId);
+                    clearTimeout(timeoutId);
+                    setErrorMessage(null);
+                    setOptional(null);
+
                     setCurrentOrder(data);
                     checkStatus = data.status;
                 }
             } catch (error) {
                 if (!ignore) {
-                    setErrorMessage('Error getting order detail: ' + error.message);
+                    if (error.message.includes('Failed to fetch')) {
+                        setErrorMessage('Network error');
+                        setOptional('Check your Internet connection and the requested URL.');
+                    } else {
+                        setErrorMessage('Error getting order detail: ' + error.message);
+                    }
+
+                    attempts += 1;
+
+                    if (!intervalId) {
+                        intervalId = setInterval(() => {
+                            fetchRequest();
+                        }, INTERVAL);
+                    }
+
+                    if (attempts >= MAX_ATTEMPTS) {
+                        clearInterval(intervalId);
+                        clearTimeout(timeoutId);
+                        navigate('/');
+                    }
                 }
             }
         }
-        fetchRequest();
-        const interval = setInterval(() => {
+
+        checkStatusIntervalId = setInterval(() => {
             if (checkStatus !== "DELIVERED") {
                 fetchRequest();
             }
         }, 10000);
+
+        timeoutId = setTimeout(() => {
+            clearInterval(intervalId);
+            navigate('/');
+        }, TIMEOUT);
+
+        fetchRequest();
+
         return () => {
             ignore = true;
-            clearInterval(interval);
+            clearInterval(checkStatusIntervalId);
+            clearInterval(intervalId);
+            clearTimeout(timeoutId);
+            setErrorMessage(null);
+            setOptional(null);
         }
     }, [orderId]);
 
@@ -89,7 +135,7 @@ export default function ModalOrder({ orderId }) {
     return (
         isLoading ? <PlaceholderModalOrder /> :
             (errorMessage ?
-                <ModalError errorMessage={errorMessage} /> :
+                <ModalError errorMessage={errorMessage} optional={optional} /> :
                 <div className="modal-flex-order">
                     <div>
                         <h2>Order #{deliveryNumber}</h2>
