@@ -1,4 +1,5 @@
 import { React, useState, useRef, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import FilterAside from "./FilterAside";
 import FilterTop from "./FilterTop";
 import Products from "./Products";
@@ -38,8 +39,16 @@ export default function CatalogMain() {
     const [optional, setOptional] = useState();
     const [modalIsOpen, setModalIsOpen] = useState(true);
 
+    const navigate = useNavigate();
+    const MAX_ATTEMPTS = 5;
+    const INTERVAL = 2000;
+    const TIMEOUT = 10000;
+
     useEffect(() => {
         let ignore = false;
+        let attempts = 0;
+        let intervalId, timeoutId;
+
         const fetchRequest = async () => {
             try {
                 const response = await fetch("http://localhost:8090/medication?size=6&page=" + urlMedication, {
@@ -67,6 +76,11 @@ export default function CatalogMain() {
                 const data = await response.json();
 
                 if (!ignore) {
+                    clearInterval(intervalId);
+                    clearTimeout(timeoutId);
+                    setErrorMessage(null);
+                    setOptional(null);
+
                     setAllPages(data.totalPages);
                     setTotalMed(data.totalElements);
                     updateWithCartInfo(data.content);
@@ -79,13 +93,31 @@ export default function CatalogMain() {
                     } else {
                         setErrorMessage('Error getting medications: ' + error.message);
                     }
+
+                    attempts += 1;
+                    if (attempts >= MAX_ATTEMPTS) {
+                        clearInterval(intervalId);
+                        clearTimeout(timeoutId);
+                        navigate('/');
+                    }
                 }
             }
         }
+
+        intervalId = setInterval(fetchRequest, INTERVAL);
+        timeoutId = setTimeout(() => {
+            clearInterval(intervalId);
+            navigate('/');
+        }, TIMEOUT);
+
         fetchRequest();
 
         return () => {
             ignore = true;
+            clearInterval(intervalId);
+            clearTimeout(timeoutId);
+            setErrorMessage(null);
+            setOptional(null);
         }
     }, [urlMedication, context.cartItemsId]);
 

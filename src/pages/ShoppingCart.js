@@ -1,4 +1,5 @@
 import { React, useState, useContext, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import { Context } from "../Context";
 import CartItem from '../components/CartItem';
 import CartSummary from '../components/CartSummary';
@@ -17,8 +18,18 @@ export default function ShoppingCart() {
     const [optional, setOptional] = useState();
     const [modalIsOpen, setModalIsOpen] = useState(true);
 
+    const navigate = useNavigate();
+    const MAX_ATTEMPTS = 5;
+    const INTERVAL = 2000;
+    const TIMEOUT = 10000;
+
     useEffect(() => {
+        if (!cartIDs) return;
+
         let ignore = false;
+        let attempts = 0;
+        let intervalId, timeoutId;
+
         const fetchRequest = async () => {
             try {
                 const response = await fetch(`http://localhost:8090/medication?size=20&ids=${cartIDs}&sort=name,asc`, {
@@ -46,6 +57,11 @@ export default function ShoppingCart() {
                 const data = await response.json();
 
                 if (!ignore) {
+                    clearInterval(intervalId);
+                    clearTimeout(timeoutId);
+                    setErrorMessage(null);
+                    setOptional(null);
+
                     const selectedItemsId = localStorage.getItem('selected-items') &&
                         localStorage.getItem('selected-items').length > 0 ?
                         JSON.parse(localStorage.getItem('selected-items')).map(item => item.id) : null;
@@ -86,16 +102,31 @@ export default function ShoppingCart() {
                     } else {
                         setErrorMessage('Error getting medications: ' + error.message);
                     }
+
+                    attempts += 1;
+                    if (attempts >= MAX_ATTEMPTS) {
+                        clearInterval(intervalId);
+                        clearTimeout(timeoutId);
+                        navigate('/');
+                    }
                 }
             }
         }
 
-        if (cartIDs) {
-            fetchRequest();
-        }
+        intervalId = setInterval(fetchRequest, INTERVAL);
+        timeoutId = setTimeout(() => {
+            clearInterval(intervalId);
+            navigate('/');
+        }, TIMEOUT);
+
+        fetchRequest();
 
         return () => {
             ignore = true;
+            clearInterval(intervalId);
+            clearTimeout(timeoutId);
+            setErrorMessage(null);
+            setOptional(null);
         }
     }, [cartIDs]);
 

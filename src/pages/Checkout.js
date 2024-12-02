@@ -1,5 +1,6 @@
 import { React, useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CheckoutDelivery from '../components/CheckoutDelivery';
 import CartSummary from '../components/CartSummary';
 import DroneDetail from '../components/DroneDetail';
@@ -17,30 +18,56 @@ export default function Checkout() {
     const [optional, setOptional] = useState();
     const [modalIsOpen, setModalIsOpen] = useState(true);
 
+    const navigate = useNavigate();
+    const MAX_ATTEMPTS = 5;
+    const INTERVAL = 2000;
+    const TIMEOUT = 10000;
+
     useEffect(() => {
-        let ignore = false;
+        let attempts = 0;
+        let intervalId, timeoutId;
+
         const fetchRequest = async () => {
             try {
-                const response = await fetch('http://localhost:8090', {
-                    method: 'GET',
+                await fetch('http://localhost:8090', {
+                    method: 'HEAD',
                     mode: 'no-cors',
                 });
-                if (!response.ok) throw new Error();
-                return;
+
+                clearInterval(intervalId);
+                clearTimeout(timeoutId);
+                setErrorMessage(null);
+                setOptional(null);
             } catch (error) {
-                if (!ignore) {
-                    if (error.message.includes('Failed to fetch')) {
-                        setErrorMessage('Network error');
-                        setOptional('Check your Internet connection and the requested URL.');
-                    } else {
-                        setErrorMessage(error.message);
-                    }
+                if (error.message.includes('Failed to fetch')) {
+                    setErrorMessage('Network error');
+                    setOptional('Check your Internet connection and the requested URL.');
+                } else {
+                    setErrorMessage(error.message);
+                }
+
+                attempts += 1;
+                if (attempts >= MAX_ATTEMPTS) {
+                    clearInterval(intervalId);
+                    clearTimeout(timeoutId);
+                    navigate('/');
                 }
             }
         };
+
+        intervalId = setInterval(fetchRequest, INTERVAL);
+        timeoutId = setTimeout(() => {
+            clearInterval(intervalId);
+            navigate('/');
+        }, TIMEOUT);
+
         fetchRequest();
+
         return () => {
-            ignore = true;
+            clearInterval(intervalId);
+            clearTimeout(timeoutId);
+            setErrorMessage(null);
+            setOptional(null);
         }
     }, [])
 
