@@ -122,7 +122,14 @@ export default function Orders() {
                     await getDeliveries();
                 }
             } catch (error) {
-                setErrorMessage('Error order creation: ' + error.message);
+                if (error.message.includes('Failed to fetch')) {
+                    setErrorMessage('Network error');
+                    setOptional('Check your Internet connection and the requested URL.');
+                } else {
+                    setErrorMessage('Error order creation: ' + error.message);
+                }
+
+                context.setIsReadyPostFetch(false);
             }
         }, 500), [context, hasFetched, getDeliveries]);
 
