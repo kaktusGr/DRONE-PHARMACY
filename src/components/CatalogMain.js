@@ -1,10 +1,13 @@
 import { React, useState, useRef, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import FilterAside from "./FilterAside";
 import FilterTop from "./FilterTop";
-import Products from "./Products";
+import Product from "./Product";
 import PlaceholderFilterAside from "../placeholders/PlaceholderFilterAside";
 import PlaceholderProducts from "../placeholders/PlaceholderProducts";
 import { Context } from "../Context";
+import Modal from "../modals/Modal";
+import ModalError from "../modals/ModalError";
 
 export default function CatalogMain() {
     const context = useContext(Context);
@@ -32,22 +35,89 @@ export default function CatalogMain() {
     const [urlSelect, setUrlSelect] = useState(urlFilters.sort.nameAZ);
     const [urlMedication, setUrlMedication] = useState(refPage.current + "&" + urlFilters.available + "&" + urlSelect);
 
+    const [errorMessage, setErrorMessage] = useState();
+    const [optional, setOptional] = useState();
+    const [modalIsOpen, setModalIsOpen] = useState(true);
+
+    const navigate = useNavigate();
+    const MAX_ATTEMPTS = 5;
+    const INTERVAL = 2000;
+    const TIMEOUT = 10000;
+
     useEffect(() => {
         let ignore = false;
-        fetch("http://localhost:8090/medication?size=6&page=" + urlMedication, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        })
-            .then(result => result.json())
-            .then(data => {
+        let attempts = 0;
+        let intervalId, timeoutId;
+
+        const fetchMedication = async () => {
+            try {
+                const response = await fetch("http://localhost:8090/medication?size=6&page=" + urlMedication, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (!response.ok) {
+                    switch (response.status) {
+                        case 400:
+                            throw new Error('Bad request sent');
+                        case 404:
+                            throw new Error('Resource not found for the given request');
+                        case 429:
+                            throw new Error('Too many requests');
+                        case 500:
+                            throw new Error('Internal server error');
+                        case 503:
+                            throw new Error('Service unavailable');
+                        default:
+                            throw new Error(`Unexpected error: ${response.status}`);
+                    }
+                }
+
+                const data = await response.json();
+
                 if (!ignore) {
+                    clearInterval(intervalId);
+                    clearTimeout(timeoutId);
+                    setErrorMessage(null);
+                    setOptional(null);
+
                     setAllPages(data.totalPages);
                     setTotalMed(data.totalElements);
                     updateWithCartInfo(data.content);
                 }
-            });
+            } catch (error) {
+                if (!ignore) {
+                    if (error.message.includes('Failed to fetch')) {
+                        setErrorMessage('Network error');
+                        setOptional('Check your Internet connection and the requested URL.');
+                    } else {
+                        setErrorMessage('Error getting medications: ' + error.message);
+                    }
+
+                    attempts += 1;
+                    if (attempts >= MAX_ATTEMPTS) {
+                        clearInterval(intervalId);
+                        clearTimeout(timeoutId);
+                        navigate('/error');
+                    }
+                }
+            }
+        }
+
+        intervalId = setInterval(fetchMedication, INTERVAL);
+        timeoutId = setTimeout(() => {
+            clearInterval(intervalId);
+            navigate('/error');
+        }, TIMEOUT);
+
+        fetchMedication();
+
         return () => {
             ignore = true;
+            clearInterval(intervalId);
+            clearTimeout(timeoutId);
+            setErrorMessage(null);
+            setOptional(null);
         }
     }, [urlMedication, context.cartItemsId]);
 
@@ -135,42 +205,55 @@ export default function CatalogMain() {
                         toggleAvailable={toggleAvailable}
                         totalMed={totalMed} />
                 }
-                <div className="catalog-filtered">
-                    {isLoadingCatalog ?
-                        <FilterTop toggleAvailable={toggleAvailable}
-                            selectSort={selectSort} /> :
-                        <FilterTop availability={availability}
-                            toggleAvailable={toggleAvailable}
-                            selectSort={selectSort} />
-                    }
-                    {isLoadingCatalog || isLoadingProducts ? <PlaceholderProducts /> :
-                        <Products allMedications={allMedications} />}
-                    <hr />
-                    <div className="catalog-pages">
-                        <div className="choose-page">
-                            <button id="left" onClick={() => {
-                                currentPage("left");
-                                window.scrollTo(scrollOptions);
-                            }}>
-                                <img src="./images/icons/chevron-left.svg" alt="arrow-left" />
-                            </button>
-                            <ul className="pages">
-                                {addPages()}
-                            </ul>
-                            <button id="right" onClick={() => {
-                                currentPage("right");
-                                window.scrollTo(scrollOptions);
-                            }}>
-                                <img src="./images/icons/chevron-right.svg" alt="arrow-right" />
-                            </button>
-                        </div>
-                        <button className="back-to-top" onClick={() => {
-                            window.scrollTo(scrollOptions);
-                        }}>
-                            Back to Top <img src="./images/icons/chevron-up.svg" alt="arrow-up" />
-                        </button>
-                    </div>
-                </div>
+
+                {(!errorMessage || isLoadingCatalog) ?
+                    <div className="catalog-filtered">
+                        {isLoadingCatalog ?
+                            <FilterTop toggleAvailable={toggleAvailable}
+                                selectSort={selectSort} /> :
+                            <FilterTop availability={availability}
+                                toggleAvailable={toggleAvailable}
+                                selectSort={selectSort} />
+                        }
+                        {isLoadingCatalog || isLoadingProducts ? <PlaceholderProducts /> :
+                            <div className="catalog-products">
+                                {allMedications.map(item => <Product key={item.id} {...item} />)}
+                            </div>}
+                        <hr />
+                        {allMedications.length > 0 &&
+                            <div className="catalog-pages">
+                                <div className="choose-page">
+                                    <button id="left" onClick={() => {
+                                        currentPage("left");
+                                        window.scrollTo(scrollOptions);
+                                    }}>
+                                        <img src="./images/icons/chevron-left.svg" alt="arrow-left" />
+                                    </button>
+                                    <ul className="pages">
+                                        {addPages()}
+                                    </ul>
+                                    <button id="right" onClick={() => {
+                                        currentPage("right");
+                                        window.scrollTo(scrollOptions);
+                                    }}>
+                                        <img src="./images/icons/chevron-right.svg" alt="arrow-right" />
+                                    </button>
+                                </div>
+                                <button className="back-to-top" onClick={() => {
+                                    window.scrollTo(scrollOptions);
+                                }}>
+                                    Back to Top <img src="./images/icons/chevron-up.svg" alt="arrow-up" />
+                                </button>
+                            </div>
+                        }
+                    </div> :
+                    <div className='loader-spinner' />
+                }
+
+                {errorMessage &&
+                    <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
+                        <ModalError errorMessage={errorMessage} optional={optional} />
+                    </Modal>}
             </div>
         </div>
     )

@@ -28,11 +28,12 @@
 
         & img#close {
             height: 34px;
+            z-index: -1;
         }
     }
 }
 
-.modal-flex {
+.modal-flex-order {
     display: flex;
     flex-direction: column;
     gap: 32px;
@@ -106,5 +107,36 @@
             font-size: 13px;
             color: var(--grey);
         }
+    }
+}
+
+.modal-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
+    position: relative;
+
+    & img {
+        width: 50px;
+        height: 50px;
+        z-index: 2;
+        background-color: var(--white);
+    }
+
+    & hr {
+        position: absolute;
+        top: 25px;
+        width: 100%;
+        z-index: 1;
+    }
+
+    & h2 span {
+        color: var(--red-error);
+    }
+
+    & h2,
+    h3 {
+        text-transform: none;
     }
 }

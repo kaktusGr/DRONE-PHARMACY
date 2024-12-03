@@ -3,7 +3,8 @@ import { Context } from "../Context";
 import OrderShortInfo from '../components/OrderShortInfo';
 import PersonalInfo from '../components/PersonalInfo';
 import Modal from '../modals/Modal';
-import ModalOrder from '../modals/ModalOrder';
+import ModalOrder from "../modals/ModalOrder";
+import ModalError from "../modals/ModalError";
 import PlaceholderOrders from '../placeholders/PlaceholderOrders';
 
 function debounce(func, delay) {
@@ -22,6 +23,9 @@ export default function Orders() {
 
     const [allDeliveries, setAllDeliveries] = useState([]);
     const [currentOrderId, setCurrentOrderId] = useState();
+
+    const [errorMessage, setErrorMessage] = useState();
+    const [optional, setOptional] = useState();
     const [modalIsOpen, setModalIsOpen] = useState(true);
 
     const totalOrders = useRef(0);
@@ -39,7 +43,20 @@ export default function Orders() {
                 });
 
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    switch (response.status) {
+                        case 400:
+                            throw new Error('Bad request sent');
+                        case 404:
+                            throw new Error('Resource not found for the given request');
+                        case 429:
+                            throw new Error('Too many requests');
+                        case 500:
+                            throw new Error('Internal server error');
+                        case 503:
+                            throw new Error('Service unavailable');
+                        default:
+                            throw new Error(`Unexpected error: ${response.status}`);
+                    }
                 }
 
                 const data = await response.json();
@@ -52,7 +69,12 @@ export default function Orders() {
                 }
             }
         } catch (error) {
-            console.error('Error getting order history: ', error);
+            if (error.message.includes('Failed to fetch')) {
+                setErrorMessage('Network error');
+                setOptional('Check your Internet connection and the requested URL.');
+            } else {
+                setErrorMessage('Error getting order history: ' + error.message);
+            }
         }
     }, [currentPage, allDataLoaded]);
 
@@ -67,7 +89,24 @@ export default function Orders() {
                     });
 
                     if (!response.ok) {
-                        throw new Error('Network response was not ok');
+                        setHasFetched(true);
+                        await getDeliveries();
+
+                        switch (response.status) {
+                            case 400:
+                                setOptional('Check availability of medications.')
+                                throw new Error('Incorrect data sent');
+                            case 404:
+                                throw new Error('Resource not found for the given request');
+                            case 429:
+                                throw new Error('Too many requests');
+                            case 500:
+                                throw new Error('Internal server error');
+                            case 503:
+                                throw new Error('Service unavailable');
+                            default:
+                                throw new Error(`Unexpected Error: ${response.status}`);
+                        }
                     }
 
                     const data = await response.json();
@@ -83,7 +122,14 @@ export default function Orders() {
                     await getDeliveries();
                 }
             } catch (error) {
-                console.error('Error order creation: ', error);
+                if (error.message.includes('Failed to fetch')) {
+                    setErrorMessage('Network error');
+                    setOptional('Check your Internet connection and the requested URL.');
+                } else {
+                    setErrorMessage('Error order creation: ' + error.message);
+                }
+
+                context.setIsReadyPostFetch(false);
             }
         }, 500), [context, hasFetched, getDeliveries]);
 
@@ -144,30 +190,38 @@ export default function Orders() {
 
     return (
         <div className='orders'>
-            {isLoading ? <PlaceholderOrders isLoading={isLoading} setIsLoading={setIsLoading} /> : <>
-                <PersonalInfo isLoading={isLoading} setIsLoading={setIsLoading} />
-                <div className='orders-info'>
-                    <h1>Orders ({totalOrders.current})</h1>
-                    <div id='scroll-point' className='all-orders'>
-                        {ordersList}
-                        {!allDataLoaded && <div className='loader-spinner'></div>}
+            {isLoading ? <PlaceholderOrders isLoading={isLoading} setIsLoading={setIsLoading} /> :
+                <>
+                    <PersonalInfo isLoading={isLoading} setIsLoading={setIsLoading} />
+                    <div className='orders-info'>
+                        <h1>Orders {!errorMessage && `(${totalOrders.current})`}</h1>
+                        <div id='scroll-point' className='all-orders'>
+                            {ordersList}
+                            {!allDataLoaded && <div className='loader-spinner' />}
+                        </div>
+                        {!errorMessage &&
+                            <button className='back-to-top' onClick={() => {
+                                window.scrollTo({
+                                    top: 0,
+                                    left: 0,
+                                    behavior: "smooth"
+                                });
+                            }}>
+                                Back to Top <img src="./images/icons/chevron-up.svg" alt="arrow-up" />
+                            </button>}
                     </div>
-                    <button className='back-to-top' onClick={() => {
-                        window.scrollTo({
-                            top: 0,
-                            left: 0,
-                            behavior: "smooth"
-                        });
-                    }}>
-                        Back to Top <img src="./images/icons/chevron-up.svg" alt="arrow-up" />
-                    </button>
-                </div>
-            </>}
+                </>}
+
             {currentOrderId &&
                 <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
                     <ModalOrder orderId={currentOrderId} />
                 </Modal>
             }
+
+            {errorMessage &&
+                <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
+                    <ModalError errorMessage={errorMessage} optional={optional} />
+                </Modal>}
         </div>
     )
 }
