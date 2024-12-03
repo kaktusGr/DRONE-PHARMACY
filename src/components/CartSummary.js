@@ -7,12 +7,14 @@ import ModalError from "../modals/ModalError";
 export default function CartSummary({ btnType, setIsSelectedAll }) {
     const context = useContext(Context);
     const [drones, setDrones] = useState([]);
+
     const [errorMessage, setErrorMessage] = useState();
     const [optional, setOptional] = useState();
     const [modalIsOpen, setModalIsOpen] = useState(true);
 
     useEffect(() => {
         let ignore = false;
+
         const fetchAvailableDrones = async () => {
             try {
                 const response = await fetch('http://localhost:8090/drone/available', {
@@ -53,6 +55,7 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
             }
         };
         fetchAvailableDrones();
+        
         return () => {
             ignore = true;
         }

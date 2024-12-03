@@ -19,7 +19,7 @@ export default function ModalOrder({ orderId }) {
         let attempts = 0;
         let checkStatusIntervalId, intervalId, timeoutId;
 
-        const fetchRequest = async () => {
+        const fetchOrderFullInfo = async () => {
             try {
                 const response = await fetch(`http://localhost:8090/delivery/${orderId}/full-info`, {
                     method: 'GET',
@@ -67,7 +67,7 @@ export default function ModalOrder({ orderId }) {
 
                     if (!intervalId) {
                         intervalId = setInterval(() => {
-                            fetchRequest();
+                            fetchOrderFullInfo();
                         }, INTERVAL);
                     }
 
@@ -82,16 +82,16 @@ export default function ModalOrder({ orderId }) {
 
         checkStatusIntervalId = setInterval(() => {
             if (checkStatus !== "DELIVERED") {
-                fetchRequest();
+                fetchOrderFullInfo();
             }
-        }, 10000);
+        }, TIMEOUT);
 
         timeoutId = setTimeout(() => {
             clearInterval(intervalId);
             navigate('/');
         }, TIMEOUT);
 
-        fetchRequest();
+        fetchOrderFullInfo();
 
         return () => {
             ignore = true;

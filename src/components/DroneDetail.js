@@ -1,4 +1,5 @@
 import { React, useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import Modal from "../modals/Modal";
 import ModalError from "../modals/ModalError";
 
@@ -13,6 +14,8 @@ export default function DroneDetail() {
 
     const [errorMessage, setErrorMessage] = useState();
     const [modalIsOpen, setModalIsOpen] = useState(true);
+
+    const navigate = useNavigate();
 
     const availableDroneId = JSON.parse(localStorage.getItem('drone'));
 
@@ -59,7 +62,7 @@ export default function DroneDetail() {
                         setDroneDetail(updatedDroneDetail);
                     }
                 } else {
-                    window.location.href = '#/shopping-cart';
+                    navigate('/shopping-cart');
                 }
             } catch (error) {
                 setErrorMessage("Error getting drone's detail: " + error.message);

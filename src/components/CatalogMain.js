@@ -2,7 +2,7 @@ import { React, useState, useRef, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import FilterAside from "./FilterAside";
 import FilterTop from "./FilterTop";
-import Products from "./Products";
+import Product from "./Product";
 import PlaceholderFilterAside from "../placeholders/PlaceholderFilterAside";
 import PlaceholderProducts from "../placeholders/PlaceholderProducts";
 import { Context } from "../Context";
@@ -49,7 +49,7 @@ export default function CatalogMain() {
         let attempts = 0;
         let intervalId, timeoutId;
 
-        const fetchRequest = async () => {
+        const fetchMedication = async () => {
             try {
                 const response = await fetch("http://localhost:8090/medication?size=6&page=" + urlMedication, {
                     method: 'GET',
@@ -104,13 +104,13 @@ export default function CatalogMain() {
             }
         }
 
-        intervalId = setInterval(fetchRequest, INTERVAL);
+        intervalId = setInterval(fetchMedication, INTERVAL);
         timeoutId = setTimeout(() => {
             clearInterval(intervalId);
             navigate('/');
         }, TIMEOUT);
 
-        fetchRequest();
+        fetchMedication();
 
         return () => {
             ignore = true;
@@ -216,7 +216,9 @@ export default function CatalogMain() {
                                 selectSort={selectSort} />
                         }
                         {isLoadingCatalog || isLoadingProducts ? <PlaceholderProducts /> :
-                            <Products allMedications={allMedications} />}
+                            <div className="catalog-products">
+                                {allMedications.map(item => <Product key={item.id} {...item} />)}
+                            </div>}
                         <hr />
                         {allMedications.length > 0 &&
                             <div className="catalog-pages">

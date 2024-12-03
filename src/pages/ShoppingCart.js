@@ -30,7 +30,7 @@ export default function ShoppingCart() {
         let attempts = 0;
         let intervalId, timeoutId;
 
-        const fetchRequest = async () => {
+        const fetchMedication = async () => {
             try {
                 const response = await fetch(`http://localhost:8090/medication?size=20&ids=${cartIDs}&sort=name,asc`, {
                     method: 'GET',
@@ -113,13 +113,13 @@ export default function ShoppingCart() {
             }
         }
 
-        intervalId = setInterval(fetchRequest, INTERVAL);
+        intervalId = setInterval(fetchMedication, INTERVAL);
         timeoutId = setTimeout(() => {
             clearInterval(intervalId);
             navigate('/');
         }, TIMEOUT);
 
-        fetchRequest();
+        fetchMedication();
 
         return () => {
             ignore = true;
