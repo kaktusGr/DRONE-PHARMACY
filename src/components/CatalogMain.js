@@ -98,7 +98,7 @@ export default function CatalogMain() {
                     if (attempts >= MAX_ATTEMPTS) {
                         clearInterval(intervalId);
                         clearTimeout(timeoutId);
-                        navigate('/');
+                        navigate('/error');
                     }
                 }
             }
@@ -107,7 +107,7 @@ export default function CatalogMain() {
         intervalId = setInterval(fetchMedication, INTERVAL);
         timeoutId = setTimeout(() => {
             clearInterval(intervalId);
-            navigate('/');
+            navigate('/error');
         }, TIMEOUT);
 
         fetchMedication();

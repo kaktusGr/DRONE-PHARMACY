@@ -107,7 +107,7 @@ export default function ShoppingCart() {
                     if (attempts >= MAX_ATTEMPTS) {
                         clearInterval(intervalId);
                         clearTimeout(timeoutId);
-                        navigate('/');
+                        navigate('/error');
                     }
                 }
             }
@@ -116,7 +116,7 @@ export default function ShoppingCart() {
         intervalId = setInterval(fetchMedication, INTERVAL);
         timeoutId = setTimeout(() => {
             clearInterval(intervalId);
-            navigate('/');
+            navigate('/error');
         }, TIMEOUT);
 
         fetchMedication();

@@ -74,7 +74,7 @@ export default function ModalOrder({ orderId }) {
                     if (attempts >= MAX_ATTEMPTS) {
                         clearInterval(intervalId);
                         clearTimeout(timeoutId);
-                        navigate('/');
+                        navigate('/error');
                     }
                 }
             }
@@ -88,7 +88,7 @@ export default function ModalOrder({ orderId }) {
 
         timeoutId = setTimeout(() => {
             clearInterval(intervalId);
-            navigate('/');
+            navigate('/error');
         }, TIMEOUT);
 
         fetchOrderFullInfo();

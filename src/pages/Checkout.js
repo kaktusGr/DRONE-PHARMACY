@@ -50,7 +50,7 @@ export default function Checkout() {
                 if (attempts >= MAX_ATTEMPTS) {
                     clearInterval(intervalId);
                     clearTimeout(timeoutId);
-                    navigate('/');
+                    navigate('/error');
                 }
             }
         };
@@ -58,7 +58,7 @@ export default function Checkout() {
         intervalId = setInterval(fetchRequest, INTERVAL);
         timeoutId = setTimeout(() => {
             clearInterval(intervalId);
-            navigate('/');
+            navigate('/error');
         }, TIMEOUT);
 
         fetchRequest();
