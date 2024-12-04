@@ -13,15 +13,14 @@
 
         & a {
             display: block;
-            width: 220px;
-            height: 100px;
+            min-width: 220px;
             text-align: center;
             padding: 37px 0;
-            border: none;
+            border: 2px solid var(--dark-grey);
             border-radius: 30px;
             background-color: var(--dark-grey);
             color: var(--white);
-            font-size: 20px;
+            font-size: 22px;
             margin-top: 32px;
             cursor: pointer;
             transition: all 0.3s ease;

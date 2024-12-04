@@ -32,7 +32,7 @@ export default function ShoppingCart() {
 
         const fetchMedication = async () => {
             try {
-                const response = await fetch(`http://localhost:8090/medication?size=20&ids=${cartIDs}&sort=name,asc`, {
+                const response = await fetch(`/medication?size=20&ids=${cartIDs}&sort=name,asc`, {
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json' }
                 });
@@ -46,6 +46,7 @@ export default function ShoppingCart() {
                         case 429:
                             throw new Error('Too many requests');
                         case 500:
+                            setOptional("Please wait for the server's response.");
                             throw new Error('Internal server error');
                         case 503:
                             throw new Error('Service unavailable');
@@ -90,9 +91,11 @@ export default function ShoppingCart() {
                     localStorage.setItem('selected-items', JSON.stringify(checkAvailableItems));
                     context.setSelectedItems(checkAvailableItems);
 
-                    setIsSelectedAll(filteredData
-                        .filter(med => med.status === 'AVAILABLE').length === selectedItemsId.length ||
-                        selectedItemsId.length === 0 ? true : false);
+                    setIsSelectedAll(() => {
+                        const availableItems = filteredData.filter(med => med.status === 'AVAILABLE');
+                        const selectedAvailableItems = availableItems.filter(med => med.isSelected);
+                        return availableItems.length > 0 && availableItems.length === selectedAvailableItems.length;
+                    });
                 }
             } catch (error) {
                 if (!ignore) {

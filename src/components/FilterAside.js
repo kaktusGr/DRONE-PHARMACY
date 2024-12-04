@@ -8,7 +8,7 @@ export default function FilterAside({ availability, toggleAvailable, totalMed })
         <div className="filter-aside">
             <div>
                 <h3>Medicines</h3>
-                <button className="btn-underline">Clear All</button>
+                <button className="btn-underline" disabled>Clear All</button>
             </div>
             <p>{totalMed} results</p>
 
@@ -16,31 +16,31 @@ export default function FilterAside({ availability, toggleAvailable, totalMed })
                 <h4>weight</h4>
                 <ul>
                     <li>
-                        <input type="checkbox" />
+                        <input type="checkbox" disabled />
                         <label>Under 50G</label>
                     </li>
                     <li>
-                        <input type="checkbox" />
+                        <input type="checkbox" disabled />
                         <label>50G – 100G</label>
                     </li>
                     <li>
-                        <input type="checkbox" />
+                        <input type="checkbox" disabled />
                         <label>100G – 150G</label>
                     </li>
                     <li>
-                        <input type="checkbox" />
+                        <input type="checkbox" disabled />
                         <label>150G – 200G</label>
                     </li>
                     <li>
-                        <input type="checkbox" />
+                        <input type="checkbox" disabled />
                         <label>200G – 250G</label>
                     </li>
                     <li style={showMore}>
-                        <input type="checkbox" />
+                        <input type="checkbox" disabled />
                         <label>250G – 300G</label>
                     </li>
                     <li style={showMore}>
-                        <input type="checkbox" />
+                        <input type="checkbox" disabled />
                         <label>Above 300G</label>
                     </li>
                 </ul>

@@ -128,32 +128,35 @@
             }
         }
     }
-}
 
-.modal-flex {
-    & .placeholder {
-        & span {
-            display: block;
-            margin-bottom: 5px;
-        }
-
+    & .modal-flex-order {
         & .modal-titles {
+            & span {
+                display: block;
+                margin-bottom: 5px;
+            }
+
             & .animated-title {
+                height: 40px;
                 width: 230px;
             }
 
             & .animated-text {
                 width: 300px;
-                margin-bottom: 30px;
             }
         }
 
-        & .modal-order-status.animated-text {
-            width: 100%;
-        }
+        & .modal-order-status {
+            position: relative;
 
-        & .modal-map {
-            margin: 30px 0;
+            & #img {
+                position: absolute;
+                top: -20px;
+                left: 10px;
+                width: 44px;
+                height: 44px;
+                background-color: var(--light-grey);
+            }
         }
 
         & table {

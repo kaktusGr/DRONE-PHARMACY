@@ -37,7 +37,7 @@ export default function Orders() {
     const getDeliveries = useCallback(async () => {
         try {
             if (!allDataLoaded) {
-                const response = await fetch(`http://localhost:8090/delivery?sort=status,id,desc&size=3&page=${currentPage}`, {
+                const response = await fetch(`/delivery?sort=status,id,desc&size=3&page=${currentPage}`, {
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json' }
                 });
@@ -51,6 +51,7 @@ export default function Orders() {
                         case 429:
                             throw new Error('Too many requests');
                         case 500:
+                            setOptional("Please wait for the server's response.");
                             throw new Error('Internal server error');
                         case 503:
                             throw new Error('Service unavailable');
@@ -82,7 +83,7 @@ export default function Orders() {
         debounce(async (order) => {
             try {
                 if (availableDroneId && context.isReadyPostFetch && !hasFetched) {
-                    const response = await fetch('http://localhost:8090/delivery/create', {
+                    const response = await fetch('/delivery/create', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(order)
@@ -101,6 +102,7 @@ export default function Orders() {
                             case 429:
                                 throw new Error('Too many requests');
                             case 500:
+                                setOptional("Please wait for the server's response.");
                                 throw new Error('Internal server error');
                             case 503:
                                 throw new Error('Service unavailable');

@@ -21,7 +21,7 @@ export default function ModalOrder({ orderId }) {
 
         const fetchOrderFullInfo = async () => {
             try {
-                const response = await fetch(`http://localhost:8090/delivery/${orderId}/full-info`, {
+                const response = await fetch(`/delivery/${orderId}/full-info`, {
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json' }
                 })
@@ -35,6 +35,7 @@ export default function ModalOrder({ orderId }) {
                         case 429:
                             throw new Error('Too many requests');
                         case 500:
+                            setOptional("Please wait for the server's response.");
                             throw new Error('Internal server error');
                         case 503:
                             throw new Error('Service unavailable');

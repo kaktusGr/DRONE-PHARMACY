@@ -46,7 +46,7 @@ export default function OrderShortInfo(props) {
                 <div className='delivery-items'>
                     {items.map(item =>
                         <div key={item.id} className='medications'>
-                            <img id='img' src={"http://localhost:8090" + item.imgUrl} alt={item.name} />
+                            <img id='img' src={item.imgUrl} alt={item.name} />
                         </div>
                     )}
                 </div>

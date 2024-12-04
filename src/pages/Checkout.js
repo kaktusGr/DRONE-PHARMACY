@@ -11,7 +11,7 @@ import ModalError from "../modals/ModalError";
 export default function Checkout() {
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-
+    
     const selectedItems = JSON.parse(localStorage.getItem('selected-items'));
 
     const [errorMessage, setErrorMessage] = useState();
@@ -29,10 +29,28 @@ export default function Checkout() {
 
         const fetchRequest = async () => {
             try {
-                await fetch('http://localhost:8090', {
+                const response = await fetch('/drone/available', {
                     method: 'HEAD',
                     mode: 'no-cors',
                 });
+
+                if (!response.ok) {
+                    switch (response.status) {
+                        case 400:
+                            throw new Error('Bad request sent');
+                        case 404:
+                            throw new Error('Resource not found for the given request');
+                        case 429:
+                            throw new Error('Too many requests');
+                        case 500:
+                            setOptional("Please wait for the server's response.");
+                            throw new Error('Internal server error');
+                        case 503:
+                            throw new Error('Service unavailable');
+                        default:
+                            throw new Error(`Unexpected error: ${response.status}`);
+                    }
+                }
 
                 clearInterval(intervalId);
                 clearTimeout(timeoutId);
@@ -94,10 +112,10 @@ export default function Checkout() {
                             <div className='checkout-customer'>
                                 <h3>customer info</h3>
                                 <form name="form-customer" action="" method="get">
-                                    <input type='text' placeholder='First name*'></input>
-                                    <input type='text' placeholder='Last name*'></input>
-                                    <input type='phone' placeholder='Phone number*'></input>
-                                    <input type='email' placeholder='Email'></input>
+                                    <input type='text' placeholder='First name*' disabled></input>
+                                    <input type='text' placeholder='Last name*' disabled></input>
+                                    <input type='phone' placeholder='Phone number*' disabled></input>
+                                    <input type='email' placeholder='Email' disabled></input>
                                 </form>
                             </div>
                             <CheckoutDelivery />
@@ -118,7 +136,7 @@ export default function Checkout() {
                                         {selectedItems
                                             .map(item =>
                                                 <div key={item.id} className='medications'>
-                                                    <img id='img' src={"http://localhost:8090" + item.imgUrl} alt={item.name} />
+                                                    <img id='img' src={item.imgUrl} alt={item.name} />
                                                     <small>{item.name}</small>
                                                 </div>
                                             )}
@@ -133,7 +151,7 @@ export default function Checkout() {
                                 </div>
                                 {isOpen && (
                                     <form name="form-promo-code" action="" method="get">
-                                        <input type='text' placeholder='Promo-code'></input>
+                                        <input type='text' placeholder='Promo-code' disabled></input>
                                     </form>
                                 )}
                             </div>

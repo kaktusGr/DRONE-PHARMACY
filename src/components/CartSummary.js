@@ -16,8 +16,10 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
         let ignore = false;
 
         const fetchAvailableDrones = async () => {
+            if (btnType === 'checkout') return;
+
             try {
-                const response = await fetch('http://localhost:8090/drone/available', {
+                const response = await fetch('/drone/available', {
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json' },
                 });
@@ -55,7 +57,7 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
             }
         };
         fetchAvailableDrones();
-        
+
         return () => {
             ignore = true;
         }
@@ -80,6 +82,8 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
             if (drone.weightLimit >= totalWeight) {
                 localStorage.setItem('drone', JSON.stringify(drone.id));
                 return drone.id;
+            } else {
+                localStorage.setItem('drone', null);
             }
         }
         return null;
@@ -179,7 +183,7 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
                     </div>
                 </div>}
 
-            {drones.length === 0 &&
+            {(drones.length === 0 && btnType === "shopping-cart") &&
                 <p className='summary-error null'>
                     * Unfortunately, we don't have a free drone available for the total weight of the selected items.
                 </p>}
@@ -205,11 +209,7 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
             ) : (
                 <div className='summary-btns'>
                     <Link to="/orders" id='checkout'
-                        className={(totalSelected === 0 ||
-                            checkDronesWeight(totalWeight) === null) ?
-                            "disabled" : undefined}
-                        onClick={(e) => (totalSelected === 0 ||
-                            checkDronesWeight(totalWeight) === null) ?
+                        onClick={(e) => !localStorage.getItem('drone') ?
                             e.preventDefault() :
                             context.setIsReadyPostFetch(true)}>
                         Checkout
