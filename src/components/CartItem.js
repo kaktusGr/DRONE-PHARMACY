@@ -16,7 +16,7 @@ export default function CartItem(props) {
                     disabled={status === 'UNAVAILABLE'}
                     onChange={() => handleSelectItem(id)} />
                 <div className='medications'>
-                    <img id='img' src={"http://localhost:8090" + imgUrl} alt='medication' />
+                    <img id='img' src={imgUrl} alt='medication' />
                 </div>
                 <label>
                     <div className='item-info'>

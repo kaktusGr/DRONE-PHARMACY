@@ -11,7 +11,7 @@ export default function Product(props) {
         <div id={"product-" + name} className="product-card">
             {!productStatus && <div className="unavailable-med"></div>}
             <div className="product-img">
-                <img id="img" src={"http://localhost:8090" + imgUrl} alt={name} />
+                <img id="img" src={imgUrl} alt={name} />
             </div>
 
             <div className="product-info">

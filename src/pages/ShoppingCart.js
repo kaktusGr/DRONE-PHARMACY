@@ -32,7 +32,7 @@ export default function ShoppingCart() {
 
         const fetchMedication = async () => {
             try {
-                const response = await fetch(`http://localhost:8090/medication?size=20&ids=${cartIDs}&sort=name,asc`, {
+                const response = await fetch(`/medication?size=20&ids=${cartIDs}&sort=name,asc`, {
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json' }
                 });

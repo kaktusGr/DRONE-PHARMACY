@@ -21,7 +21,7 @@ export default function ModalOrder({ orderId }) {
 
         const fetchOrderFullInfo = async () => {
             try {
-                const response = await fetch(`http://localhost:8090/delivery/${orderId}/full-info`, {
+                const response = await fetch(`/delivery/${orderId}/full-info`, {
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json' }
                 })

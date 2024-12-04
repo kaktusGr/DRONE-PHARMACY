@@ -24,7 +24,7 @@ export default function DroneDetail() {
         const fetchDroneDetail = async () => {
             try {
                 if (availableDroneId) {
-                    const response = await fetch(`http://localhost:8090/drone/${availableDroneId}/state`, {
+                    const response = await fetch(`/drone/${availableDroneId}/state`, {
                         method: 'GET',
                         headers: { 'Content-Type': 'application/json' }
                     })

@@ -29,7 +29,7 @@ export default function Checkout() {
 
         const fetchRequest = async () => {
             try {
-                await fetch('http://localhost:8090', {
+                await fetch('/', {
                     method: 'HEAD',
                     mode: 'no-cors',
                 });
@@ -118,7 +118,7 @@ export default function Checkout() {
                                         {selectedItems
                                             .map(item =>
                                                 <div key={item.id} className='medications'>
-                                                    <img id='img' src={"http://localhost:8090" + item.imgUrl} alt={item.name} />
+                                                    <img id='img' src={item.imgUrl} alt={item.name} />
                                                     <small>{item.name}</small>
                                                 </div>
                                             )}

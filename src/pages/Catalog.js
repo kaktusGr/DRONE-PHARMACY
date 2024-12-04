@@ -51,7 +51,7 @@ export default function CatalogMain() {
 
         const fetchMedication = async () => {
             try {
-                const response = await fetch("http://localhost:8090/medication?size=6&page=" + urlMedication, {
+                const response = await fetch("/medication?size=6&page=" + urlMedication, {
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json' }
                 });

@@ -37,7 +37,7 @@ export default function Orders() {
     const getDeliveries = useCallback(async () => {
         try {
             if (!allDataLoaded) {
-                const response = await fetch(`http://localhost:8090/delivery?sort=status,id,desc&size=3&page=${currentPage}`, {
+                const response = await fetch(`/delivery?sort=status,id,desc&size=3&page=${currentPage}`, {
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json' }
                 });
@@ -82,7 +82,7 @@ export default function Orders() {
         debounce(async (order) => {
             try {
                 if (availableDroneId && context.isReadyPostFetch && !hasFetched) {
-                    const response = await fetch('http://localhost:8090/delivery/create', {
+                    const response = await fetch('/delivery/create', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(order)

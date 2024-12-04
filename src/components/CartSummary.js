@@ -17,7 +17,7 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
 
         const fetchAvailableDrones = async () => {
             try {
-                const response = await fetch('http://localhost:8090/drone/available', {
+                const response = await fetch('/drone/available', {
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json' },
                 });
