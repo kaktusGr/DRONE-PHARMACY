@@ -16,6 +16,8 @@ export default function CartSummary({ btnType, setIsSelectedAll }) {
         let ignore = false;
 
         const fetchAvailableDrones = async () => {
+            if (btnType === 'checkout') return;
+
             try {
                 const response = await fetch('/drone/available', {
                     method: 'GET',
