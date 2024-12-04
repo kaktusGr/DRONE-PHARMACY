@@ -94,10 +94,10 @@ export default function Checkout() {
                             <div className='checkout-customer'>
                                 <h3>customer info</h3>
                                 <form name="form-customer" action="" method="get">
-                                    <input type='text' placeholder='First name*'></input>
-                                    <input type='text' placeholder='Last name*'></input>
-                                    <input type='phone' placeholder='Phone number*'></input>
-                                    <input type='email' placeholder='Email'></input>
+                                    <input type='text' placeholder='First name*' disabled></input>
+                                    <input type='text' placeholder='Last name*' disabled></input>
+                                    <input type='phone' placeholder='Phone number*' disabled></input>
+                                    <input type='email' placeholder='Email' disabled></input>
                                 </form>
                             </div>
                             <CheckoutDelivery />
@@ -133,7 +133,7 @@ export default function Checkout() {
                                 </div>
                                 {isOpen && (
                                     <form name="form-promo-code" action="" method="get">
-                                        <input type='text' placeholder='Promo-code'></input>
+                                        <input type='text' placeholder='Promo-code' disabled></input>
                                     </form>
                                 )}
                             </div>
