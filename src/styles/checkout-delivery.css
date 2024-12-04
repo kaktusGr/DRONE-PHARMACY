@@ -24,7 +24,7 @@
                     border: 1px solid var(--grey);
                     border-radius: 8px;
                     padding: 10px;
-                    width: 108px;
+                    min-width: 108px;
                     cursor: pointer;
 
                     &.active {
@@ -49,10 +49,6 @@
 
                 & label {
                     margin-left: 8px;
-                }
-
-                & input {
-                    cursor: pointer;
                 }
 
                 &:has(input:checked) {

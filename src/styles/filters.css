@@ -26,6 +26,12 @@
         margin-top: 8px;
         text-decoration: underline;
         cursor: pointer;
+
+        &:disabled {
+            cursor: default;
+            color: var(--grey);
+            margin-top: 4px;
+        }
     }
 
     & p {
@@ -40,16 +46,8 @@
     & ul {
         color: var(--grey);
 
-        & :has(input:checked) label {
-            color: var(--dark-grey);
-        }
-
         & li {
             margin-bottom: 8px;
-
-            & input {
-                cursor: pointer;
-            }
 
             & label {
                 margin-left: 8px;
@@ -164,12 +162,8 @@
     & .filter-btns {
         display: flex;
 
-        & img {
-            cursor: pointer;
-
-            &:first-child {
-                margin-right: 16px;
-            }
+        & img:first-child {
+            margin-right: 16px;
         }
 
         & .custom-select {
