@@ -11,7 +11,7 @@ import ModalError from "../modals/ModalError";
 export default function Checkout() {
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-
+    
     const selectedItems = JSON.parse(localStorage.getItem('selected-items'));
 
     const [errorMessage, setErrorMessage] = useState();
@@ -29,10 +29,28 @@ export default function Checkout() {
 
         const fetchRequest = async () => {
             try {
-                await fetch('/', {
+                const response = await fetch('/drone/available', {
                     method: 'HEAD',
                     mode: 'no-cors',
                 });
+
+                if (!response.ok) {
+                    switch (response.status) {
+                        case 400:
+                            throw new Error('Bad request sent');
+                        case 404:
+                            throw new Error('Resource not found for the given request');
+                        case 429:
+                            throw new Error('Too many requests');
+                        case 500:
+                            setOptional("Please wait for the server's response.");
+                            throw new Error('Internal server error');
+                        case 503:
+                            throw new Error('Service unavailable');
+                        default:
+                            throw new Error(`Unexpected error: ${response.status}`);
+                    }
+                }
 
                 clearInterval(intervalId);
                 clearTimeout(timeoutId);
