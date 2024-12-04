@@ -65,6 +65,7 @@ export default function CatalogMain() {
                         case 429:
                             throw new Error('Too many requests');
                         case 500:
+                            setOptional("Please wait for the server's response.");
                             throw new Error('Internal server error');
                         case 503:
                             throw new Error('Service unavailable');
