@@ -90,9 +90,11 @@ export default function ShoppingCart() {
                     localStorage.setItem('selected-items', JSON.stringify(checkAvailableItems));
                     context.setSelectedItems(checkAvailableItems);
 
-                    setIsSelectedAll(filteredData
-                        .filter(med => med.status === 'AVAILABLE').length === selectedItemsId.length ||
-                        selectedItemsId.length === 0 ? true : false);
+                    setIsSelectedAll(() => {
+                        const availableItems = filteredData.filter(med => med.status === 'AVAILABLE');
+                        const selectedAvailableItems = availableItems.filter(med => med.isSelected);
+                        return availableItems.length > 0 && availableItems.length === selectedAvailableItems.length;
+                    });
                 }
             } catch (error) {
                 if (!ignore) {
