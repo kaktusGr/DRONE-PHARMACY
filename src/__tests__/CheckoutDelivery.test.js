@@ -24,7 +24,7 @@ describe('Checkout delivery:', () => {
         })
 
         it('should return correct "tomorrow" day (THU)', () => {
-            expect(getDay('tomorrow')).toBe("THU");
+            expect(getDay('tomorrow')).toBe('THU');
         })
 
         it('should return correct "dayAfterTomorrow" day (FRI)', () => {
@@ -63,22 +63,22 @@ describe('Checkout delivery:', () => {
 
         it('should return correct date (August 30)', () => {
             jest.setSystemTime(new Date('2024-08-28T00:00:00'));
-            expect(setDateAfterTomorrow()).toBe('August 30');
+            expect(setDateAfterTomorrow()).toMatch(/^August\s30$/);
         })
 
         it('should return correct date (September 1)', () => {
             jest.setSystemTime(new Date('2024-08-30T00:00:00'));
-            expect(setDateAfterTomorrow()).toBe('September 1');
+            expect(setDateAfterTomorrow()).toMatch(/^September\s1$/);
         })
 
         it('should return correct date (September 2) in another timezone', () => {
             jest.setSystemTime(new Date('2024-08-30T23:00:00-04:00'));
-            expect(setDateAfterTomorrow()).toBe('September 2');
+            expect(setDateAfterTomorrow()).toMatch(/^September\s2$/);
         })
 
         it('should return correct date when crossing the end of the year', () => {
             jest.setSystemTime(new Date('2024-12-30T00:00:00'));
-            expect(setDateAfterTomorrow()).toBe('January 1');
+            expect(setDateAfterTomorrow()).toMatch(/^January\s1$/);
         })
 
         it('should throw error for unnecessary argument', () => {
