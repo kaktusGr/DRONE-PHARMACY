@@ -21,15 +21,18 @@
                 gap: 12px;
 
                 & .date {
-                    border: 1px solid var(--grey);
+                    border: 1px solid var(--dark-grey);
                     border-radius: 8px;
                     padding: 10px;
                     min-width: 108px;
-                    cursor: pointer;
 
                     &.active {
-                        border: 1px solid var(--dark-grey);
                         outline: 1px solid var(--dark-grey);
+                    }
+
+                    &:not(.active) {
+                        background-color: #EFEFEF4D;
+                        color: var(--grey);
                     }
 
                     & p:first-child {

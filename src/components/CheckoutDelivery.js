@@ -47,13 +47,6 @@ const setDateAfterTomorrow = function () {
 }
 
 export default function CheckoutDelivery() {
-    function handleClick(e) {
-        if (!e.target.closest('.date.active')) {
-            document.querySelectorAll('.active').forEach(item => item.classList.remove('active'));
-        }
-        e.target.closest('.date').classList.toggle('active');
-    }
-
     return (
         <div className='checkout-delivery'>
             <h3>Delivery</h3>
@@ -64,15 +57,15 @@ export default function CheckoutDelivery() {
                         <p>Choose a convenient delivery date and time</p>
                     </div>
                     <div className='delivery-dates'>
-                        <div className='date active' onClick={handleClick}>
+                        <div className='date active'>
                             <p>{getDay("today")}</p>
                             <p>Today</p>
                         </div>
-                        <div className='date' onClick={handleClick}>
+                        <div className='date'>
                             <p>{getDay("tomorrow")}</p>
                             <p>Tomorrow</p>
                         </div>
-                        <div className='date' onClick={handleClick}>
+                        <div className='date'>
                             <p>{getDay("dayAfterTomorrow")}</p>
                             <p>{setDateAfterTomorrow()}</p>
                         </div>
